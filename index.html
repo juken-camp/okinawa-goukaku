@@ -1573,6 +1573,12 @@ function selectAndJudge(id){
    GLOBAL INIT
    ================================================================ */
 initScrollReveal();
+
+/* type="number" のホイールスクロールで値が変わるPC限定バグを防ぐ */
+document.querySelectorAll("input[type='number']").forEach(el=>{
+  el.addEventListener("wheel",function(e){e.preventDefault();},{passive:false});
+  el.addEventListener("mousedown",function(){this.focus();});
+});
 </script>
 </body>
 </html>
