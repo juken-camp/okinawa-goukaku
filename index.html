@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>沖縄県立高校入試 合格判定シミュレーター｜内申点・偏差値・志望校で合格可能性をチェック</title>
+<meta name="description" content="沖縄県立高校入試の合格可能性を、内申点・評定・偏差値・志望校からチェックできる無料シミュレーター。JUKEN CAMP運営。">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://hantei.okinawa-nyushi.jp/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="沖縄県立高校入試 合格判定シミュレーター">
+<meta property="og:description" content="内申点・偏差値・志望校を入力して、沖縄県立高校入試の合格可能性をすぐチェック。JUKEN CAMP運営。">
+<meta property="og:url" content="https://hantei.okinawa-nyushi.jp/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定シミュレーター","url":"https://hantei.okinawa-nyushi.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Inter','Noto Sans JP',-apple-system,'Hiragino Sans',sans-serif;
+  font-size:15px;line-height:1.65;
+  background:#ffffff;
+  color:#0a0a0a;
+  -webkit-font-smoothing:antialiased;
+  min-height:100dvh;
+  overflow-x:hidden;
+  letter-spacing:-.01em;
+}
+
+/* カラー定義：白黒ベース＋インディゴ1色のみアクセント */
+:root{
+  --accent:#4f46e5;
+  --accent-dark:#3730a3;
+  --accent-lt:#eef2ff;
+  --accent-ring:rgba(79,70,229,.14);
+  --ink:#0a0a0a;
+  --ink-mid:#525252;
+  --ink-soft:#a3a3a3;
+  --ink-faint:#d4d4d4;
+  --bg:#ffffff;
+  --bg-soft:#fafafa;
+  --surface:#ffffff;
+  --border:#e5e5e5;
+  --border-soft:#f0f0f0;
+  /* 判定グレード用（無彩色階調＋アクセントのみ最小限使用） */
+  --grade-a:#0a0a0a;
+  --grade-b:#404040;
+  --grade-c:#737373;
+  --grade-d:#a3a3a3;
+  --grade-e:#c7c7c7;
+  /* シャドウ階層（Stripe/Linear系の微細な奥行き表現） */
+  --shadow-xs:0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04);
+  --shadow-focus:0 0 0 3px var(--accent-ring);
+}
+
+/* ============================
+   HEADER
+   ============================ */
+.hd{
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border-soft);
+  padding:0 20px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.hd-logo{font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.01em}
+.hd-logo small{display:block;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:1px}
+.hd-link{
+  font-size:13px;font-weight:600;color:#fff;
+  background:var(--ink);
+  border-radius:8px;padding:7px 16px;
+  text-decoration:none;
+  transition:background .15s,transform .1s;
+}
+.hd-link:hover{background:var(--accent-dark);text-decoration:none}
+.hd-link:active{transform:scale(.96)}
+
+/* ============================
+   HERO
+   ============================ */
+.hero{
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%,rgba(79,70,229,.06) 0%,transparent 70%),
+    #ffffff;
+  padding:72px 20px 60px;
+  text-align:center;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border-soft);
+}
+.hero-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.hero h1{
+  font-size:clamp(30px,6.4vw,46px);
+  font-weight:800;line-height:1.2;
+  color:var(--ink);letter-spacing:-.035em;
+  margin-bottom:20px;
+}
+.hero h1 span{
+  color:var(--accent);
+}
+.hero-sub{font-size:15px;color:var(--ink-mid);margin-bottom:38px;line-height:1.75;max-width:420px;margin-left:auto;margin-right:auto}
+.btn-start{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--ink);color:#fff;
+  font-size:15px;font-weight:600;
+  padding:14px 30px;border-radius:10px;
+  text-decoration:none;
+  box-shadow:var(--shadow-md);
+  transition:background .15s,transform .15s,box-shadow .15s;
+  border:none;cursor:pointer;
+}
+.btn-start:hover{background:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-1px);text-decoration:none}
+.btn-start:active{transform:scale(.98) translateY(0);box-shadow:var(--shadow-sm)}
+
+/* ============================
+   STEPS UI
+   ============================ */
+.main-wrap{max-width:640px;margin:0 auto;padding:0 16px}
+
+.step-section{padding:48px 0 0}
+
+.step-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;
+  margin-bottom:18px;
+}
+.step-num{
+  width:22px;height:22px;border-radius:6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
+  background:var(--ink);
+  flex-shrink:0;
+}
+.step-title{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:-.025em}
+.step-sub{font-size:13px;color:var(--ink-soft);margin-bottom:24px}
+
+/* ============================
+   SCHOOL CHIPS
+   ============================ */
+.area-tabs{
+  display:flex;gap:6px;overflow-x:auto;
+  padding-bottom:4px;margin-bottom:14px;
+  scrollbar-width:none;
+}
+.area-tabs::-webkit-scrollbar{display:none}
+.area-tab{
+  flex-shrink:0;
+  padding:7px 14px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  border:1px solid var(--border);
+  background:#fff;color:var(--ink-mid);
+  cursor:pointer;transition:all .15s;
+  white-space:nowrap;
+}
+.area-tab:hover{border-color:var(--ink-soft);color:var(--ink)}
+.area-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.school-chips{
+  display:flex;flex-wrap:wrap;gap:6px;
+  max-height:160px;overflow-y:auto;
+  padding:4px;
+  scrollbar-width:thin;
+}
+.school-chip{
+  padding:8px 13px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  border:1px solid var(--border);
+  background:#fff;color:var(--ink-mid);
+  cursor:pointer;transition:all .12s;
+  line-height:1.3;
+}
+.school-chip:hover{border-color:var(--ink-soft);color:var(--ink);background:var(--bg-soft)}
+.school-chip.on{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+  box-shadow:var(--shadow-xs);
+}
+
+.selected-display{
+  margin-top:12px;padding:16px 18px;
+  background:var(--accent-lt);border-radius:12px;
+  border:1px solid #e0e7ff;
+  display:none;
+}
+.selected-display.show{display:block}
+.selected-label{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.03em;margin-bottom:5px;text-transform:uppercase}
+.selected-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+
+/* ============================
+   NAISHIN INPUT
+   ============================ */
+.input-toggle{
+  display:flex;gap:0;margin-bottom:20px;
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.input-toggle-btn{
+  flex:1;padding:11px 8px;
+  font-size:13px;font-weight:500;
+  background:#fff;color:var(--ink-soft);
+  cursor:pointer;transition:all .15s;
+  border:none;
+}
+.input-toggle-btn:hover{color:var(--ink)}
+.input-toggle-btn.on{background:var(--ink);color:#fff}
+
+/* ビッグ数字入力 */
+.big-input-wrap{
+  background:var(--bg-soft);border:1px solid var(--border);
+  border-radius:16px;padding:28px 24px;
+  text-align:center;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.big-input-wrap:focus-within{
+  border-color:var(--accent);background:#fff;
+  box-shadow:var(--shadow-focus);
+}
+.big-input-label{font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.03em;margin-bottom:10px;text-transform:uppercase}
+.big-input{
+  width:180px;
+  font-family:inherit;
+  font-size:56px;font-weight:700;
+  color:var(--ink);text-align:center;
+  border:none;outline:none;background:transparent;
+  -moz-appearance:textfield;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+}
+.big-input::-webkit-outer-spin-button,
+.big-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.big-input::placeholder{color:var(--ink-faint)}
+.big-input-max{font-size:12px;color:var(--ink-soft);margin-top:6px;font-weight:500}
+
+/* 評定グリッド */
+.grades-panel{display:none}
+.grades-panel.open{display:block}
+.grade-year-tabs{display:flex;gap:6px;margin-bottom:14px}
+.grade-year-btn{
+  flex:1;padding:9px 4px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  border:1px solid var(--border);background:#fff;
+  color:var(--ink-soft);cursor:pointer;transition:all .12s;
+  text-align:center;
+}
+.grade-year-btn:hover{border-color:var(--ink-soft);color:var(--ink)}
+.grade-year-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.grade-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.grade-name{
+  font-size:12px;font-weight:500;color:var(--ink-mid);
+  flex:0 0 68px;line-height:1.2;
+}
+.grade-name.art{color:var(--accent)}
+.grade-btns{display:flex;gap:5px;flex:1}
+.grade-btn{
+  flex:1;height:36px;border-radius:8px;
+  border:1px solid var(--border);
+  font-size:14px;font-weight:600;color:var(--ink-soft);
+  background:#fff;cursor:pointer;transition:all .1s;
+}
+.grade-btn:hover{border-color:var(--ink-soft)}
+.grade-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grade-btn.on.art{background:var(--accent);border-color:var(--accent)}
+
+.naishin-meter{
+  margin-top:16px;padding:18px;
+  background:var(--bg-soft);
+  border-radius:14px;border:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nm-block{text-align:center}
+.nm-label{font-size:11px;font-weight:600;color:var(--ink-soft);letter-spacing:.03em;text-transform:uppercase}
+.nm-val{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
+.nm-sub{font-size:11px;color:var(--ink-soft)}
+
+/* ============================
+   HENSACHI INPUT
+   ============================ */
+.score-toggle{display:flex;gap:8px;margin-bottom:16px}
+.score-toggle-btn{
+  flex:1;padding:9px 8px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  border:1px solid var(--border);background:#fff;
+  color:var(--ink-soft);cursor:pointer;transition:all .15s;
+  text-align:center;
+}
+.score-toggle-btn:hover{color:var(--ink)}
+.score-toggle-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ============================
+   JUDGE BUTTON
+   ============================ */
+.judge-section{padding:28px 0 48px}
+.btn-judge{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:17px;
+  background:var(--ink);
+  color:#fff;font-family:inherit;
+  font-size:15px;font-weight:600;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:background .15s,transform .1s,box-shadow .15s;
+  letter-spacing:-.005em;
+  letter-spacing:-.01em;
+}
+.btn-judge:hover{background:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.btn-judge:active{transform:scale(.99);box-shadow:var(--shadow-xs)}
+.btn-judge svg{width:18px;height:18px;flex-shrink:0}
+
+/* ============================
+   RESULT
+   ============================ */
+#resultArea{display:none;padding-bottom:16px}
+#resultArea.show{display:block}
+
+/* 結果カード */
+.result-main{
+  position:relative;overflow:hidden;
+  border-radius:20px;
+  padding:44px 24px 32px;
+  text-align:center;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-lg);
+}
+
+.result-grade-ring{
+  width:128px;height:128px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  margin:0 auto 24px;
+  border:2px solid currentColor;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(0,0,0,.02),transparent 70%),
+    #fff;
+  position:relative;z-index:1;
+  box-shadow:var(--shadow-sm);
+}
+.result-grade-letter{
+  font-size:54px;font-weight:800;line-height:1;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+.result-grade-label{
+  font-size:17px;font-weight:700;
+  position:relative;z-index:1;margin-bottom:5px;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.result-grade-sub{
+  font-size:13px;font-weight:500;color:var(--ink-soft);
+  position:relative;z-index:1;margin-bottom:28px;
+}
+.result-school-tag{
+  display:inline-block;
+  background:var(--bg-soft);
+  border:1px solid var(--border);
+  border-radius:8px;padding:6px 15px;
+  font-size:12px;font-weight:600;color:var(--ink-mid);
+  position:relative;z-index:1;margin-bottom:24px;
+}
+
+/* パーセントバー：合格可能性を主役にした表現 */
+.pct-bar-wrap{
+  position:relative;z-index:1;
+  background:var(--border-soft);
+  border-radius:8px;height:10px;
+  overflow:hidden;margin-bottom:12px;
+}
+.pct-bar-fill{
+  height:100%;background:var(--ink);border-radius:8px;
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  width:0%;
+}
+.pct-label{
+  font-size:12px;font-weight:500;
+  color:var(--ink-soft);
+  position:relative;z-index:1;
+  display:flex;justify-content:space-between;
+  align-items:baseline;margin-bottom:16px;
+  letter-spacing:.01em;
+}
+.pct-big{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+/* breakdown */
+.breakdown-card{
+  background:#fff;border-radius:16px;
+  padding:20px 22px;margin-bottom:12px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-xs);
+}
+.breakdown-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid var(--border-soft);
+}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-name{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.breakdown-val{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.breakdown-diff{
+  font-size:12px;font-weight:600;
+  padding:4px 11px;border-radius:7px;
+}
+.diff-ok{background:var(--accent-lt);color:var(--accent-dark)}
+.diff-ng{background:var(--bg-soft);color:var(--ink-mid);border:1px solid var(--border)}
+
+/* アドバイスカード */
+.advice-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;padding:20px 22px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow-xs);
+}
+.advice-title{font-size:11px;font-weight:600;color:var(--ink-soft);margin-bottom:9px;letter-spacing:.05em;text-transform:uppercase}
+.advice-text{font-size:14px;color:var(--ink-mid);line-height:1.75}
+
+/* 差チップ群 */
+.gap-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.gap-chip{
+  padding:7px 14px;border-radius:8px;
+  font-size:12px;font-weight:500;
+  border:1px solid var(--border);
+}
+.gc-ok{background:var(--accent-lt);color:var(--accent-dark);border-color:#e0e7ff}
+.gc-ng{background:#fff;color:var(--ink-mid)}
+
+/* 近い高校 */
+.nearby-wrap{
+  background:#fff;border-radius:16px;
+  padding:22px;border:1px solid var(--border);
+  margin-bottom:16px;
+  box-shadow:var(--shadow-xs);
+}
+.nearby-title{
+  font-size:13px;font-weight:600;color:var(--ink);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.nearby-list{display:flex;flex-direction:column;gap:8px}
+.nearby-item{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 15px;border-radius:12px;
+  background:var(--bg-soft);border:1px solid var(--border-soft);
+  cursor:pointer;transition:all .15s;
+}
+.nearby-item:hover{border-color:var(--ink-soft);background:#fff;box-shadow:var(--shadow-xs)}
+.nearby-badge{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;border:1.5px solid currentColor;
+  flex-shrink:0;background:#fff;
+}
+.nearby-txt{flex:1}
+.nearby-school{font-size:13px;font-weight:600;color:var(--ink)}
+.nearby-dept{font-size:11px;font-weight:500;color:var(--ink-soft)}
+.nearby-arrow{font-size:14px;color:var(--ink-faint);transition:transform .15s}
+.nearby-item:hover .nearby-arrow{transform:translateX(2px)}
+
+/* 注意書き */
+.note-card{
+  background:var(--bg-soft);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+  font-size:12px;line-height:1.75;color:var(--ink-soft);
+  margin-bottom:16px;
+}
+.note-card b{color:var(--ink-mid)}
+
+/* ============================
+   FOOTER
+   ============================ */
+footer{
+  background:#fff;padding:32px 20px;text-align:center;
+  border-top:1px solid var(--border-soft);
+}
+.ft-brand{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.ft-sub{font-size:12px;color:var(--ink-soft);line-height:1.7}
+.ft-sub a{color:var(--ink-mid)}
+.ft-copy{font-size:11px;color:var(--ink-faint);margin-top:12px}
+
+/* animations */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fade-in{animation:fadeUp .5s ease both}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ============================
+   TAP FEEDBACK（全タップ要素共通・控えめ）
+   ============================ */
+.school-chip,.area-tab,.grade-btn,.grade-year-btn,.input-toggle-btn,
+.score-toggle-btn,.btn-start,.btn-judge,.nearby-item,
+.share-btn{
+  transition:transform .1s ease,background .15s,border-color .15s,color .15s;
+}
+.school-chip:active,.area-tab:active,.grade-btn:active,.grade-year-btn:active,
+.input-toggle-btn:active,.score-toggle-btn:active,.nearby-item:active,
+.share-btn:active{
+  transform:scale(.97);
+}
+.btn-start:active,.btn-judge:active{
+  transform:scale(.98);
+}
+
+/* ============================
+   STEP PROGRESS DOTS
+   ============================ */
+.progress-dots{
+  display:flex;justify-content:center;gap:6px;
+  padding:12px 0 4px;
+}
+.progress-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--ink-faint);transition:all .25s ease;
+}
+.progress-dot.filled{background:var(--ink);width:18px;border-radius:3px}
+
+/* ============================
+   選択表示のフェードイン
+   ============================ */
+.selected-display{transform-origin:center top}
+@keyframes fadeInSoft{
+  0%{opacity:0;transform:translateY(-4px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.selected-display.show{animation:fadeInSoft .25s ease both}
+
+/* ============================
+   数字カウントアップ表示
+   ============================ */
+.nm-val{
+  font-variant-numeric:tabular-nums;
+}
+
+/* ============================
+   ローディング演出（判定中・控えめ）
+   ============================ */
+#loadingOverlay{
+  display:none;
+  padding:56px 20px;
+  text-align:center;
+}
+#loadingOverlay.show{display:block;animation:fadeUp .3s ease both}
+.loading-ring-wrap{
+  position:relative;width:64px;height:64px;margin:0 auto 24px;
+}
+.loading-ring-svg{width:64px;height:64px;transform:rotate(-90deg)}
+.loading-ring-track{fill:none;stroke:var(--border);stroke-width:4}
+.loading-ring-fill{
+  fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;
+  stroke-dasharray:329;stroke-dashoffset:329;
+  transition:stroke-dashoffset .1s linear;
+}
+.loading-text{
+  font-size:14px;font-weight:600;color:var(--ink);
+  min-height:20px;
+}
+.loading-sub{font-size:12px;color:var(--ink-soft);margin-top:6px}
+
+/* カウントダウン数字（控えめ） */
+.countdown-num{
+  font-size:44px;font-weight:700;color:var(--ink);
+  animation:countdownFade .4s ease both;
+}
+@keyframes countdownFade{
+  0%{opacity:0;transform:scale(1.15)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+/* ============================
+   判定発表シークエンス（控えめ）
+   ============================ */
+@keyframes gradeRevealSoft{
+  0%{opacity:0;transform:translateY(8px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.grade-reveal{animation:gradeRevealSoft .4s ease both}
+
+.ring-pulse{}
+
+@keyframes shakeCard{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-3px)}
+  75%{transform:translateX(3px)}
+}
+.shake-in{animation:shakeCard .25s ease}
+
+/* ============================
+   結果ゲージバー：シマー＆カウントアップ
+   ============================ */
+@keyframes barShimmer{
+  0%{background-position:-100px 0}
+  100%{background-position:200px 0}
+}
+.pct-bar-fill.shimmer{
+  background-image:linear-gradient(90deg,transparent 0%,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%,transparent 100%);
+  background-size:200px 100%;
+  animation:barShimmer 1.4s linear infinite;
+}
+
+/* ============================
+   SHARE セクション
+   ============================ */
+.share-section{
+  background:#fff;border:1px solid var(--border);
+  border-radius:14px;padding:20px;margin-bottom:16px;
+  text-align:center;
+}
+.share-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.share-sub{font-size:12px;color:var(--ink-soft);margin-bottom:16px}
+.share-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.share-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:8px;
+  font-size:12px;font-weight:600;
+  border:1px solid var(--border);cursor:pointer;
+  font-family:inherit;
+  background:#fff;color:var(--ink-mid);
+}
+.share-btn svg{width:16px;height:16px;flex-shrink:0}
+.share-x{background:var(--ink);color:#fff;border-color:var(--ink)}
+.share-line{background:#06c755;color:#fff;border-color:#06c755}
+.share-copy{background:#fff;color:var(--ink-mid);border-color:var(--border)}
+.share-copy.copied{background:var(--accent-lt);color:var(--accent-dark);border-color:#e0e7ff}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-logo">
+    沖縄県立高校入試<br>
+    <small>合格判定シミュレーター</small>
+  </div>
+  <a href="#step1" class="hd-link">判定する →</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>
+      志望校との距離を、<br>
+      <span>今すぐ数値で</span>確認する。
+    </h1>
+    <p class="hero-sub">
+      内申点・偏差値・志望校を入力するだけ。過去の合否データにもとづいて、合格可能性を判定します。
+    </p>
+    <a href="#step1" class="btn-start">
+      無料で判定する
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<main>
+<div class="main-wrap">
+
+<div class="progress-dots" id="progressDots">
+  <div class="progress-dot"></div>
+  <div class="progress-dot"></div>
+  <div class="progress-dot"></div>
+</div>
+
+<!-- ======================== STEP 1 ======================== -->
+<section class="step-section" id="step1">
+  <div class="step-badge">
+    <span class="step-num">1</span>
+    <span style="font-weight:600;color:var(--ink)">志望校</span>
+  </div>
+  <h2 class="step-title">志望校を選択してください</h2>
+  <p class="step-sub">地域を選び、該当する学校をタップしてください</p>
+
+  <div class="area-tabs" id="areaTabs">
+    <button class="area-tab on" data-area="南部" onclick="switchArea('南部',this)">南部・那覇</button>
+    <button class="area-tab" data-area="中部" onclick="switchArea('中部',this)">中部</button>
+    <button class="area-tab" data-area="北部" onclick="switchArea('北部',this)">北部</button>
+    <button class="area-tab" data-area="宮古・八重山" onclick="switchArea('宮古・八重山',this)">宮古・八重山</button>
+  </div>
+
+  <div class="school-chips" id="schoolChips"></div>
+
+  <div class="selected-display" id="selectedDisplay">
+    <div class="selected-label">選択中の志望校</div>
+    <div class="selected-name" id="selectedName">-</div>
+  </div>
+</section>
+
+<!-- ======================== STEP 2 ======================== -->
+<section class="step-section" id="step2">
+  <div class="step-badge">
+    <span class="step-num">2</span>
+    <span style="font-weight:600;color:var(--ink)">内申点</span>
+  </div>
+  <h2 class="step-title">内申点を入力してください</h2>
+  <p class="step-sub">165点満点です。不明な場合は評定から自動計算できます</p>
+
+  <div class="input-toggle">
+    <button class="input-toggle-btn on" id="toggleDirect" onclick="switchNaishin('direct')">内申点を入力</button>
+    <button class="input-toggle-btn" id="toggleCalc" onclick="switchNaishin('calc')">評定から計算する</button>
+  </div>
+
+  <!-- 直接入力 -->
+  <div id="panelDirect">
+    <div class="big-input-wrap">
+      <div class="big-input-label">内申点（165点満点）</div>
+      <input class="big-input" type="number" id="naishinInput" placeholder="120" min="0" max="165" inputmode="numeric">
+      <div class="big-input-max">/ 165点</div>
+    </div>
+  </div>
+
+  <!-- 評定から -->
+  <div id="panelCalc" class="grades-panel">
+    <div class="grade-year-tabs">
+      <button class="grade-year-btn on" data-y="1" onclick="switchYear(1)">中1</button>
+      <button class="grade-year-btn" data-y="2" onclick="switchYear(2)">中2</button>
+      <button class="grade-year-btn" data-y="3" onclick="switchYear(3)">中3</button>
+    </div>
+    <div id="gradeGrid"></div>
+    <div class="naishin-meter">
+      <div class="nm-block">
+        <div class="nm-label">確定内申点</div>
+        <div class="nm-val" id="nmConfirmed">—</div>
+        <div class="nm-sub">/ 165点</div>
+      </div>
+      <div class="nm-block">
+        <div class="nm-label">このペースの見込み</div>
+        <div class="nm-val" id="nmProjected">—</div>
+        <div class="nm-sub">点見込み</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== STEP 3 ======================== -->
+<section class="step-section" id="step3">
+  <div class="step-badge">
+    <span class="step-num">3</span>
+    <span style="font-weight:600;color:var(--ink)">学力の目安</span>
+  </div>
+  <h2 class="step-title">偏差値または点数を入力してください</h2>
+  <p class="step-sub">任意項目です。入力すると判定の精度が上がります</p>
+
+  <div class="score-toggle">
+    <button class="score-toggle-btn on" id="toggleDev" onclick="switchScore('dev')">偏差値で入力</button>
+    <button class="score-toggle-btn" id="toggleScore" onclick="switchScore('score')">5教科の点数で入力</button>
+  </div>
+
+  <div id="panelDev">
+    <div class="big-input-wrap" id="devWrap">
+      <div class="big-input-label">偏差値（プレ入試・県模試など）</div>
+      <input class="big-input" type="number" id="devInput" placeholder="52" min="20" max="80" inputmode="numeric">
+      <div class="big-input-max">（20〜80）</div>
+    </div>
+  </div>
+
+  <div id="panelScore" style="display:none">
+    <div class="big-input-wrap">
+      <div class="big-input-label">5教科合計（300点満点）</div>
+      <input class="big-input" type="number" id="scoreInput" placeholder="180" min="0" max="300" inputmode="numeric">
+      <div class="big-input-max">→ 偏差値に換算します</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== JUDGE BUTTON ======================== -->
+<div class="judge-section">
+  <button class="btn-judge" id="judgeBtn" onclick="runJudge(event)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10M12 8l4 4-4 4"/><path d="M22 2 12 12"/></svg>
+    判定する
+  </button>
+</div>
+
+<!-- ======================== LOADING ======================== -->
+<div id="loadingOverlay">
+  <div class="loading-ring-wrap">
+    <svg class="loading-ring-svg" viewBox="0 0 120 120">
+      <circle class="loading-ring-track" cx="60" cy="60" r="52"/>
+      <circle class="loading-ring-fill" id="loadingRingFill" cx="60" cy="60" r="52"/>
+    </svg>
+  </div>
+  <div class="loading-text" id="loadingText">診断しています</div>
+  <div class="loading-sub">内申点と偏差値を照合しています</div>
+</div>
+
+<!-- ======================== RESULT ======================== -->
+<div id="resultArea">
+
+  <!-- メイン判定 -->
+  <div class="result-main fade-in" id="resultMain">
+    <div class="result-school-tag" id="rSchoolTag">─</div>
+    <div class="result-grade-ring" id="rRing">
+      <span class="result-grade-letter" id="rLetter">─</span>
+    </div>
+    <div class="result-grade-label" id="rLabel">─</div>
+    <div class="result-grade-sub" id="rSub">─</div>
+    <div class="pct-label">
+      <span>合格可能性の目安</span>
+      <span class="pct-big" id="rPctNum">0%</span>
+    </div>
+    <div class="pct-bar-wrap">
+      <div class="pct-bar-fill" id="rPctBar"></div>
+    </div>
+  </div>
+
+  <!-- ブレークダウン -->
+  <div class="breakdown-card fade-in" id="bdCard">
+    <div class="breakdown-row">
+      <span class="breakdown-name">内申判定</span>
+      <span class="breakdown-val" id="bdNai">—</span>
+      <span class="breakdown-diff" id="bdNaiDiff"></span>
+    </div>
+    <div class="breakdown-row">
+      <span class="breakdown-name">学力判定</span>
+      <span class="breakdown-val" id="bdDev">—</span>
+      <span class="breakdown-diff" id="bdDevDiff"></span>
+    </div>
+    <div class="breakdown-row" style="background:var(--bg-soft);border-radius:8px;padding:12px">
+      <span class="breakdown-name" style="color:var(--ink);font-weight:600">総合判定</span>
+      <span class="breakdown-val" id="bdOverall" style="color:var(--ink)">—</span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- 差チップ -->
+  <div class="gap-chips" id="gapChips"></div>
+
+  <!-- アドバイス -->
+  <div class="advice-card fade-in" id="adviceCard">
+    <div class="advice-title">アドバイス</div>
+    <div class="advice-text" id="adviceText">─</div>
+  </div>
+
+  <!-- 近い高校 -->
+  <div class="nearby-wrap fade-in" id="nearbyWrap" style="display:none">
+    <div class="nearby-title">
+      近いレベルの高校候補
+    </div>
+    <div class="nearby-list" id="nearbyList"></div>
+    <p style="font-size:11px;color:var(--ink-soft);margin-top:12px">※タップすると上の判定に反映されます</p>
+  </div>
+
+  <!-- シェア -->
+  <div class="share-section fade-in">
+    <div class="share-title" id="shareTitleText">この結果をシェアする</div>
+    <div class="share-sub">友だちや保護者に結果を送ってみよう</div>
+    <div class="share-btns">
+      <button class="share-btn share-line" onclick="shareResult('line')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        LINE
+      </button>
+      <button class="share-btn share-x" onclick="shareResult('x')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X (Twitter)
+      </button>
+      <button class="share-btn share-copy" id="copyBtn" onclick="shareResult('copy')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copyBtnText">コピー</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 注意書き -->
+  <div class="note-card fade-in">
+    この判定は過去データや入力内容にもとづく<b>目安</b>です。実際の合否は倍率、面接、調査書、特色選抜、学校ごとの選抜方法などによって変わります。学校や塾の先生とあわせてご活用ください。
+  </div>
+
+</div><!-- /resultArea -->
+</div><!-- /main-wrap -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="main-wrap">
+    <div class="ft-brand">沖縄県立高校入試 合格判定シミュレーター</div>
+    <div class="ft-sub">
+      運営：<a href="https://www.juken-camp.online/" target="_blank" rel="noopener">JUKEN CAMP（受験キャンプ）</a><br>
+      判定は参考情報です。実際の入試制度・日程は沖縄県教育委員会および各高校の最新情報をご確認ください。
+    </div>
+    <div class="ft-copy">© 2025 JUKEN CAMP. All rights reserved.</div>
+  </div>
+</footer>
+</main>
+
+<script>
+/* ================================================================
+   振動フィードバック（対応端末のみ・控えめに使用）
+   ================================================================ */
+function vibrate(pattern){
+  if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} }
+}
+
+/* ================================================================
+   スクロール連動フェードイン（Intersection Observer）
+   ================================================================ */
+function initScrollReveal(){
+  const targets=document.querySelectorAll(".step-section, footer");
+  targets.forEach(el=>el.classList.add("reveal"));
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.12,rootMargin:"0px 0px -40px 0px"});
+  targets.forEach(el=>io.observe(el));
+}
+
+/* ================================================================
+   DATA
+   ================================================================ */
+const SCHOOLS=[
+{id:"kaiho-g",name:"開邦",dept:"学術探究科",area:"南部",y:{2025:{dev:67,nai:147,rT:1.81,rI:0.93}}},
+{id:"kaiho-art",name:"開邦",dept:"芸術科",area:"南部",y:{2025:{dev:50,nai:120,rT:1.75,rI:0.85}}},
+{id:"nahakok-f",name:"那覇国際",dept:"普通科",area:"南部",y:{2025:{dev:64,nai:147,rT:4.73,rI:1.12}}},
+{id:"nahakok-k",name:"那覇国際",dept:"国際科",area:"南部",y:{2025:{dev:61,nai:143,rT:4.28,rI:1.33}}},
+{id:"naha-f",name:"那覇",dept:"普通科",area:"南部",y:{2025:{dev:59,nai:136,rT:2.86,rI:1.02}}},
+{id:"shuri-f",name:"首里",dept:"普通科",area:"南部",y:{2025:{dev:59,nai:137,rT:1.23,rI:1.13}}},
+{id:"shuri-sen",name:"首里",dept:"染織デザイン科",area:"南部",y:{2025:{dev:47,nai:112,rT:1.00,rI:1.23}}},
+{id:"shurihigashi-f",name:"首里東",dept:"普通科",area:"南部",y:{2025:{dev:41,nai:92,rT:1.42,rI:1.05}}},
+{id:"nahanishi-f",name:"那覇西",dept:"普通科",area:"南部",y:{2025:{dev:51,nai:120,rT:4.46,rI:1.13}}},
+{id:"nahanishi-jin",name:"那覇西",dept:"国際人文科",area:"南部",y:{2025:{dev:49,nai:117,rT:2.38,rI:1.10}}},
+{id:"nahanishi-tai",name:"那覇西",dept:"体育科",area:"南部",y:{2025:{dev:44,nai:100,rT:2.65,rI:1.20}}},
+{id:"oroku-f",name:"小禄",dept:"普通コース",area:"南部",y:{2025:{dev:51,nai:120,rT:3.19,rI:1.06}}},
+{id:"oroku-gei",name:"小禄",dept:"芸術教養コース",area:"南部",y:{2025:{dev:45,nai:110,rT:2.50,rI:0.95}}},
+{id:"oroku-biz",name:"小禄",dept:"情報ビジネスコース",area:"南部",y:{2025:{dev:48,nai:110,rT:1.90,rI:1.05}}},
+{id:"mawashi-f",name:"真和志",dept:"普通コース",area:"南部",y:{2025:{dev:35,nai:70,rT:0.04,rI:0.55}}},
+{id:"mawashi-arts",name:"真和志",dept:"クリエイティブアーツ",area:"南部",y:{2025:{dev:36,nai:80,rT:0.30,rI:1.30}}},
+{id:"mawashi-fuku",name:"真和志",dept:"みらい福祉",area:"南部",y:{2025:{dev:36,nai:75,rT:0.21,rI:0.53}}},
+{id:"tomishiro-f",name:"豊見城",dept:"普通コース",area:"南部",y:{2025:{dev:44,nai:103,rT:2.29,rI:1.20}}},
+{id:"tomishiro-t",name:"豊見城",dept:"特進コース",area:"南部",y:{2025:{dev:45,nai:105,rT:0.50,rI:0.88}}},
+{id:"tomiminami-f",name:"豊見城南",dept:"普通コース",area:"南部",y:{2025:{dev:38,nai:85,rT:0.33,rI:0.96}}},
+{id:"tomiminami-t",name:"豊見城南",dept:"特進コース",area:"南部",y:{2025:{dev:40,nai:88,rT:0.00,rI:0.40}}},
+{id:"haebaru-fs",name:"南風原",dept:"普通総合",area:"南部",y:{2025:{dev:37,nai:86,rT:0.60,rI:0.58}}},
+{id:"haebaru-kyodo",name:"南風原",dept:"郷土文化コース",area:"南部",y:{2025:{dev:36,nai:84,rT:1.20,rI:0.83}}},
+{id:"haebaru-biz",name:"南風原",dept:"教養ビジネスコース",area:"南部",y:{2025:{dev:36,nai:83,rT:0.38,rI:0.50}}},
+{id:"nahasho-sho",name:"那覇商業",dept:"商業科",area:"南部",y:{2025:{dev:43,nai:105,rT:1.39,rI:1.17}}},
+{id:"nahasho-joho",name:"那覇商業",dept:"情報処理科",area:"南部",y:{2025:{dev:47,nai:108,rT:1.29,rI:1.05}}},
+{id:"nahasho-kokukei",name:"那覇商業",dept:"国際経済科",area:"南部",y:{2025:{dev:48,nai:118,rT:2.00,rI:1.08}}},
+{id:"nanbusho-ryu",name:"南部商業",dept:"流通クリエイト科",area:"南部",y:{2025:{dev:35,nai:78,rT:0.06,rI:0.58}}},
+{id:"nanbusho-digi",name:"南部商業",dept:"デジタルクリエイト科",area:"南部",y:{2025:{dev:37,nai:82,rT:0.06,rI:0.98}}},
+{id:"nanbusho-office",name:"南部商業",dept:"オフィスクリエイト科",area:"南部",y:{2025:{dev:35,nai:73,rT:0.06,rI:0.70}}},
+{id:"nanbusho-kanko",name:"南部商業",dept:"観光クリエイト科",area:"南部",y:{2025:{dev:35,nai:75,rT:0.22,rI:1.18}}},
+{id:"nahako-kikai",name:"那覇工業",dept:"機械科",area:"南部",y:{2025:{dev:35,nai:70,rT:0.00,rI:0.90}}},
+{id:"nahako-jidosha",name:"那覇工業",dept:"自動車科",area:"南部",y:{2025:{dev:36,nai:80,rT:1.00,rI:1.15}}},
+{id:"nahako-denki",name:"那覇工業",dept:"電気科",area:"南部",y:{2025:{dev:35,nai:70,rT:0.04,rI:0.70}}},
+{id:"nahako-graphic",name:"那覇工業",dept:"グラフィックアーツ科",area:"南部",y:{2025:{dev:37,nai:80,rT:0.50,rI:0.85}}},
+{id:"nahako-fuku",name:"那覇工業",dept:"服飾デザイン科",area:"南部",y:{2025:{dev:38,nai:85,rT:0.25,rI:0.55}}},
+{id:"okiko-johoden",name:"沖縄工業",dept:"情報電子科",area:"南部",y:{2025:{dev:47,nai:103,rT:0.54,rI:0.86}}},
+{id:"okiko-denshiki",name:"沖縄工業",dept:"電子機械科",area:"南部",y:{2025:{dev:45,nai:100,rT:0.42,rI:1.04}}},
+{id:"okiko-kenchiku",name:"沖縄工業",dept:"建築科",area:"南部",y:{2025:{dev:45,nai:102,rT:0.92,rI:1.18}}},
+{id:"okiko-doboku",name:"沖縄工業",dept:"土木科",area:"南部",y:{2025:{dev:39,nai:90,rT:0.00,rI:1.28}}},
+{id:"okiko-kagaku",name:"沖縄工業",dept:"工業化学科",area:"南部",y:{2025:{dev:39,nai:85,rT:0.13,rI:0.50}}},
+{id:"okiko-seikatsu",name:"沖縄工業",dept:"生活情報科",area:"南部",y:{2025:{dev:39,nai:99,rT:0.67,rI:1.10}}},
+{id:"kyuyo-bunri",name:"球陽",dept:"文理探究科",area:"中部",y:{2025:{dev:62,nai:143,rT:1.71,rI:0.93}}},
+{id:"futenma-f",name:"普天間",dept:"普通科",area:"中部",y:{2025:{dev:59,nai:139,rT:2.65,rI:1.09}}},
+{id:"ginowan-f",name:"宜野湾",dept:"普通コース",area:"中部",y:{2025:{dev:48,nai:122,rT:1.69,rI:1.23}}},
+{id:"ginowan-joho",name:"宜野湾",dept:"情報処理コース",area:"中部",y:{2025:{dev:45,nai:110,rT:1.63,rI:1.43}}},
+{id:"ginowan-spo",name:"宜野湾",dept:"スポーツ・健康コース",area:"中部",y:{2025:{dev:40,nai:95,rT:2.40,rI:1.05}}},
+{id:"urasoe-f",name:"浦添",dept:"普通科",area:"中部",y:{2025:{dev:54,nai:123,rT:3.21,rI:0.99}}},
+{id:"yomei-sogo",name:"陽明",dept:"総合学科",area:"中部",y:{2025:{dev:42,nai:96,rT:0.75,rI:1.15}}},
+{id:"nishihara-kenko",name:"西原",dept:"健康科学コース",area:"中部",y:{2025:{dev:38,nai:90,rT:1.70,rI:0.85}}},
+{id:"nishihara-bunri",name:"西原",dept:"文理コース",area:"中部",y:{2025:{dev:44,nai:100,rT:1.18,rI:1.08}}},
+{id:"nishihara-toku",name:"西原",dept:"特別進学コース",area:"中部",y:{2025:{dev:46,nai:107,rT:0.80,rI:0.95}}},
+{id:"kitanaka-f",name:"北中城",dept:"普通科",area:"中部",y:{2025:{dev:42,nai:102,rT:0.23,rI:0.98}}},
+{id:"chatan-f",name:"北谷",dept:"普通科",area:"中部",y:{2025:{dev:36,nai:85,rT:0.45,rI:0.54}}},
+{id:"urasho-kigyo",name:"浦添商業",dept:"企業システム科",area:"中部",y:{2025:{dev:36,nai:90,rT:0.06,rI:0.64}}},
+{id:"urasho-it",name:"浦添商業",dept:"ITビジネス科",area:"中部",y:{2025:{dev:37,nai:89,rT:0.00,rI:0.35}}},
+{id:"urasho-kanko",name:"浦添商業",dept:"国際観光科",area:"中部",y:{2025:{dev:38,nai:98,rT:0.06,rI:0.45}}},
+{id:"chubusho-sogo",name:"中部商業",dept:"総合ビジネス科",area:"中部",y:{2025:{dev:36,nai:82,rT:0.08,rI:0.74}}},
+{id:"chubusho-joho",name:"中部商業",dept:"情報ビジネス科",area:"中部",y:{2025:{dev:36,nai:80,rT:0.00,rI:0.40}}},
+{id:"chubusho-kokusai",name:"中部商業",dept:"国際ビジネス科",area:"中部",y:{2025:{dev:37,nai:86,rT:0.44,rI:0.65}}},
+{id:"chubusho-spo",name:"中部商業",dept:"生涯スポーツ科",area:"中部",y:{2025:{dev:36,nai:88,rT:0.55,rI:0.40}}},
+{id:"urako-chori",name:"浦添工業",dept:"調理科",area:"中部",y:{2025:{dev:42,nai:108,rT:0.31,rI:0.88}}},
+{id:"urako-design",name:"浦添工業",dept:"デザイン科",area:"中部",y:{2025:{dev:41,nai:93,rT:0.31,rI:0.94}}},
+{id:"urako-johogi",name:"浦添工業",dept:"情報技術科",area:"中部",y:{2025:{dev:39,nai:80,rT:0.56,rI:1.05}}},
+{id:"urako-interior",name:"浦添工業",dept:"インテリア科",area:"中部",y:{2025:{dev:39,nai:80,rT:0.06,rI:0.54}}},
+{id:"urako-kenchiku",name:"浦添工業",dept:"建築科",area:"中部",y:{2025:{dev:37,nai:83,rT:0.56,rI:1.05}}},
+{id:"hentona-f",name:"辺土名",dept:"普通科",area:"北部",y:{2025:{dev:36,nai:80,rT:null,rI:null,dummy:true}}},
+{id:"hentona-env",name:"辺土名",dept:"自然環境科",area:"北部",y:{2025:{dev:37,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"hokuzan-f",name:"北山",dept:"普通科",area:"北部",y:{2025:{dev:38,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"hokuzan-ri",name:"北山",dept:"理数科",area:"北部",y:{2025:{dev:43,nai:100,rT:null,rI:null,dummy:true}}},
+{id:"motobu-sj",name:"本部",dept:"進学・情報コース",area:"北部",y:{2025:{dev:37,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"motobu-sf",name:"本部",dept:"スポーツ・保育福祉コース",area:"北部",y:{2025:{dev:36,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"nago-f",name:"名護",dept:"普通科",area:"北部",y:{2025:{dev:46,nai:110,rT:null,rI:null,dummy:true}}},
+{id:"nago-fr",name:"名護",dept:"フロンティア科",area:"北部",y:{2025:{dev:52,nai:124,rT:null,rI:null,dummy:true}}},
+{id:"ginoza-f",name:"宜野座",dept:"普通科",area:"北部",y:{2025:{dev:38,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"hokuno-na",name:"北部農林",dept:"熱帯農業科",area:"北部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"hokuno-ek",name:"北部農林",dept:"園芸工学科",area:"北部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"hokuno-sk",name:"北部農林",dept:"食品科学科",area:"北部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"hokuno-rr",name:"北部農林",dept:"林業緑地科",area:"北部",y:{2025:{dev:35,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"hokuno-sg",name:"北部農林",dept:"生活科学科",area:"北部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-km",name:"名護商工",dept:"工業技術科（機械）",area:"北部",y:{2025:{dev:37,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-kd",name:"名護商工",dept:"工業技術科（電気）",area:"北部",y:{2025:{dev:37,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-ke",name:"名護商工",dept:"建築科",area:"北部",y:{2025:{dev:37,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-sj",name:"名護商工",dept:"総合情報科",area:"北部",y:{2025:{dev:39,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-sh",name:"名護商工",dept:"商業科",area:"北部",y:{2025:{dev:39,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"nagosho-cs",name:"名護商工",dept:"地域産業科",area:"北部",y:{2025:{dev:36,nai:80,rT:null,rI:null,dummy:true}}},
+{id:"ishikawa-f",name:"石川",dept:"普通科",area:"中部",y:{2025:{dev:39,nai:90,rT:null,rI:null,dummy:true}}},
+{id:"maehara-br",name:"前原",dept:"文理コース",area:"中部",y:{2025:{dev:44,nai:104,rT:null,rI:null,dummy:true}}},
+{id:"maehara-en",name:"前原",dept:"英語コース",area:"中部",y:{2025:{dev:45,nai:108,rT:null,rI:null,dummy:true}}},
+{id:"maehara-sp",name:"前原",dept:"総合スポーツコース",area:"中部",y:{2025:{dev:40,nai:92,rT:null,rI:null,dummy:true}}},
+{id:"yokatsu-f",name:"与勝",dept:"普通科",area:"中部",y:{2025:{dev:40,nai:92,rT:null,rI:null,dummy:true}}},
+{id:"yomitan-f",name:"読谷",dept:"普通科",area:"中部",y:{2025:{dev:45,nai:106,rT:null,rI:null,dummy:true}}},
+{id:"kadena-dd",name:"嘉手納",dept:"総合学科（ドリームデザイン）",area:"中部",y:{2025:{dev:37,nai:86,rT:null,rI:null,dummy:true}}},
+{id:"kadena-ca",name:"嘉手納",dept:"総合学科（キャリアアップ）",area:"中部",y:{2025:{dev:37,nai:86,rT:null,rI:null,dummy:true}}},
+{id:"gushikawa-f",name:"具志川",dept:"普通科",area:"中部",y:{2025:{dev:44,nai:104,rT:null,rI:null,dummy:true}}},
+{id:"misato-f",name:"美里",dept:"普通科",area:"中部",y:{2025:{dev:42,nai:98,rT:null,rI:null,dummy:true}}},
+{id:"koza-f",name:"コザ",dept:"普通科",area:"中部",y:{2025:{dev:52,nai:124,rT:null,rI:null,dummy:true}}},
+{id:"chubuno-nr",name:"中部農林",dept:"熱帯資源科",area:"中部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"chubuno-ek",name:"中部農林",dept:"園芸科学科",area:"中部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"chubuno-sk",name:"中部農林",dept:"食品科学科",area:"中部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"chubuno-zo",name:"中部農林",dept:"造園科",area:"中部",y:{2025:{dev:35,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"chubuno-fk",name:"中部農林",dept:"福祉科",area:"中部",y:{2025:{dev:36,nai:79,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-ms",name:"美来工科",dept:"機械システム科",area:"中部",y:{2025:{dev:40,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-jd",name:"美来工科",dept:"自動車工学科",area:"中部",y:{2025:{dev:39,nai:86,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-es",name:"美来工科",dept:"電子システム科",area:"中部",y:{2025:{dev:41,nai:92,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-dk",name:"美来工科",dept:"土木工学科",area:"中部",y:{2025:{dev:38,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-it",name:"美来工科",dept:"ITシステム科",area:"中部",y:{2025:{dev:42,nai:96,rT:null,rI:null,dummy:true}}},
+{id:"miraikoka-cd",name:"美来工科",dept:"コンピュータデザイン科",area:"中部",y:{2025:{dev:41,nai:92,rT:null,rI:null,dummy:true}}},
+{id:"misatoko-ki",name:"美里工業",dept:"機械科",area:"中部",y:{2025:{dev:38,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"misatoko-de",name:"美里工業",dept:"電気科",area:"中部",y:{2025:{dev:38,nai:86,rT:null,rI:null,dummy:true}}},
+{id:"misatoko-ke",name:"美里工業",dept:"建築科",area:"中部",y:{2025:{dev:38,nai:85,rT:null,rI:null,dummy:true}}},
+{id:"misatoko-se",name:"美里工業",dept:"設備工業科",area:"中部",y:{2025:{dev:37,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"misatoko-ch",name:"美里工業",dept:"調理科",area:"中部",y:{2025:{dev:39,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"gushisho-rk",name:"具志川商業",dept:"リゾート観光科",area:"中部",y:{2025:{dev:38,nai:88,rT:null,rI:null,dummy:true}}},
+{id:"gushisho-ob",name:"具志川商業",dept:"オフィスビジネス科",area:"中部",y:{2025:{dev:38,nai:86,rT:null,rI:null,dummy:true}}},
+{id:"gushisho-bm",name:"具志川商業",dept:"ビジネスマルチメディア科",area:"中部",y:{2025:{dev:38,nai:87,rT:null,rI:null,dummy:true}}},
+{id:"gushisho-js",name:"具志川商業",dept:"情報システム科",area:"中部",y:{2025:{dev:40,nai:92,rT:null,rI:null,dummy:true}}},
+{id:"koyo-f",name:"向陽",dept:"普通科",area:"南部",y:{2025:{dev:56,nai:132,rT:null,rI:null,dummy:true}}},
+{id:"koyo-ri",name:"向陽",dept:"理数科",area:"南部",y:{2025:{dev:58,nai:138,rT:null,rI:null,dummy:true}}},
+{id:"koyo-kb",name:"向陽",dept:"国際文科",area:"南部",y:{2025:{dev:57,nai:135,rT:null,rI:null,dummy:true}}},
+{id:"chinen-f",name:"知念",dept:"普通科",area:"南部",y:{2025:{dev:50,nai:119,rT:null,rI:null,dummy:true}}},
+{id:"itoman-f",name:"糸満",dept:"普通科",area:"南部",y:{2025:{dev:45,nai:107,rT:null,rI:null,dummy:true}}},
+{id:"kumejima-f",name:"久米島",dept:"普通科",area:"南部",y:{2025:{dev:37,nai:84,rT:null,rI:null,dummy:true}}},
+{id:"kumejima-en",name:"久米島",dept:"園芸科",area:"南部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"nanbuno-ss",name:"南部農林",dept:"食料生産科",area:"南部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"nanbuno-sb",name:"南部農林",dept:"生物資源科",area:"南部",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"nanbuno-sk",name:"南部農林",dept:"食品加工科",area:"南部",y:{2025:{dev:36,nai:77,rT:null,rI:null,dummy:true}}},
+{id:"nanbuno-ks",name:"南部農林",dept:"環境創造科",area:"南部",y:{2025:{dev:35,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"nanbuno-sd",name:"南部農林",dept:"生活デザイン科",area:"南部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"nanbuko-ki",name:"南部工業",dept:"機械科",area:"南部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"nanbuko-de",name:"南部工業",dept:"電気科",area:"南部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"nanbuko-kd",name:"南部工業",dept:"建築設備科（建築デザイン）",area:"南部",y:{2025:{dev:36,nai:79,rT:null,rI:null,dummy:true}}},
+{id:"nanbuko-sg",name:"南部工業",dept:"建築設備科（設備工学）",area:"南部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"okisui-kg",name:"沖縄水産",dept:"海洋技術科",area:"南部",y:{2025:{dev:35,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"okisui-ks",name:"沖縄水産",dept:"海洋サイエンス科",area:"南部",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"okisui-sg",name:"沖縄水産",dept:"総合学科",area:"南部",y:{2025:{dev:37,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"miyako-f",name:"宮古",dept:"普通科",area:"宮古・八重山",y:{2025:{dev:47,nai:112,rT:null,rI:null,dummy:true}}},
+{id:"miyako-br",name:"宮古",dept:"文理探究科",area:"宮古・八重山",y:{2025:{dev:53,nai:126,rT:null,rI:null,dummy:true}}},
+{id:"yaeyama-f",name:"八重山",dept:"普通科",area:"宮古・八重山",y:{2025:{dev:49,nai:116,rT:null,rI:null,dummy:true}}},
+{id:"yaeno-af",name:"八重山農林",dept:"アグリフード科",area:"宮古・八重山",y:{2025:{dev:34,nai:74,rT:null,rI:null,dummy:true}}},
+{id:"yaeno-gl",name:"八重山農林",dept:"グリーンライフ科",area:"宮古・八重山",y:{2025:{dev:34,nai:74,rT:null,rI:null,dummy:true}}},
+{id:"yaeno-fp",name:"八重山農林",dept:"フードプロデュース科",area:"宮古・八重山",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"yaeno-ls",name:"八重山農林",dept:"ライフスキル科",area:"宮古・八重山",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"miyakoko-jm",name:"宮古工業",dept:"自動車機械システム科",area:"宮古・八重山",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+{id:"miyakoko-dj",name:"宮古工業",dept:"電気情報科",area:"宮古・八重山",y:{2025:{dev:36,nai:79,rT:null,rI:null,dummy:true}}},
+{id:"miyakoko-sj",name:"宮古工業",dept:"生活情報科",area:"宮古・八重山",y:{2025:{dev:36,nai:80,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-km",name:"八重山商工",dept:"機械電気科（機械）",area:"宮古・八重山",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-kd",name:"八重山商工",dept:"機械電気科（電気）",area:"宮古・八重山",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-jg",name:"八重山商工",dept:"情報技術科",area:"宮古・八重山",y:{2025:{dev:37,nai:82,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-ka",name:"八重山商工",dept:"商業科（会計システム）",area:"宮古・八重山",y:{2025:{dev:36,nai:80,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-jb",name:"八重山商工",dept:"商業科（情報ビジネス）",area:"宮古・八重山",y:{2025:{dev:36,nai:80,rT:null,rI:null,dummy:true}}},
+{id:"yaesho-kk",name:"八重山商工",dept:"商業科（観光）",area:"宮古・八重山",y:{2025:{dev:36,nai:79,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-sb",name:"宮古総合実業",dept:"生物生産科",area:"宮古・八重山",y:{2025:{dev:34,nai:74,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-fc",name:"宮古総合実業",dept:"食と環境科（フードクリエイト）",area:"宮古・八重山",y:{2025:{dev:35,nai:76,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-kc",name:"宮古総合実業",dept:"食と環境科（環境クリエイト）",area:"宮古・八重山",y:{2025:{dev:34,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-sf",name:"宮古総合実業",dept:"生活福祉科",area:"宮古・八重山",y:{2025:{dev:35,nai:77,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-kk",name:"宮古総合実業",dept:"海洋科学科",area:"宮古・八重山",y:{2025:{dev:34,nai:75,rT:null,rI:null,dummy:true}}},
+{id:"miyasou-sh",name:"宮古総合実業",dept:"商業科",area:"宮古・八重山",y:{2025:{dev:36,nai:78,rT:null,rI:null,dummy:true}}},
+];
+
+const SUBS=["国語","社会","数学","理科","英語","音楽","美術","保健体育","技術家庭"];
+const ARTS=["音楽","美術","保健体育","技術家庭"];
+const cur=s=>s.y[Math.max(...Object.keys(s.y).map(Number))];
+
+/* 判定ロジック */
+function erf(x){const sg=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return sg*y}
+const ncdf=z=>0.5*(1+erf(z/Math.SQRT2));
+const Z80=0.8416212,SIGMA=4/Z80;
+function passProb(m){return Math.max(2,Math.min(98,Math.round(100*ncdf(m/SIGMA+Z80))))}
+function score2dev(s){return Math.max(20,Math.min(80,Math.round(20+(s/300)*60)))}
+
+const GRADE_DEF=[
+  {r:"A",label:"A判定",sub:"合格圏",
+   bg:"#fafafa",ring:"#0a0a0a",
+   icon:"",
+   msg:"合格ラインに到達しています。この位置をキープできれば、本番でも十分に戦える水準です。特色選抜の準備も視野に入ります。"},
+  {r:"B",label:"B判定",sub:"合格ラインまであと一歩",
+   bg:"#fafafa",ring:"#404040",
+   icon:"",
+   msg:"合格ラインまであと一歩の位置です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技の評定を上げることが内申アップの近道になります。"},
+  {r:"C",label:"C判定",sub:"ボーダーライン",
+   bg:"#fafafa",ring:"#737373",
+   icon:"",
+   msg:"ボーダーライン上に位置しています。当日の得点力によって結果が左右される段階です。特色選抜・一般選抜・2次募集と、最大3回の受験機会がある制度を活用してください。"},
+  {r:"D",label:"D判定",sub:"挑戦圏",
+   bg:"#fafafa",ring:"#a3a3a3",
+   icon:"",
+   msg:"現時点では基準まで距離があります。内申点・偏差値のいずれも、入試本番まで改善が可能な数値です。差の内訳を確認し、優先して取り組む項目を決めましょう。"},
+  {r:"E",label:"E判定",sub:"要対策",
+   bg:"#fafafa",ring:"#c7c7c7",
+   icon:"",
+   msg:"現時点では基準との差が大きい状態です。まず内申点・偏差値のどちらから改善するかを絞り込みましょう。志望校の選択肢を広げて検討することもおすすめします。"},
+];
+const RANK={A:4,B:3,C:2,D:1,E:0};
+const DEV_PER_NAISHIN=2.4; /* 内申2.4点 ≒ 偏差値1相当の換算係数 */
+function gInfo(r){return GRADE_DEF.find(g=>g.r===r)||GRADE_DEF[4]}
+function nGrade(nai,base){if(nai===null)return null;const d=nai-base;if(d>=0)return"A";if(d>=-6)return"B";if(d>=-12)return"C";if(d>=-18)return"D";return"E"}
+function dGrade(dev,base){if(dev===null)return null;const d=dev-base;if(d>=0)return"A";if(d>=-3)return"B";if(d>=-6)return"C";if(d>=-9)return"D";return"E"}
+function oGrade(ng,dg){if(!ng&&!dg)return null;if(!ng)return dg;if(!dg)return ng;return RANK[ng]<=RANK[dg]?ng:dg}
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let currentArea="南部";
+let selectedId=null;
+let gradeYear=1;
+let grades={1:{},2:{},3:{}};
+[1,2,3].forEach(y=>SUBS.forEach(s=>grades[y][s]=0));
+let naishinMode="direct";
+let scoreMode="dev";
+
+/* ================================================================
+   INIT
+   ================================================================ */
+
+
+/* ================================================================
+   SCHOOL CHIPS
+   ================================================================ */
+function switchArea(area,btn){
+  currentArea=area;
+    document.querySelectorAll(".area-tab").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  renderChips();
+}
+function renderChips(){
+  const wrap=document.getElementById("schoolChips");
+  wrap.innerHTML="";
+  SCHOOLS.filter(s=>s.area===currentArea).forEach(s=>{
+    const b=document.createElement("button");
+    b.className="school-chip"+(s.id===selectedId?" on":"");
+    b.textContent=s.name+(s.dept.includes("普通")?"":(" "+s.dept));
+    if(cur(s).dummy) b.textContent+="（参考）";
+    b.onclick=()=>selectSchool(s.id);
+    wrap.appendChild(b);
+  });
+}
+function selectSchool(id){
+  selectedId=id;
+    vibrate(15);
+  renderChips();
+  const s=SCHOOLS.find(x=>x.id===id);
+  const disp=document.getElementById("selectedDisplay");
+  document.getElementById("selectedName").textContent=s.name+"高校 "+s.dept+(cur(s).dummy?"（参考値）":"");
+  disp.classList.remove("show");
+  void disp.offsetWidth; /* リフロー強制でアニメーションを再生させる */
+  disp.classList.add("show");
+  updateProgressDots();
+}
+renderChips();
+
+/* ================================================================
+   NAISHIN
+   ================================================================ */
+function switchNaishin(mode){
+  naishinMode=mode;
+    document.getElementById("toggleDirect").classList.toggle("on",mode==="direct");
+  document.getElementById("toggleCalc").classList.toggle("on",mode==="calc");
+  document.getElementById("panelDirect").style.display=mode==="direct"?"":"none";
+  const pc=document.getElementById("panelCalc");
+  pc.style.display=mode==="calc"?"block":"none";
+  pc.className="grades-panel"+(mode==="calc"?" open":"");
+  if(mode==="calc")renderGrades();
+}
+function switchYear(y){
+  gradeYear=y;
+    document.querySelectorAll(".grade-year-btn").forEach(b=>b.classList.toggle("on",Number(b.dataset.y)===y));
+  renderGrades();
+}
+function renderGrades(){
+  const g=document.getElementById("gradeGrid");g.innerHTML="";
+  SUBS.forEach(sj=>{
+    const art=ARTS.includes(sj);
+    const row=document.createElement("div");row.className="grade-row";
+    const nm=document.createElement("div");nm.className="grade-name"+(art?" art":"");
+    nm.textContent=sj+(art?" ×1.5":"");
+    row.appendChild(nm);
+    const btns=document.createElement("div");btns.className="grade-btns";
+    for(let v=1;v<=5;v++){
+      const b=document.createElement("button");
+      b.className="grade-btn"+(art?" art":"")+(grades[gradeYear][sj]===v?" on":"");
+      b.textContent=v;b.type="button";
+      b.onclick=()=>{
+        grades[gradeYear][sj]=grades[gradeYear][sj]===v?0:v;
+        vibrate(10);
+        calcNaishin();renderGrades();
+      };
+      btns.appendChild(b);
+    }
+    row.appendChild(btns);g.appendChild(row);
+  });
+}
+
+/* 数字カウントアップ演出：現在表示中の値から目標値まで数コマでパラパラ変化させる */
+function animateCountTo(el,target){
+  if(target===null){ el.textContent="—"; return; }
+  const startTxt=el.textContent;
+  const start=isNaN(parseInt(startTxt,10))?0:parseInt(startTxt,10);
+  if(start===target){ el.textContent=target; return; }
+  const dur=380,startTime=performance.now();
+  function step(now){
+    const p=Math.min(1,(now-startTime)/dur);
+    const eased=1-Math.pow(1-p,3);
+    const val=Math.round(start+(target-start)*eased);
+    el.textContent=val;
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
+
+function calcNaishin(){
+  let pts=0,cnt=0,sum=0;
+  [1,2,3].forEach(y=>SUBS.forEach(sj=>{const v=grades[y][sj];if(v>0){pts+=v*(ARTS.includes(sj)?1.5:1);cnt++;sum+=v}}));
+  const conf=cnt?Math.round(pts):null;
+  let proj=null;
+  if(cnt>0){const m=sum/cnt;let p=0;[1,2,3].forEach(y=>SUBS.forEach(sj=>{const v=grades[y][sj];p+=(v>0?v:m)*(ARTS.includes(sj)?1.5:1)}));proj=Math.min(165,Math.round(p));}
+  animateCountTo(document.getElementById("nmConfirmed"),conf);
+  animateCountTo(document.getElementById("nmProjected"),proj);
+  if(conf!==null)document.getElementById("naishinInput").value=conf;
+}
+
+/* ================================================================
+   SCORE MODE
+   ================================================================ */
+function switchScore(mode){
+  scoreMode=mode;
+    document.getElementById("toggleDev").classList.toggle("on",mode==="dev");
+  document.getElementById("toggleScore").classList.toggle("on",mode==="score");
+  document.getElementById("panelDev").style.display=mode==="dev"?"":"none";
+  document.getElementById("panelScore").style.display=mode==="score"?"":"none";
+}
+
+/* ================================================================
+   PROGRESS DOTS（3ステップの進捗を可視化）
+   ================================================================ */
+function updateProgressDots(){
+  const naiFilled=document.getElementById("naishinInput").value!=="" ;
+  const dots=[!!selectedId,naiFilled,true];
+  document.querySelectorAll(".progress-dot").forEach((d,i)=>{
+    d.classList.toggle("filled",!!dots[i]);
+  });
+}
+
+/* ================================================================
+   JUDGE
+   ================================================================ */
+function runJudge(){
+  if(!selectedId){
+    vibrate([30,40,30]);
+    shakeElement(document.getElementById("step1"));
+    alert("志望校を選んでください。");
+    return;
+  }
+  const school=SCHOOLS.find(s=>s.id===selectedId);
+  const d=cur(school);
+  let nai=null;
+  const nr=document.getElementById("naishinInput").value;
+  if(nr!==""){const v=Number(nr);if(!isNaN(v))nai=Math.max(0,Math.min(165,v))}
+  let dev=null;
+  if(scoreMode==="dev"){
+    const dr=document.getElementById("devInput").value;
+    if(dr!==""){const v=Number(dr);if(!isNaN(v))dev=Math.max(20,Math.min(80,v))}
+  }else{
+    const sr=document.getElementById("scoreInput").value;
+    if(sr!==""){const v=Number(sr);if(!isNaN(v))dev=score2dev(v)}
+  }
+  if(nai===null&&dev===null){
+    vibrate([30,40,30]);
+    shakeElement(document.getElementById("step2"));
+    alert("内申点か偏差値（点数）を入力してください。");
+    return;
+  }
+  playJudgeSequence(school,d,nai,dev);
+}
+
+function shakeElement(el){
+  if(!el) return;
+  el.classList.remove("shake-in");
+  void el.offsetWidth;
+  el.classList.add("shake-in");
+}
+
+/* ================================================================
+   判定処理シークエンス：ローディング → カウントダウン → 結果表示
+   ================================================================ */
+function playJudgeSequence(school,d,nai,dev){
+  const btn=document.getElementById("judgeBtn");
+  btn.style.opacity=".5";btn.style.pointerEvents="none";
+
+  const overlay=document.getElementById("loadingOverlay");
+  const resultArea=document.getElementById("resultArea");
+  resultArea.classList.remove("show");resultArea.style.display="none";
+  overlay.classList.add("show");
+  setTimeout(()=>overlay.scrollIntoView({behavior:"smooth",block:"center"}),60);
+
+  const ringFill=document.getElementById("loadingRingFill");
+  const loadingText=document.getElementById("loadingText");
+  const CIRC=2*Math.PI*52;
+  ringFill.style.strokeDasharray=CIRC;
+  ringFill.style.strokeDashoffset=CIRC;
+
+  const messages=["志望校データを照合しています","内申点を分析しています","偏差値を照合しています","過去の合否データと比較しています"];
+  let msgIdx=0;
+  loadingText.textContent=messages[0];
+
+  const totalMs=1200;
+  const startT=performance.now();
+  const msgInterval=setInterval(()=>{
+    msgIdx=(msgIdx+1)%messages.length;
+    loadingText.textContent=messages[msgIdx];
+  },totalMs/messages.length);
+
+  function ringStep(now){
+    const p=Math.min(1,(now-startT)/totalMs);
+    ringFill.style.strokeDashoffset=CIRC*(1-p);
+    if(p<1) requestAnimationFrame(ringStep);
+  }
+  requestAnimationFrame(ringStep);
+
+  setTimeout(()=>{
+    clearInterval(msgInterval);
+    overlay.classList.remove("show");
+    runCountdown(()=>{
+      renderResult(school,d,nai,dev);
+      btn.style.opacity="";btn.style.pointerEvents="";
+    });
+  },totalMs);
+}
+
+/* カウントダウン「3・2・1」演出（控えめ） */
+function runCountdown(onDone){
+  const overlay=document.getElementById("loadingOverlay");
+  overlay.classList.add("show");
+  overlay.innerHTML='<div class="countdown-num" id="countdownNum">3</div><div class="loading-sub">結果を表示します</div>';
+  let n=3;
+  const iv=setInterval(()=>{
+    n--;
+    if(n>=1){
+      const el=document.getElementById("countdownNum");
+      el.textContent=n;
+      el.style.animation="none";void el.offsetWidth;el.style.animation="";
+      vibrate(15);
+    }else{
+      clearInterval(iv);
+      overlay.classList.remove("show");
+      /* オーバーレイのinnerHTMLを元に戻す（次回のローディングに備える） */
+      overlay.innerHTML=`
+        <div class="loading-ring-wrap">
+          <svg class="loading-ring-svg" viewBox="0 0 120 120">
+            <circle class="loading-ring-track" cx="60" cy="60" r="52"/>
+            <circle class="loading-ring-fill" id="loadingRingFill" cx="60" cy="60" r="52"/>
+          </svg>
+        </div>
+        <div class="loading-text" id="loadingText">診断しています</div>
+        <div class="loading-sub">内申点と偏差値を照合しています</div>`;
+      onDone();
+    }
+  },380);
+}
+
+/* ================================================================
+   RESULT
+   ================================================================ */
+function renderResult(school,d,nai,dev){
+  const ra=document.getElementById("resultArea");
+  ra.style.display="block";ra.classList.add("show");
+  setTimeout(()=>ra.scrollIntoView({behavior:"smooth",block:"start"}),80);
+
+  const ng=nai!==null?nGrade(nai,d.nai):null;
+  const dg=dev!==null?dGrade(dev,d.dev):null;
+  const overall=oGrade(ng,dg)||(dev!==null?dg:ng)||"C";
+  const gi=gInfo(overall);
+
+  /* 合格可能性%は入力値と基準の差分(margin)からpassProbで連続計算する。
+     内申差は DEV_PER_NAISHIN で偏差値スケールに換算し、
+     内申・偏差値の両方が入力されていれば平均、片方のみならそちらを採用する。 */
+  const naiMargin=nai!==null&&d.nai!=null?(nai-d.nai)/DEV_PER_NAISHIN:null;
+  const devMargin=dev!==null&&d.dev!=null?(dev-d.dev):null;
+  let margin;
+  if(naiMargin!==null&&devMargin!==null) margin=(naiMargin+devMargin)/2;
+  else if(devMargin!==null) margin=devMargin;
+  else if(naiMargin!==null) margin=naiMargin;
+  else margin=0;
+  const pct=passProb(margin);
+
+  /* 結果をグローバルに保持（シェア機能から参照） */
+  window.__lastResult={school,pct,overall,label:gi.label};
+
+  /* メインカード：ポップ演出付きで表示 */
+  const rm=document.getElementById("resultMain");
+  rm.classList.remove("grade-reveal");
+  void rm.offsetWidth;
+  rm.style.background=gi.bg;
+  rm.style.color="#fff";
+  rm.classList.add("grade-reveal");
+  document.getElementById("rSchoolTag").textContent=school.name+"高校 "+school.dept+(d.dummy?"（参考値）":"");
+  const ring=document.getElementById("rRing");
+  ring.style.borderColor=gi.ring;ring.style.color=gi.ring;
+  ring.classList.remove("ring-pulse");
+  document.getElementById("rLetter").textContent=gi.r;
+  document.getElementById("rLabel").textContent=gi.label;
+  document.getElementById("rSub").textContent=gi.sub;
+
+  /* 効果音・振動：判定ランクに応じて演出強度を変える */
+    if(overall==="A") vibrate([0,60,40,60,40,90]);
+  else if(overall==="B") vibrate([0,50,30,70]);
+  else vibrate(40);
+  setTimeout(()=>ring.classList.add("ring-pulse"),80);
+
+  /* パーセント：0からカウントアップ */
+  const pctNumEl=document.getElementById("rPctNum");
+  pctNumEl.textContent="0%";
+  const pctBar=document.getElementById("rPctBar");
+  pctBar.style.width="0%";
+  pctBar.classList.add("shimmer");
+  setTimeout(()=>{
+    pctBar.style.width=pct+"%";
+    animateCountPct(pctNumEl,pct);
+    setTimeout(()=>pctBar.classList.remove("shimmer"),1300);
+  },250);
+
+  /* breakdown：色はGRADE_DEFのring値を単一ソースとして使う（二重管理を避ける） */
+  const formatGrade=(g)=>g?`<span style="color:${gInfo(g).ring};font-weight:700">${g}判定</span>`:`<span style="color:var(--ink-faint)">—</span>`;
+  document.getElementById("bdNai").innerHTML=ng?formatGrade(ng):"—";
+  document.getElementById("bdDev").innerHTML=dg?formatGrade(dg):"—";
+  document.getElementById("bdOverall").innerHTML=formatGrade(overall);
+
+  const naiDiff=nai!==null&&d.nai!=null?(nai>=d.nai?{t:"クリア",ok:true}:{t:`あと${Math.round(d.nai-nai)}点`,ok:false}):null;
+  const devDiff=dev!==null&&d.dev!=null?(dev>=d.dev?{t:"クリア",ok:true}:{t:`あと${Math.round(d.dev-dev)}`,ok:false}):null;
+  const bd=document.getElementById("bdNaiDiff");
+  if(naiDiff){bd.className="breakdown-diff "+(naiDiff.ok?"diff-ok":"diff-ng");bd.textContent=naiDiff.t}else{bd.textContent=""}
+  const bd2=document.getElementById("bdDevDiff");
+  if(devDiff){bd2.className="breakdown-diff "+(devDiff.ok?"diff-ok":"diff-ng");bd2.textContent=devDiff.t}else{bd2.textContent=""}
+
+  /* gap chips */
+  const chips=document.getElementById("gapChips");chips.innerHTML="";
+  if(nai!==null&&d.nai!=null){
+    if(nai>=d.nai){chips.innerHTML+=`<span class="gap-chip gc-ok">内申点：基準クリア（${nai}／${d.nai}）</span>`}
+    else{chips.innerHTML+=`<span class="gap-chip gc-ng">内申点：あと${Math.round(d.nai-nai)}点でA判定ライン</span>`}
+  }
+  if(dev!==null&&d.dev!=null){
+    if(dev>=d.dev){chips.innerHTML+=`<span class="gap-chip gc-ok">偏差値：基準クリア（${dev}／${d.dev}）</span>`}
+    else{chips.innerHTML+=`<span class="gap-chip gc-ng">偏差値：あと${Math.round(d.dev-dev)}でA判定ライン</span>`}
+  }
+
+  /* アドバイス */
+  let advice=gi.msg;
+  if(d.rT!=null&&d.rT>=2)advice+=`なお、特色選抜の倍率は${d.rT.toFixed(2)}倍と高めのため、一般選抜の準備も並行して進めてください。`;
+  if(d.rI!=null&&d.rI<1)advice+=`一般選抜は${d.rI.toFixed(2)}倍（定員割れ）でした。`;
+  if(d.dummy)advice="この学校のデータは追跡調査未収集のため参考値です。"+advice;
+  document.getElementById("adviceText").textContent=advice;
+
+  /* コピーボタンの状態をリセット（新しい判定のたびに） */
+  const copyBtn=document.getElementById("copyBtn");
+  if(copyBtn){copyBtn.classList.remove("copied");document.getElementById("copyBtnText").textContent="コピー"}
+
+  /* nearby */
+  renderNearby(school,nai,dev);
+}
+
+/* パーセント専用カウントアップ（%記号付き） */
+function animateCountPct(el,target){
+  const dur=900,startTime=performance.now();
+  function step(now){
+    const p=Math.min(1,(now-startTime)/dur);
+    const eased=1-Math.pow(1-p,4);
+    const val=Math.round(target*eased);
+    el.textContent=val+"%";
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=target+"%";
+  }
+  requestAnimationFrame(step);
+}
+
+/* ================================================================
+   SHARE
+   ================================================================ */
+function shareResult(kind){
+  const r=window.__lastResult;
+  if(!r){return}
+  const text=`【沖縄県立高校入試 合格判定】\n${r.school.name}高校 ${r.school.dept}\n判定：${r.label}（合格可能性 ${r.pct}%の目安）\n\n沖縄県立高校入試 合格判定シミュレーターで診断してみましょう`;
+  const url="https://hantei.okinawa-nyushi.jp/";
+
+  if(kind==="line"){
+    window.open("https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text),"_blank","noopener");
+  }else if(kind==="x"){
+    window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank","noopener");
+  }else if(kind==="copy"){
+    const full=text+"\n"+url;
+    const doneUI=()=>{
+      vibrate(15);
+      const btn=document.getElementById("copyBtn");
+      const btnText=document.getElementById("copyBtnText");
+      btn.classList.add("copied");
+      btnText.textContent="コピーしました";
+      setTimeout(()=>{btn.classList.remove("copied");btnText.textContent="コピー"},2200);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(full).then(doneUI).catch(()=>{
+        window.prompt("コピーしてください:",full);
+      });
+    }else{
+      window.prompt("コピーしてください:",full);
+    }
+  }
+}
+
+function renderNearby(school,nai,dev){
+  const wrap=document.getElementById("nearbyWrap");
+  const list=document.getElementById("nearbyList");list.innerHTML="";
+  const ranked=SCHOOLS.filter(s=>s.id!==school.id).map(s=>{
+    const d2=cur(s);
+    const dd=dev!=null&&d2.dev!=null?Math.abs(dev-d2.dev):null;
+    const nd=nai!=null&&d2.nai!=null?Math.abs(nai-d2.nai)/DEV_PER_NAISHIN:null;
+    const dist=dd!=null?dd:(nd!=null?nd:999);
+    return{s,dist};
+  }).sort((a,b)=>a.dist-b.dist).slice(0,5);
+  if(!ranked.length){wrap.style.display="none";return}
+  wrap.style.display="";
+  ranked.forEach(({s})=>{
+    const d2=cur(s);
+    const ng2=nai!=null?nGrade(nai,d2.nai):null;
+    const dg2=dev!=null?dGrade(dev,d2.dev):null;
+    const g2=oGrade(ng2,dg2)||dg2||ng2||"C";
+    const gi2=gInfo(g2);
+    const item=document.createElement("div");item.className="nearby-item";
+    item.onclick=()=>selectAndJudge(s.id);
+    item.innerHTML=`<div class="nearby-badge" style="color:${gi2.ring};border-color:${gi2.ring}">${g2}</div><div class="nearby-txt"><div class="nearby-school">${s.name}高校</div><div class="nearby-dept">${s.dept}</div></div><div class="nearby-arrow">→</div>`;
+    list.appendChild(item);
+  });
+}
+function selectAndJudge(id){
+  selectedId=id;
+  vibrate(15);
+  renderChips();
+  const s=SCHOOLS.find(x=>x.id===id);
+  document.getElementById("selectedName").textContent=s.name+"高校 "+s.dept;
+  document.getElementById("selectedDisplay").classList.add("show");
+  currentArea=s.area;
+  document.querySelectorAll(".area-tab").forEach(b=>{
+    b.classList.toggle("on",b.dataset.area===s.area);
+  });
+  renderChips();
+  runJudge();
+}
+
+/* ================================================================
+   GLOBAL INIT
+   ================================================================ */
+initScrollReveal();
+
+/* 内申点の直接入力にも進捗ドット更新を紐づける */
+document.getElementById("naishinInput").addEventListener("input",updateProgressDots);
+</script>
+</body>
+</html>
