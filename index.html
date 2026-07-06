@@ -74,8 +74,7 @@ body{
   display:flex;align-items:center;
   position:sticky;top:0;z-index:100;
 }
-.hd-logo{font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.01em}
-.hd-logo small{display:block;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:1px}
+.hd-logo{font-size:14px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em}
 
 /* ============================
    HERO
@@ -619,8 +618,7 @@ footer{
 <!-- HEADER -->
 <header class="hd">
   <div class="hd-logo">
-    沖縄県立高校入試<br>
-    <small>合格判定シミュレーター</small>
+    沖縄県立高校 合格判定シミュレーター
   </div>
 </header>
 
@@ -1064,33 +1062,75 @@ function passProb(m){return Math.max(2,Math.min(98,Math.round(100*ncdf(m/SIGMA+Z
 function score2dev(s){return Math.max(20,Math.min(80,Math.round(20+(s/300)*60)))}
 
 const GRADE_DEF=[
-  {r:"A",label:"A判定",sub:"合格圏",
-   bg:"#fafafa",ring:"#0a0a0a",
-   icon:"",
-   msg:"合格ラインに到達しています。この位置をキープできれば、本番でも十分に戦える水準です。特色選抜の準備も視野に入ります。"},
-  {r:"B",label:"B判定",sub:"合格ラインまであと一歩",
-   bg:"#fafafa",ring:"#404040",
-   icon:"",
-   msg:"合格ラインまであと一歩の位置です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技の評定を上げることが内申アップの近道になります。"},
-  {r:"C",label:"C判定",sub:"ボーダーライン",
-   bg:"#fafafa",ring:"#737373",
-   icon:"",
-   msg:"ボーダーライン上に位置しています。当日の得点力によって結果が左右される段階です。特色選抜・一般選抜・2次募集と、最大3回の受験機会がある制度を活用してください。"},
-  {r:"D",label:"D判定",sub:"挑戦圏",
-   bg:"#fafafa",ring:"#a3a3a3",
-   icon:"",
-   msg:"現時点では基準まで距離があります。内申点・偏差値のいずれも、入試本番まで改善が可能な数値です。差の内訳を確認し、優先して取り組む項目を決めましょう。"},
-  {r:"E",label:"E判定",sub:"要対策",
-   bg:"#fafafa",ring:"#c7c7c7",
-   icon:"",
-   msg:"現時点では基準との差が大きい状態です。まず内申点・偏差値のどちらから改善するかを絞り込みましょう。志望校の選択肢を広げて検討することもおすすめします。"},
+  {r:"A",label:"A判定",sub:"合格圏",bg:"#fafafa",ring:"#0a0a0a",icon:""},
+  {r:"B",label:"B判定",sub:"合格ラインまであと一歩",bg:"#fafafa",ring:"#404040",icon:""},
+  {r:"C",label:"C判定",sub:"ボーダーライン",bg:"#fafafa",ring:"#737373",icon:""},
+  {r:"D",label:"D判定",sub:"挑戦圏",bg:"#fafafa",ring:"#a3a3a3",icon:""},
+  {r:"E",label:"E判定",sub:"要対策",bg:"#fafafa",ring:"#c7c7c7",icon:""},
 ];
 const RANK={A:4,B:3,C:2,D:1,E:0};
-const DEV_PER_NAISHIN=2.4; /* 内申2.4点 ≒ 偏差値1相当の換算係数 */
+const DEV_PER_NAISHIN=2.4;
 function gInfo(r){return GRADE_DEF.find(g=>g.r===r)||GRADE_DEF[4]}
 function nGrade(nai,base){if(nai===null)return null;const d=nai-base;if(d>=0)return"A";if(d>=-6)return"B";if(d>=-12)return"C";if(d>=-18)return"D";return"E"}
 function dGrade(dev,base){if(dev===null)return null;const d=dev-base;if(d>=0)return"A";if(d>=-3)return"B";if(d>=-6)return"C";if(d>=-9)return"D";return"E"}
 function oGrade(ng,dg){if(!ng&&!dg)return null;if(!ng)return dg;if(!dg)return ng;return RANK[ng]<=RANK[dg]?ng:dg}
+
+/* ================================================================
+   状況別アドバイス（内申×学力の組み合わせ分岐）
+   ng/dg : 判定ランク文字 or null
+   naiGap: nai - d.nai（正=超過, 負=不足）
+   devGap: dev - d.dev（正=超過, 負=不足）
+   ================================================================ */
+function buildAdvice(ng,dg,naiGap,devGap){
+  const nr=ng?RANK[ng]:null;
+  const dr=dg?RANK[dg]:null;
+  const nOk=nr===4,dOk=dr===4;
+
+  if(nr!==null&&dr!==null){
+    if(nOk&&dOk)
+      return"内申も学力も基準をクリアしています。あとはこの状態をキープするだけ。テストで崩れないこと、実技教科（音楽・美術・保健体育・技術家庭）の評定を落とさないことだけ意識して、自信を持って本番に臨んでください。";
+    if(nOk&&dr>=2)
+      return"内申点は基準を超えています。あとは当日の得点力が鍵です。内申という武器があるぶん、学力で多少ビハインドがあっても十分逆転できる位置にいます。模試の点数をもう一段上げることだけに集中しましょう。";
+    if(nOk&&dr<=1)
+      return"内申点は十分に持っています。ただ、当日の得点力が現時点での課題です。内申があるぶん学力一本に集中できる状況とも言えます。まず模試や過去問で弱い教科を特定して、そこから崩していきましょう。";
+    if(dOk&&nr>=2)
+      return"学力は基準を超えています。内申点があと少し届いていない状況です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技の評定を1つ上げるだけで一気に差が縮まります。提出物・授業態度も内申に直結します。";
+    if(dOk&&nr<=1)
+      return"学力は十分な水準に達しています。内申点の差が現時点での課題です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技を上げることが最も効率的な内申アップの手段です。提出物・授業参加の姿勢も見直してみてください。";
+    if(nr===3&&dr===3)
+      return"内申・学力のどちらもあと一歩の位置に揃っています。バランスは悪くない。どちらかが少し伸びれば一気に射程圏内に入ります。実技教科の評定を上げるか、模試で苦手教科を1つ潰すか、やりやすい方から手をつけてみてください。";
+    if(nr===3&&dr<=2)
+      return"内申点はある程度確保できています。学力面が現時点での課題です。当日の得点をどこまで上げられるかが合否の分かれ目になります。模試を定期的に受けて、自分の弱点を数字で把握するところから始めましょう。";
+    if(nr<=2&&dr===3)
+      return"学力は手が届く位置にあります。内申点をもう少し上げられると、判定がぐっと安定します。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技1教科の評定アップが内申全体に大きく効きます。";
+    if(nr<=2&&dr<=2){
+      const nAbs=naiGap!==null?Math.abs(naiGap):0;
+      const dAbs=devGap!==null?Math.abs(devGap)*DEV_PER_NAISHIN:0;
+      if(nAbs>dAbs*1.3)
+        return"内申・学力のどちらも基準まで距離があります。特に内申点の差が大きい状況です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、まず実技の評定を上げることが最短ルートです。内申が固まれば、あとは当日の得点で勝負できます。";
+      if(dAbs>nAbs*1.3)
+        return"内申・学力のどちらも基準まで距離があります。特に学力面の差が大きい状況です。模試や過去問で弱い教科を特定して、そこから集中的に取り組みましょう。学力が伸びてくると、判定は一気に変わってきます。";
+      return"内申・学力のどちらも基準まで距離があります。両方を同時に追うより、まずどちらから攻めるかを決めて一点突破で動き始めましょう。先に片方を固めるほうが結果につながりやすいです。";
+    }
+    return"内申点と学力の差の内訳を確認して、伸ばしやすい方から集中的に取り組みましょう。どちらか片方が基準に届けば、判定は大きく変わります。";
+  }
+
+  if(nr!==null){
+    if(nOk)  return"内申点は基準をクリアしています。あとは当日の得点力次第です。偏差値や点数も入力すると、より正確な判定が出ます。";
+    if(nr===3)return"内申点はあと少しの位置です。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、実技の評定アップが内申アップの最短ルートです。";
+    if(nr===2)return"内申点はボーダーライン上です。実技教科の評定を上げること、提出物・授業態度を見直すことで内申は動きます。偏差値も入力すると全体像が見えてきます。";
+    return"内申点が基準まで距離があります。実技4教科（音楽・美術・保健体育・技術家庭）は評定×1.5で計算されるため、ここが最も効率的に内申を上げられる場所です。まず実技の現状を確認してみてください。";
+  }
+
+  if(dr!==null){
+    if(dOk)  return"学力は基準をクリアしています。内申点も入力すると、より正確な判定が出ます。";
+    if(dr===3)return"学力はあと一歩の位置です。苦手教科を1つ絞って集中的に取り組むと、偏差値は動きやすくなります。";
+    if(dr===2)return"学力はボーダーライン上です。模試の結果を教科別に分析して、伸びしろのある教科から攻略しましょう。";
+    return"学力が基準まで距離があります。まず過去問や模試で、どの教科で点数が取れていないかを把握することが先決です。";
+  }
+
+  return"内申点か偏差値を入力すると、より具体的なアドバイスが表示されます。";
+}
 
 /* ================================================================
    STATE
@@ -1210,7 +1250,8 @@ function calcNaishin(){
   if(cnt>0){const m=sum/cnt;let p=0;[1,2,3].forEach(y=>SUBS.forEach(sj=>{const v=grades[y][sj];p+=(v>0?v:m)*(ARTS.includes(sj)?1.5:1)}));proj=Math.min(165,Math.round(p));}
   animateCountTo(document.getElementById("nmConfirmed"),conf);
   animateCountTo(document.getElementById("nmProjected"),proj);
-  if(conf!==null)document.getElementById("naishinInput").value=conf;
+  if(proj!==null)document.getElementById("naishinInput").value=proj;
+  else if(conf!==null)document.getElementById("naishinInput").value=conf;
 }
 
 /* ================================================================
@@ -1374,7 +1415,6 @@ function renderResult(school,d,nai,dev){
   rm.classList.remove("grade-reveal");
   void rm.offsetWidth;
   rm.style.background=gi.bg;
-  rm.style.color="#fff";
   rm.classList.add("grade-reveal");
   document.getElementById("rSchoolTag").textContent=school.name+"高校 "+school.dept+(d.dummy?"（参考値）":"");
   const ring=document.getElementById("rRing");
@@ -1409,7 +1449,7 @@ function renderResult(school,d,nai,dev){
   document.getElementById("bdOverall").innerHTML=formatGrade(overall);
 
   const naiDiff=nai!==null&&d.nai!=null?(nai>=d.nai?{t:"クリア",ok:true}:{t:`あと${Math.round(d.nai-nai)}点`,ok:false}):null;
-  const devDiff=dev!==null&&d.dev!=null?(dev>=d.dev?{t:"クリア",ok:true}:{t:`あと${Math.round(d.dev-dev)}`,ok:false}):null;
+  const devDiff=dev!==null&&d.dev!=null?(dev>=d.dev?{t:"クリア",ok:true}:{t:`あと${Math.round(d.dev-dev)}点`,ok:false}):null;
   const bd=document.getElementById("bdNaiDiff");
   if(naiDiff){bd.className="breakdown-diff "+(naiDiff.ok?"diff-ok":"diff-ng");bd.textContent=naiDiff.t}else{bd.textContent=""}
   const bd2=document.getElementById("bdDevDiff");
@@ -1423,14 +1463,16 @@ function renderResult(school,d,nai,dev){
   }
   if(dev!==null&&d.dev!=null){
     if(dev>=d.dev){chips.innerHTML+=`<span class="gap-chip gc-ok">偏差値：基準クリア（${dev}／${d.dev}）</span>`}
-    else{chips.innerHTML+=`<span class="gap-chip gc-ng">偏差値：あと${Math.round(d.dev-dev)}でA判定ライン</span>`}
+    else{chips.innerHTML+=`<span class="gap-chip gc-ng">偏差値：あと${Math.round(d.dev-dev)}点でA判定ライン</span>`}
   }
 
-  /* アドバイス */
-  let advice=gi.msg;
-  if(d.rT!=null&&d.rT>=2)advice+=`なお、特色選抜の倍率は${d.rT.toFixed(2)}倍と高めのため、一般選抜の準備も並行して進めてください。`;
-  if(d.rI!=null&&d.rI<1)advice+=`一般選抜は${d.rI.toFixed(2)}倍（定員割れ）でした。`;
-  if(d.dummy)advice="この学校のデータは追跡調査未収集のため参考値です。"+advice;
+  /* アドバイス：内申×学力の組み合わせで分岐 */
+  const naiGap=nai!==null&&d.nai!=null?nai-d.nai:null;
+  const devGap=dev!==null&&d.dev!=null?dev-d.dev:null;
+  let advice=buildAdvice(ng,dg,naiGap,devGap);
+  if(d.rT!=null&&d.rT>=2)advice+=`　なお、この学校の特色選抜の倍率は${d.rT.toFixed(2)}倍と高めです。一般選抜の準備も並行して進めておきましょう。`;
+  if(d.rI!=null&&d.rI<1)advice+=`　一般選抜は前年度${d.rI.toFixed(2)}倍（定員割れ）でした。`;
+  if(d.dummy)advice="※この学校のデータは追跡調査未収集のため参考値です。　"+advice;
   document.getElementById("adviceText").textContent=advice;
 
   /* コピーボタンの状態をリセット（新しい判定のたびに） */
