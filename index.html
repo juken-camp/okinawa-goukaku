@@ -71,20 +71,11 @@ body{
   -webkit-backdrop-filter:blur(8px);
   border-bottom:1px solid var(--border-soft);
   padding:0 20px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;
   position:sticky;top:0;z-index:100;
 }
 .hd-logo{font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.01em}
 .hd-logo small{display:block;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:1px}
-.hd-link{
-  font-size:13px;font-weight:600;color:#fff;
-  background:var(--ink);
-  border-radius:8px;padding:7px 16px;
-  text-decoration:none;
-  transition:background .15s,transform .1s;
-}
-.hd-link:hover{background:var(--accent-dark);text-decoration:none}
-.hd-link:active{transform:scale(.96)}
 
 /* ============================
    HERO
@@ -514,19 +505,6 @@ footer{
 }
 
 /* ============================
-   STEP PROGRESS DOTS
-   ============================ */
-.progress-dots{
-  display:flex;justify-content:center;gap:6px;
-  padding:12px 0 4px;
-}
-.progress-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--ink-faint);transition:all .25s ease;
-}
-.progress-dot.filled{background:var(--ink);width:18px;border-radius:3px}
-
-/* ============================
    選択表示のフェードイン
    ============================ */
 .selected-display{transform-origin:center top}
@@ -644,7 +622,6 @@ footer{
     沖縄県立高校入試<br>
     <small>合格判定シミュレーター</small>
   </div>
-  <a href="#step1" class="hd-link">判定する →</a>
 </header>
 
 <!-- HERO -->
@@ -666,12 +643,6 @@ footer{
 
 <main>
 <div class="main-wrap">
-
-<div class="progress-dots" id="progressDots">
-  <div class="progress-dot"></div>
-  <div class="progress-dot"></div>
-  <div class="progress-dot"></div>
-</div>
 
 <!-- ======================== STEP 1 ======================== -->
 <section class="step-section" id="step1">
@@ -761,7 +732,7 @@ footer{
     <div class="big-input-wrap" id="devWrap">
       <div class="big-input-label">偏差値（プレ入試・県模試など）</div>
       <input class="big-input" type="number" id="devInput" placeholder="52" min="20" max="80" inputmode="numeric">
-      <div class="big-input-max">（20〜80）</div>
+      <div class="big-input-max">/ 20〜80の範囲</div>
     </div>
   </div>
 
@@ -769,7 +740,7 @@ footer{
     <div class="big-input-wrap">
       <div class="big-input-label">5教科合計（300点満点）</div>
       <input class="big-input" type="number" id="scoreInput" placeholder="180" min="0" max="300" inputmode="numeric">
-      <div class="big-input-max">→ 偏差値に換算します</div>
+      <div class="big-input-max">点 ／ 偏差値に自動換算されます</div>
     </div>
   </div>
 </section>
@@ -1168,7 +1139,6 @@ function selectSchool(id){
   disp.classList.remove("show");
   void disp.offsetWidth; /* リフロー強制でアニメーションを再生させる */
   disp.classList.add("show");
-  updateProgressDots();
 }
 renderChips();
 
@@ -1252,17 +1222,6 @@ function switchScore(mode){
   document.getElementById("toggleScore").classList.toggle("on",mode==="score");
   document.getElementById("panelDev").style.display=mode==="dev"?"":"none";
   document.getElementById("panelScore").style.display=mode==="score"?"":"none";
-}
-
-/* ================================================================
-   PROGRESS DOTS（3ステップの進捗を可視化）
-   ================================================================ */
-function updateProgressDots(){
-  const naiFilled=document.getElementById("naishinInput").value!=="" ;
-  const dots=[!!selectedId,naiFilled,true];
-  document.querySelectorAll(".progress-dot").forEach((d,i)=>{
-    d.classList.toggle("filled",!!dots[i]);
-  });
 }
 
 /* ================================================================
@@ -1572,9 +1531,6 @@ function selectAndJudge(id){
    GLOBAL INIT
    ================================================================ */
 initScrollReveal();
-
-/* 内申点の直接入力にも進捗ドット更新を紐づける */
-document.getElementById("naishinInput").addEventListener("input",updateProgressDots);
 </script>
 </body>
 </html>
