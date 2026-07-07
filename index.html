@@ -1,20 +1,31 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-QB9X0232K7');
 </script>
-  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<!-- PWA / icons -->
+<meta name="application-name" content="沖縄合格判定">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="沖縄合格判定">
+<meta name="msapplication-TileColor" content="#4f46e5">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <title>沖縄県立高校入試 合格判定シミュレーター｜内申点・偏差値・志望校で合格可能性をチェック</title>
 <meta name="description" content="沖縄県立高校入試の合格可能性を、内申点・評定・偏差値・志望校からチェックできる無料シミュレーター。JUKEN CAMP運営。">
 <meta name="robots" content="index,follow">
@@ -1590,6 +1601,16 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
   el.addEventListener("wheel",function(e){e.preventDefault();},{passive:false});
   el.addEventListener("mousedown",function(){this.focus();});
 });
+</script>
+<!-- Service Worker registration -->
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js", { updateViaCache: "none" })
+      .catch((error) => console.warn("Service Worker registration failed:", error));
+  });
+}
 </script>
 </body>
 </html>

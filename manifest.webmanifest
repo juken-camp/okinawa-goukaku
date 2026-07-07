@@ -1,0 +1,38 @@
+{
+  "id": "/",
+  "name": "沖縄県立高校入試 合格判定シミュレーター",
+  "short_name": "沖縄合格判定",
+  "description": "内申点・偏差値・志望校から、沖縄県立高校入試の合格可能性を確認できる無料シミュレーター。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "ja",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
