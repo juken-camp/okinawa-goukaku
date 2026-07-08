@@ -330,19 +330,64 @@ input{font-family:inherit}
   font-size:12px;font-weight:700;color:var(--soft);transition:all .15s;
 }
 .year-btn.on{background:var(--amber-glow);border-color:var(--amber);color:var(--amber)}
-.grade-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.grade-name{font-size:11.5px;font-weight:700;color:var(--mid);flex:0 0 72px;line-height:1.25}
-.grade-name .x15{display:block;font-family:var(--num);font-size:8.5px;color:var(--amber);letter-spacing:.06em}
-.grade-btns{display:flex;gap:4px;flex:1}
-.grade-btn{
-  flex:1;height:38px;border-radius:9px;cursor:pointer;
-  border:1px solid var(--line);background:var(--panel);
-  font-family:var(--num);font-size:14px;font-weight:700;color:var(--soft);
-  transition:all .1s;
+.year-btn{position:relative}
+.year-btn.filled::after{content:"";position:absolute;top:6px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
+
+/* 円形リング */
+.gy-ring-wrap{position:relative;width:180px;height:180px;margin:18px auto 6px}
+.gy-ring{position:absolute;inset:0;transform:rotate(-90deg)}
+.gy-track{fill:none;stroke:var(--line);stroke-width:11}
+.gy-fill{fill:none;stroke:var(--amber);stroke-width:11;stroke-linecap:round;filter:drop-shadow(0 0 8px var(--amber-glow));transition:stroke-dashoffset .28s cubic-bezier(.22,.61,.36,1)}
+.gy-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.gy-num{font-family:var(--num);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.gy-num #gyNum{font-size:46px;color:var(--amber)}
+.gy-den{font-size:15px;color:var(--soft);margin-left:3px}
+.gy-lbl{font-size:11px;color:var(--mid);margin-top:7px;font-weight:600;letter-spacing:.04em}
+
+/* 一括入力 */
+.gy-bulk{margin-top:16px;padding:13px 14px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.gy-bulk-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.gy-bulk-cap{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--mid)}
+.gy-bulk-clear{border:1px solid var(--line);background:transparent;border-radius:8px;padding:4px 11px;font-size:10.5px;font-weight:700;color:var(--soft);cursor:pointer;transition:transform .1s,border-color .14s,color .14s}
+.gy-bulk-clear:active{transform:scale(.94)}
+.gy-bulk-clear:hover{border-color:var(--line-lt);color:var(--mid)}
+.gy-bulk-btns{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.gy-bulk-btns button{
+  height:46px;border-radius:11px;cursor:pointer;
+  border:1px solid var(--line-lt);background:var(--panel-2);
+  font-family:var(--num);font-size:19px;font-weight:700;color:var(--ink);
+  transition:transform .08s,background .18s,border-color .18s,color .18s;
 }
-.grade-btn:active{transform:scale(.93)}
-.grade-btn.on{background:var(--ink);border-color:var(--ink);color:var(--bg0)}
-.grade-btn.on.art{background:var(--amber);border-color:var(--amber);color:#241500}
+.gy-bulk-btns button:active{transform:scale(.9)}
+.gy-bulk-btns button.flash{background:var(--amber-glow);border-color:var(--amber);color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
+
+/* 個別調整：教科ピル（5教科／実技で分ける） */
+.gy-grp-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--soft);margin:16px 2px 8px}
+.gy-grp-lbl .gy-x{font-family:var(--num);font-size:8.5px;color:var(--amber);margin-left:4px;letter-spacing:.02em}
+.gy-pills{display:grid;gap:7px}
+#gyPills5{grid-template-columns:repeat(5,1fr)}
+#gyPillsA{grid-template-columns:repeat(4,1fr)}
+.gy-pill{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 4px;border-radius:11px;cursor:pointer;white-space:nowrap;min-width:0;
+  border:1px solid var(--line);background:var(--panel);transition:transform .1s,border-color .14s,background .14s;
+}
+.gy-pill:active{transform:scale(.95)}
+.gy-pill .gp-name{font-size:12px;font-weight:700;color:var(--mid)}
+.gy-pill .gp-val{font-family:var(--num);font-size:15px;font-weight:700;color:var(--ink);min-width:12px;text-align:center;font-variant-numeric:tabular-nums}
+.gy-pill.art .gp-val{color:var(--amber)}
+.gy-pill.empty .gp-val{color:var(--soft)}
+.gy-pill.sel{border-color:var(--amber);background:var(--amber-glow)}
+.gy-pill.sel .gp-name{color:var(--amber)}
+
+/* 選択中の教科スライダー */
+.gy-picker{margin-top:14px;padding:15px 16px 12px;border-radius:14px;border:1px solid var(--line-lt);background:var(--panel-2)}
+.gy-pick-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.gy-pick-name{font-size:14.5px;font-weight:700;color:var(--ink)}
+.gy-pick-name .gc-x{font-style:normal;font-family:var(--num);font-size:9px;color:var(--amber);margin-left:6px;letter-spacing:.03em}
+.gy-pick-val{font-family:var(--num);font-size:23px;font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums}
+.gy-slider{width:100%;height:40px}
+.gy-pick-hint{font-size:10.5px;color:var(--soft);text-align:center;margin-top:1px}
 .naishin-meter{
   margin-top:14px;padding:14px 16px;border-radius:14px;
   border:1px solid var(--line);background:var(--panel);
@@ -483,10 +528,12 @@ input{font-family:inherit}
 .diff-ok{background:rgba(61,220,132,.14);color:var(--ga)}
 .diff-ng{background:var(--panel-2);color:var(--mid);border:1px solid var(--line)}
 
-.gap-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.gap-chip{font-size:11px;font-weight:700;padding:6px 12px;border-radius:9px}
-.gc-ok{background:rgba(61,220,132,.12);color:var(--ga);border:1px solid rgba(61,220,132,.3)}
-.gc-ng{background:var(--panel);color:var(--mid);border:1px solid var(--line)}
+.bd-refs{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.bd-refs:empty{display:none}
+.bd-refs-cap{font-family:var(--num);font-size:8.5px;font-weight:600;letter-spacing:.16em;color:var(--soft)}
+.bd-ref{font-size:11.5px;font-weight:600;color:var(--soft)}
+.bd-ref b{font-family:var(--num);font-size:14px;font-weight:700;color:var(--mid)}
+.bd-ref .line{color:var(--soft)}
 
 .advice-text{font-size:13.5px;color:var(--mid);line-height:1.85}
 
@@ -664,7 +711,47 @@ input{font-family:inherit}
             <button class="year-btn" data-y="2" onclick="switchYear(2)">中2</button>
             <button class="year-btn" data-y="3" onclick="switchYear(3)">中3</button>
           </div>
-          <div id="gradeGrid"></div>
+          <div class="gy-ring-wrap">
+            <svg class="gy-ring" viewBox="0 0 180 180">
+              <circle class="gy-track" cx="90" cy="90" r="76"/>
+              <circle class="gy-fill" id="gyFill" cx="90" cy="90" r="76"/>
+            </svg>
+            <div class="gy-center">
+              <div>
+                <div class="gy-num"><span id="gyNum">0</span><span class="gy-den">/ 55</span></div>
+                <div class="gy-lbl" id="gyYearLbl">中1の内申点</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gy-picker">
+            <div class="gy-pick-head">
+              <span class="gy-pick-name" id="gyPickName">国語</span>
+              <span class="gy-pick-val" id="gyPickVal">—</span>
+            </div>
+            <input type="range" class="fat-slider gy-slider" id="gySlider" min="0" max="5" step="1" value="0" aria-label="選択中の教科の評定（0＝未入力）">
+            <div class="gy-pick-hint" id="gyPickHint">スライダーを動かして評定を入力（左端＝未入力）</div>
+          </div>
+
+          <div class="gy-bulk">
+            <div class="gy-bulk-head">
+              <span class="gy-bulk-cap">9教科をまとめて設定</span>
+              <button class="gy-bulk-clear" onclick="bulkSet(0)">クリア</button>
+            </div>
+            <div class="gy-bulk-btns">
+              <button data-n="1" onclick="bulkSet(1)">1</button>
+              <button data-n="2" onclick="bulkSet(2)">2</button>
+              <button data-n="3" onclick="bulkSet(3)">3</button>
+              <button data-n="4" onclick="bulkSet(4)">4</button>
+              <button data-n="5" onclick="bulkSet(5)">5</button>
+            </div>
+          </div>
+
+          <div class="gy-grp-lbl">5教科</div>
+          <div class="gy-pills" id="gyPills5"></div>
+          <div class="gy-grp-lbl">実技4教科<span class="gy-x">×1.5</span></div>
+          <div class="gy-pills" id="gyPillsA"></div>
+
           <div class="naishin-meter">
             <div class="nm-block">
               <div class="nm-label">確定内申点</div>
@@ -774,9 +861,8 @@ input{font-family:inherit}
             <span class="bd-val" id="bdOverall">—</span>
             <span></span>
           </div>
+          <div class="bd-refs" id="bdRefs"></div>
         </div>
-
-        <div class="gap-chips" id="gapChips"></div>
 
         <div class="card">
           <div class="card-h">ADVICE / アドバイス</div>
@@ -1298,28 +1384,109 @@ function switchYear(y){
   document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("on",Number(b.dataset.y)===y));
   renderGrades();
 }
-function renderGrades(){
-  const g=document.getElementById("gradeGrid");g.innerHTML="";
-  SUBS.forEach(sj=>{
-    const art=ARTS.includes(sj);
-    const row=document.createElement("div");row.className="grade-row";
-    const nm=document.createElement("div");nm.className="grade-name";
-    nm.innerHTML=sj+(art?'<span class="x15">×1.5</span>':"");
-    row.appendChild(nm);
-    const btns=document.createElement("div");btns.className="grade-btns";
-    for(let v=1;v<=5;v++){
-      const b=document.createElement("button");
-      b.className="grade-btn"+(art?" art":"")+(grades[gradeYear][sj]===v?" on":"");
-      b.textContent=v;b.type="button";
-      b.onclick=()=>{
-        grades[gradeYear][sj]=grades[gradeYear][sj]===v?0:v;
-        vibrate(10);
-        calcNaishin();renderGrades();
-      };
-      btns.appendChild(b);
-    }
-    row.appendChild(btns);g.appendChild(row);
+/* 実技は×1.5後の内申点で表示。小数は.5のみなので末尾.0は落とす */
+function fmtPts(n){return Number.isInteger(n)?String(n):n.toFixed(1);}
+function gradeDisp(v,art){return v===0?"—":(art?fmtPts(v*1.5):String(v));}
+
+const SHORT={"国語":"国語","社会":"社会","数学":"数学","理科":"理科","英語":"英語","音楽":"音楽","美術":"美術","保健体育":"保体","技術家庭":"技家"};
+const YEAR_MAX=55;               /* 1学年の満点（5教科×5 + 実技4×5×1.5） */
+let gradeSel=SUBS[0];            /* 現在スライダーで編集中の教科 */
+const gyChipMap={};             /* 教科→チップ要素の参照 */
+let gradePanelReady=false;
+
+function yearPts(y){let t=0;SUBS.forEach(sj=>{const v=grades[y][sj]||0;t+=v*(ARTS.includes(sj)?1.5:1)});return t;}
+
+/* 円形リング更新 */
+function updateRing(){
+  const t=yearPts(gradeYear);
+  const C=2*Math.PI*76;
+  const fill=document.getElementById("gyFill");
+  fill.style.strokeDasharray=C;
+  fill.style.strokeDashoffset=C*(1-Math.min(1,t/YEAR_MAX));
+  document.getElementById("gyNum").textContent=fmtPts(t);
+  document.getElementById("gyYearLbl").textContent="中"+gradeYear+"の内申点";
+}
+
+/* 学年タブの入力済みインジケーター */
+function updateYearTabs(){
+  document.querySelectorAll(".year-btn").forEach(b=>{
+    const y=Number(b.dataset.y);
+    b.classList.toggle("on",y===gradeYear);
+    b.classList.toggle("filled",yearPts(y)>0);
   });
+}
+
+/* 選択中スライダーの値表示 */
+function updatePickVal(v,art){
+  document.getElementById("gyPickVal").textContent=v===0?"—":gradeDisp(v,art)+"点";
+  document.getElementById("gyPickHint").textContent=v===0?"未入力（左端）":"評定 "+v+" を選択中";
+}
+
+/* 選択中教科をスライダー／ヘッダーに反映 */
+function syncPicker(){
+  const sj=gradeSel,art=ARTS.includes(sj),v=grades[gradeYear][sj]||0;
+  document.getElementById("gyPickName").innerHTML=sj+(art?'<span class="gc-x">×1.5</span>':"");
+  const pv=document.getElementById("gyPickVal");
+  pv.style.color=art?"var(--amber)":"var(--ink)";
+  const sl=document.getElementById("gySlider");
+  sl.value=v;
+  sl.style.setProperty("--p",(v/5*100)+"%");
+  updatePickVal(v,art);
+}
+
+/* 教科ピル描画（5教科／実技で分ける） */
+function pillFor(sj){
+  const art=ARTS.includes(sj);
+  const v=grades[gradeYear][sj]||0;
+  const pill=document.createElement("button");pill.type="button";
+  pill.className="gy-pill"+(art?" art":"")+(sj===gradeSel?" sel":"")+(v===0?" empty":"");
+  const nm=document.createElement("span");nm.className="gp-name";nm.textContent=SHORT[sj];
+  const val=document.createElement("span");val.className="gp-val";val.textContent=gradeDisp(v,art);
+  pill.appendChild(nm);pill.appendChild(val);
+  pill.onclick=()=>{gradeSel=sj;vibrate(6);renderPills();syncPicker();};
+  gyChipMap[sj]={chip:pill,val};
+  return pill;
+}
+function renderPills(){
+  const a=document.getElementById("gyPills5"),b=document.getElementById("gyPillsA");
+  a.innerHTML="";b.innerHTML="";
+  for(const k in gyChipMap)delete gyChipMap[k];
+  SUBS.forEach(sj=>{(ARTS.includes(sj)?b:a).appendChild(pillFor(sj));});
+}
+
+/* 一括入力（0＝クリア） */
+function bulkSet(n){
+  SUBS.forEach(sj=>{grades[gradeYear][sj]=n;});
+  vibrate(n===0?[18,26,18]:12);
+  renderPills();syncPicker();updateRing();updateYearTabs();calcNaishin();
+  const btns=document.querySelectorAll(".gy-bulk-btns button");
+  btns.forEach(b=>b.classList.toggle("flash",Number(b.dataset.n)===n));
+  if(n>0)setTimeout(()=>btns.forEach(b=>b.classList.remove("flash")),480);
+}
+
+/* スライダーのリスナーは一度だけ登録（要素は固定HTML） */
+function setupGradePanel(){
+  if(gradePanelReady)return;gradePanelReady=true;
+  const sl=document.getElementById("gySlider");
+  sl.addEventListener("input",()=>{
+    const sj=gradeSel,art=ARTS.includes(sj),v=Number(sl.value);
+    grades[gradeYear][sj]=v;
+    sl.style.setProperty("--p",(v/5*100)+"%");
+    updatePickVal(v,art);
+    const cm=gyChipMap[sj];
+    if(cm){cm.val.textContent=gradeDisp(v,art);cm.chip.classList.toggle("empty",v===0);}
+    updateRing();updateYearTabs();
+    vibrate(4);
+    calcNaishin();
+  });
+}
+
+function renderGrades(){
+  setupGradePanel();
+  renderPills();
+  syncPicker();
+  updateRing();
+  updateYearTabs();
 }
 
 /* 数字カウントアップ演出 */
@@ -1523,16 +1690,12 @@ function renderResult(school,d,nai,dev){
   const bd2=document.getElementById("bdDevDiff");
   if(devDiff){bd2.className="bd-diff "+(devDiff.ok?"diff-ok":"diff-ng");bd2.textContent=devDiff.t}else{bd2.className="bd-diff";bd2.textContent=""}
 
-  /* gap chips */
-  const chips=document.getElementById("gapChips");chips.innerHTML="";
-  if(nai!==null&&d.nai!=null){
-    if(nai>=d.nai){chips.innerHTML+='<span class="gap-chip gc-ok">内申点：基準クリア（'+nai+'／'+d.nai+'）</span>'}
-    else{chips.innerHTML+='<span class="gap-chip gc-ng">内申点：あと'+Math.round(d.nai-nai)+'点でA判定ライン</span>'}
-  }
-  if(dev!==null&&d.dev!=null){
-    if(dev>=d.dev){chips.innerHTML+='<span class="gap-chip gc-ok">偏差値：基準クリア（'+dev+'／'+d.dev+'）</span>'}
-    else{chips.innerHTML+='<span class="gap-chip gc-ng">偏差値：あと'+Math.round(d.dev-dev)+'点でA判定ライン</span>'}
-  }
+  /* 現在値 vs A判定ライン（生の数値のみ。あと〇点／クリアは判定内訳側に集約） */
+  const refs=document.getElementById("bdRefs");refs.innerHTML="";
+  let refHtml="";
+  if(nai!==null&&d.nai!=null){refHtml+='<span class="bd-ref">内申 <b>'+nai+'</b><span class="line"> / '+Math.round(d.nai)+'</span></span>';}
+  if(dev!==null&&d.dev!=null){refHtml+='<span class="bd-ref">偏差値 <b>'+dev+'</b><span class="line"> / '+Math.round(d.dev)+'</span></span>';}
+  if(refHtml){refs.innerHTML='<span class="bd-refs-cap">A判定ライン</span>'+refHtml;}
 
   /* アドバイス：内申×学力の組み合わせで分岐 */
   const naiGap=nai!==null&&d.nai!=null?nai-d.nai:null;
