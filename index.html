@@ -11,12 +11,13 @@
   gtag('config', 'G-QB9X0232K7');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#05070f">
+<meta name="color-scheme" content="dark">
 <!-- PWA / icons -->
 <meta name="application-name" content="沖縄合格判定">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="沖縄合格判定">
 <meta name="msapplication-TileColor" content="#4f46e5">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -48,613 +49,668 @@
 {"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定シミュレーター","url":"https://okinawa-goukaku.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap');
+
+/* ================================================================
+   TOKENS — 深宇宙ネイビー × 発光インディゴ/シアン（計器盤HUD）
+   ================================================================ */
+:root{
+  color-scheme:dark;
+  --bg0:#05070f;
+  --ink:#eef2ff;
+  --ink-mid:#a7b0d0;
+  --ink-soft:#6e7899;
+  --ink-faint:#3d4666;
+  --line:rgba(160,175,225,.16);
+  --line-soft:rgba(160,175,225,.08);
+  --accent:#7c8aff;
+  --accent-hot:#a5b0ff;
+  --cyan:#7de8ff;
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+  --disp:'Space Grotesk','Inter',sans-serif;
+}
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;background:var(--bg0)}
 body{
   font-family:'Inter','Noto Sans JP',-apple-system,'Hiragino Sans',sans-serif;
   font-size:15px;line-height:1.65;
-  background:#ffffff;
-  color:#0a0a0a;
+  background:var(--bg0);
+  color:var(--ink);
   -webkit-font-smoothing:antialiased;
   min-height:100dvh;
   overflow-x:hidden;
   letter-spacing:-.01em;
 }
+::selection{background:rgba(124,138,255,.35)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{-webkit-tap-highlight-color:transparent}
+a{-webkit-tap-highlight-color:transparent}
 
-/* カラー定義：白黒ベース＋インディゴ1色のみアクセント */
-:root{
-  --accent:#4f46e5;
-  --accent-dark:#3730a3;
-  --accent-lt:#eef2ff;
-  --accent-ring:rgba(79,70,229,.14);
-  --ink:#0a0a0a;
-  --ink-mid:#525252;
-  --ink-soft:#a3a3a3;
-  --ink-faint:#d4d4d4;
-  --bg:#ffffff;
-  --bg-soft:#fafafa;
-  --surface:#ffffff;
-  --border:#e5e5e5;
-  --border-soft:#f0f0f0;
-  /* 判定グレード用（無彩色階調＋アクセントのみ最小限使用） */
-  --grade-a:#0a0a0a;
-  --grade-b:#404040;
-  --grade-c:#737373;
-  --grade-d:#a3a3a3;
-  --grade-e:#c7c7c7;
-  /* シャドウ階層（Stripe/Linear系の微細な奥行き表現） */
-  --shadow-xs:0 1px 2px rgba(0,0,0,.04);
-  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.04);
-  --shadow-lg:0 12px 32px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04);
-  --shadow-focus:0 0 0 3px var(--accent-ring);
-}
+@keyframes riseUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-/* ============================
-   HEADER
-   ============================ */
-.hd{
-  background:rgba(255,255,255,.85);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--border-soft);
-  padding:0 20px;height:56px;
-  display:flex;align-items:center;
-  position:sticky;top:0;z-index:100;
-}
-.hd-logo{font-size:14px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em}
-
-/* ============================
-   HERO
-   ============================ */
-.hero{
+/* ================================================================
+   AMBIENT — 固定背景（オーロラ2灯＋精密グリッド）
+   ================================================================ */
+.ambient{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% -10%,#0c1330 0%,#05070f 58%),var(--bg0)}
+.au{position:absolute;border-radius:50%}
+.au.a1{width:74vmax;height:74vmax;left:-18vmax;top:-32vmax;
+  background:radial-gradient(circle,rgba(91,108,255,.20),transparent 62%);
+  animation:drift1 34s ease-in-out infinite alternate}
+.au.a2{width:62vmax;height:62vmax;right:-26vmax;bottom:-30vmax;
+  background:radial-gradient(circle,rgba(125,232,255,.09),transparent 60%);
+  animation:drift2 46s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(6vmax,4vmax) scale(1.08)}}
+@keyframes drift2{to{transform:translate(-5vmax,-5vmax) scale(1.06)}}
+.gridfx{position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% -10%,rgba(79,70,229,.06) 0%,transparent 70%),
-    #ffffff;
-  padding:72px 20px 60px;
-  text-align:center;
-  position:relative;overflow:hidden;
-  border-bottom:1px solid var(--border-soft);
+    linear-gradient(rgba(148,163,216,.05) 1px,transparent 1px) 0 0/100% 56px,
+    linear-gradient(90deg,rgba(148,163,216,.05) 1px,transparent 1px) 0 0/56px 100%;
+  -webkit-mask:radial-gradient(130% 85% at 50% 0%,#000 25%,transparent 78%);
+          mask:radial-gradient(130% 85% at 50% 0%,#000 25%,transparent 78%);
 }
-.hero-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+
+/* 判定確定時の一瞬のフラッシュ */
+#flash{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.85),rgba(124,138,255,.35) 42%,transparent 72%)}
+#flash.go{animation:flashGo .3s ease-out both}
+@keyframes flashGo{0%{opacity:0}22%{opacity:1}100%{opacity:0}}
+
+/* ================================================================
+   共通ユーティリティ：コーナーブラケット／スペキュラ光
+   ================================================================ */
+.corners{--ck:rgba(160,175,225,.4);position:relative}
+.corners::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;border-radius:inherit;
+  background:
+    linear-gradient(var(--ck),var(--ck)) 10px 10px/12px 1px,
+    linear-gradient(var(--ck),var(--ck)) 10px 10px/1px 12px,
+    linear-gradient(var(--ck),var(--ck)) calc(100% - 10px) 10px/12px 1px,
+    linear-gradient(var(--ck),var(--ck)) calc(100% - 10px) 10px/1px 12px,
+    linear-gradient(var(--ck),var(--ck)) 10px calc(100% - 10px)/12px 1px,
+    linear-gradient(var(--ck),var(--ck)) 10px calc(100% - 10px)/1px 12px,
+    linear-gradient(var(--ck),var(--ck)) calc(100% - 10px) calc(100% - 10px)/12px 1px,
+    linear-gradient(var(--ck),var(--ck)) calc(100% - 10px) calc(100% - 10px)/1px 12px;
+  background-repeat:no-repeat;
+}
+.glare::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
+  background:radial-gradient(240px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.07),transparent 62%);
+  opacity:0;transition:opacity .3s;
+}
+@media (hover:hover) and (pointer:fine){
+  .glare:hover::after{opacity:1}
+}
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+.hd{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(11px + env(safe-area-inset-top,0px)) 20px 11px;
+  background:rgba(6,9,20,.62);
+  backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--line-soft);
+}
+.hd-logo{font-size:13.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em;line-height:1.3}
+.hd-meta{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--ink-soft);white-space:nowrap}
+.hd-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent);animation:blink 2.4s ease-in-out infinite}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{position:relative;overflow:hidden;padding:84px 20px 68px;text-align:center;border-bottom:1px solid var(--line-soft)}
+.hero-rings{position:absolute;inset:0;pointer-events:none}
+.hero-rings::before,.hero-rings::after{
+  content:"";position:absolute;left:50%;border-radius:50%;
+  border:1px solid rgba(160,175,225,.12);
+}
+.hero-rings::before{width:640px;height:640px;top:-390px;margin-left:-320px}
+.hero-rings::after{width:940px;height:940px;top:-560px;margin-left:-470px;border-color:rgba(160,175,225,.07)}
+.hero-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
+.hero-inner>*{animation:riseUp .7s cubic-bezier(.22,1,.32,1) both}
+.hero-inner>*:nth-child(2){animation-delay:.08s}
+.hero-inner>*:nth-child(3){animation-delay:.16s}
+.hero-inner>*:nth-child(4){animation-delay:.24s}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-soft);
+  margin-bottom:22px;padding:7px 14px 7px 12px;
+  border:1px solid var(--line);border-radius:999px;background:rgba(148,163,216,.05);
+}
+.he-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
 .hero h1{
-  font-size:clamp(30px,6.4vw,46px);
-  font-weight:800;line-height:1.2;
+  font-size:clamp(30px,6.6vw,48px);
+  font-weight:800;line-height:1.22;
   color:var(--ink);letter-spacing:-.035em;
   margin-bottom:20px;
 }
 .hero h1 span{
-  color:var(--accent);
+  background:linear-gradient(92deg,#9aa6ff 10%,#7de8ff 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.hero-sub{font-size:15px;color:var(--ink-mid);margin-bottom:38px;line-height:1.75;max-width:420px;margin-left:auto;margin-right:auto}
+.hero-sub{font-size:15px;color:var(--ink-mid);margin:0 auto 36px;line-height:1.8;max-width:430px}
 .btn-start{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--ink);color:#fff;
-  font-size:15px;font-weight:600;
-  padding:14px 30px;border-radius:10px;
-  text-decoration:none;
-  box-shadow:var(--shadow-md);
-  transition:background .15s,transform .15s,box-shadow .15s;
+  display:inline-flex;align-items:center;gap:9px;
+  background:linear-gradient(180deg,#8b96ff,#5b6cff);
+  color:#fff;font-size:15px;font-weight:700;
+  padding:15px 32px;border-radius:14px;text-decoration:none;
+  box-shadow:0 14px 36px -10px rgba(91,108,255,.65),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .16s cubic-bezier(.3,1.2,.4,1),box-shadow .2s,filter .2s;
   border:none;cursor:pointer;
 }
-.btn-start:hover{background:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-1px);text-decoration:none}
-.btn-start:active{transform:scale(.98) translateY(0);box-shadow:var(--shadow-sm)}
+.btn-start:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 18px 44px -10px rgba(91,108,255,.8),inset 0 1px 0 rgba(255,255,255,.25);text-decoration:none}
+.btn-start:active{transform:translateY(1px) scale(.98)}
 
-/* ============================
-   STEPS UI
-   ============================ */
+/* ================================================================
+   STEPS
+   ================================================================ */
 .main-wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.step-section{padding:52px 0 0}
+.step-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em}
+.se-num{color:var(--accent);font-weight:700}
+.se-line{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.se-tag{color:var(--ink-soft)}
+.step-title{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:-.02em}
+.step-sub{font-size:13px;color:var(--ink-soft);margin-bottom:22px}
 
-.step-section{padding:48px 0 0}
-
-.step-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:12px;font-weight:600;
-  margin-bottom:18px;
-}
-.step-num{
-  width:22px;height:22px;border-radius:6px;
-  display:inline-flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:#fff;
-  background:var(--ink);
-  flex-shrink:0;
-}
-.step-title{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:-.025em}
-.step-sub{font-size:13px;color:var(--ink-soft);margin-bottom:24px}
-
-/* ============================
-   SCHOOL CHIPS
-   ============================ */
-.area-tabs{
-  display:flex;gap:6px;overflow-x:auto;
-  padding-bottom:4px;margin-bottom:14px;
-  scrollbar-width:none;
-}
+/* ================================================================
+   SCHOOL CHIPS（磁力ホバー＋バネ押下）
+   ================================================================ */
+.area-tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:14px;scrollbar-width:none}
 .area-tabs::-webkit-scrollbar{display:none}
 .area-tab{
-  flex-shrink:0;
-  padding:7px 14px;border-radius:8px;
-  font-size:13px;font-weight:500;
-  border:1px solid var(--border);
-  background:#fff;color:var(--ink-mid);
-  cursor:pointer;transition:all .15s;
-  white-space:nowrap;
+  flex-shrink:0;padding:8px 15px;border-radius:10px;
+  font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap;
+  border:1px solid var(--line);background:rgba(148,163,216,.05);color:var(--ink-mid);
+  cursor:pointer;
+  transform:translate(var(--mx,0),var(--my,0));
+  transition:transform .18s cubic-bezier(.3,1.4,.4,1),background .18s,border-color .18s,color .18s,box-shadow .18s;
 }
-.area-tab:hover{border-color:var(--ink-soft);color:var(--ink)}
-.area-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.area-tab:hover{border-color:rgba(160,175,225,.35);color:var(--ink)}
+.area-tab:active{transform:translate(var(--mx,0),var(--my,0)) scale(.94)}
+.area-tab.on{
+  background:linear-gradient(180deg,#8b96ff,#5b6cff);color:#fff;border-color:transparent;
+  box-shadow:0 6px 20px -6px rgba(91,108,255,.6),inset 0 1px 0 rgba(255,255,255,.22);
+}
 
 .school-chips{
-  display:flex;flex-wrap:wrap;gap:6px;
-  max-height:160px;overflow-y:auto;
-  padding:4px;
-  scrollbar-width:thin;
+  display:flex;flex-wrap:wrap;gap:7px;
+  max-height:172px;overflow-y:auto;padding:4px 2px;
+  scrollbar-width:thin;scrollbar-color:rgba(160,175,225,.25) transparent;
 }
+.school-chips::-webkit-scrollbar{width:5px}
+.school-chips::-webkit-scrollbar-thumb{background:rgba(160,175,225,.22);border-radius:3px}
 .school-chip{
-  padding:8px 13px;border-radius:8px;
-  font-size:13px;font-weight:500;
-  border:1px solid var(--border);
-  background:#fff;color:var(--ink-mid);
-  cursor:pointer;transition:all .12s;
-  line-height:1.3;
+  padding:9px 14px;border-radius:10px;
+  font-family:inherit;font-size:13px;font-weight:500;line-height:1.3;
+  border:1px solid var(--line);background:rgba(148,163,216,.05);color:var(--ink-mid);
+  cursor:pointer;
+  transform:translate(var(--mx,0),var(--my,0));
+  transition:transform .18s cubic-bezier(.3,1.4,.4,1),background .18s,border-color .18s,color .18s,box-shadow .18s;
 }
-.school-chip:hover{border-color:var(--ink-soft);color:var(--ink);background:var(--bg-soft)}
+.school-chip:hover{border-color:rgba(160,175,225,.35);color:var(--ink);background:rgba(148,163,216,.09)}
+.school-chip:active{transform:translate(var(--mx,0),var(--my,0)) scale(.93)}
 .school-chip.on{
-  background:var(--ink);color:#fff;border-color:var(--ink);
-  box-shadow:var(--shadow-xs);
+  background:linear-gradient(180deg,#8b96ff,#5b6cff);color:#fff;border-color:transparent;font-weight:600;
+  box-shadow:0 6px 22px -6px rgba(91,108,255,.65),inset 0 1px 0 rgba(255,255,255,.22);
 }
 
 .selected-display{
-  margin-top:12px;padding:16px 18px;
-  background:var(--accent-lt);border-radius:12px;
-  border:1px solid #e0e7ff;
-  display:none;
+  display:none;margin-top:14px;padding:16px 18px 15px;border-radius:14px;
+  background:linear-gradient(180deg,rgba(124,138,255,.10),rgba(124,138,255,.05));
+  border:1px solid rgba(124,138,255,.3);
+  --ck:rgba(124,138,255,.55);
 }
-.selected-display.show{display:block}
-.selected-label{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.03em;margin-bottom:5px;text-transform:uppercase}
-.selected-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.selected-display.show{display:block;animation:lockIn .35s cubic-bezier(.3,1.3,.4,1) both}
+@keyframes lockIn{0%{opacity:0;transform:translateY(-6px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.selected-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;font-weight:600;color:var(--accent-hot);letter-spacing:.05em;margin-bottom:6px}
+.sl-lock{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--cyan)}
+.selected-name{font-size:16.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
 
-/* ============================
-   NAISHIN INPUT
-   ============================ */
-.input-toggle{
-  display:flex;gap:0;margin-bottom:20px;
-  border-radius:10px;overflow:hidden;
-  border:1px solid var(--border);
+/* ================================================================
+   セグメントトグル（滑走サム）
+   ================================================================ */
+.seg{--n:2;--i:0;position:relative;display:flex;margin-bottom:18px;padding:4px;border-radius:13px;border:1px solid var(--line);background:rgba(8,12,26,.6)}
+.seg-3{--n:3}
+.seg-thumb{
+  position:absolute;top:4px;bottom:4px;left:4px;
+  width:calc((100% - 8px)/var(--n));border-radius:10px;
+  background:linear-gradient(180deg,rgba(139,150,255,.32),rgba(91,108,255,.20));
+  border:1px solid rgba(139,150,255,.35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 3px 12px -4px rgba(91,108,255,.5);
+  transform:translateX(calc(var(--i)*100%));
+  transition:transform .38s cubic-bezier(.3,1.35,.4,1);
+  pointer-events:none;
 }
-.input-toggle-btn{
-  flex:1;padding:11px 8px;
-  font-size:13px;font-weight:500;
-  background:#fff;color:var(--ink-soft);
-  cursor:pointer;transition:all .15s;
-  border:none;
+.seg-btn{
+  position:relative;z-index:1;flex:1;padding:10px 6px;border:none;background:transparent;
+  font-family:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);
+  cursor:pointer;border-radius:10px;
+  transition:color .2s,transform .12s;
 }
-.input-toggle-btn:hover{color:var(--ink)}
-.input-toggle-btn.on{background:var(--ink);color:#fff}
+.seg-btn:active{transform:scale(.97)}
+.seg-btn.on{color:var(--ink)}
 
-/* ビッグ数字入力 */
+/* ================================================================
+   ビッグ数字入力（浮上フォーカス＋発光メーター）
+   ================================================================ */
 .big-input-wrap{
-  background:var(--bg-soft);border:1px solid var(--border);
-  border-radius:16px;padding:28px 24px;
-  text-align:center;
-  transition:border-color .18s,box-shadow .18s,background .18s;
+  position:relative;
+  background:rgba(148,163,216,.05);
+  border:1px solid var(--line);border-radius:18px;
+  padding:26px 24px 20px;text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  transition:border-color .2s,box-shadow .25s,transform .25s cubic-bezier(.3,1.2,.4,1),background .2s;
 }
 .big-input-wrap:focus-within{
-  border-color:var(--accent);background:#fff;
-  box-shadow:var(--shadow-focus);
+  border-color:rgba(124,138,255,.55);
+  background:rgba(148,163,216,.07);
+  transform:translateY(-2px);
+  box-shadow:0 0 0 3px rgba(124,138,255,.14),0 16px 40px -18px rgba(91,108,255,.5),inset 0 1px 0 rgba(255,255,255,.06);
 }
-.big-input-label{font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.03em;margin-bottom:10px;text-transform:uppercase}
+.big-input-label{font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.04em;margin-bottom:8px}
+.big-input-wrap:focus-within .big-input-label{color:var(--accent-hot)}
 .big-input{
-  width:180px;
-  font-family:inherit;
-  font-size:56px;font-weight:700;
+  width:200px;max-width:100%;
+  font-family:var(--disp);
+  font-size:58px;font-weight:700;
   color:var(--ink);text-align:center;
   border:none;outline:none;background:transparent;
-  -moz-appearance:textfield;
+  -moz-appearance:textfield;appearance:textfield;
   letter-spacing:-.03em;
   font-variant-numeric:tabular-nums;
+  caret-color:var(--accent);
 }
 .big-input::-webkit-outer-spin-button,
 .big-input::-webkit-inner-spin-button{-webkit-appearance:none}
 .big-input::placeholder{color:var(--ink-faint)}
-.big-input-max{font-size:12px;color:var(--ink-soft);margin-top:6px;font-weight:500}
+.big-input-wrap:focus-within .big-input{text-shadow:0 0 30px rgba(124,138,255,.35)}
+.bi-meter{height:3px;max-width:220px;margin:12px auto 8px;background:rgba(160,175,225,.12);border-radius:2px;overflow:hidden}
+.bi-meter i{
+  display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  box-shadow:0 0 10px rgba(124,138,255,.7);
+  transition:width .4s cubic-bezier(.25,1,.3,1);
+}
+.big-input-max{font-family:var(--mono);font-size:11px;color:var(--ink-soft);font-weight:500;letter-spacing:.06em}
 
-/* 評定グリッド */
+/* ================================================================
+   評定グリッド
+   ================================================================ */
 .grades-panel{display:none}
 .grades-panel.open{display:block}
-.grade-year-tabs{display:flex;gap:6px;margin-bottom:14px}
-.grade-year-btn{
-  flex:1;padding:9px 4px;border-radius:8px;
-  font-size:13px;font-weight:500;
-  border:1px solid var(--border);background:#fff;
-  color:var(--ink-soft);cursor:pointer;transition:all .12s;
-  text-align:center;
-}
-.grade-year-btn:hover{border-color:var(--ink-soft);color:var(--ink)}
-.grade-year-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-
 .grade-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.grade-name{
-  font-size:12px;font-weight:500;color:var(--ink-mid);
-  flex:0 0 68px;line-height:1.2;
-}
-.grade-name.art{color:var(--accent)}
+.grade-name{font-size:12px;font-weight:500;color:var(--ink-mid);flex:0 0 70px;line-height:1.25}
+.grade-name.art{color:var(--cyan)}
 .grade-btns{display:flex;gap:5px;flex:1}
 .grade-btn{
-  flex:1;height:36px;border-radius:8px;
-  border:1px solid var(--border);
-  font-size:14px;font-weight:600;color:var(--ink-soft);
-  background:#fff;cursor:pointer;transition:all .1s;
+  flex:1;height:38px;border-radius:10px;border:1px solid var(--line);
+  font-family:var(--disp);font-size:15px;font-weight:600;color:var(--ink-soft);
+  background:rgba(148,163,216,.04);cursor:pointer;
+  transition:transform .14s cubic-bezier(.3,1.4,.4,1),background .15s,border-color .15s,color .15s,box-shadow .15s;
 }
-.grade-btn:hover{border-color:var(--ink-soft)}
-.grade-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.grade-btn.on.art{background:var(--accent);border-color:var(--accent)}
-
+.grade-btn:hover{border-color:rgba(160,175,225,.35)}
+.grade-btn:active{transform:scale(.9)}
+.grade-btn.on{
+  background:linear-gradient(180deg,#8b96ff,#5b6cff);border-color:transparent;color:#fff;
+  box-shadow:0 4px 14px -4px rgba(91,108,255,.6),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.grade-btn.on.art{
+  background:linear-gradient(180deg,#7de8ff,#3ec3e8);color:#062532;
+  box-shadow:0 4px 14px -4px rgba(125,232,255,.5),inset 0 1px 0 rgba(255,255,255,.35);
+}
 .naishin-meter{
-  margin-top:16px;padding:18px;
-  background:var(--bg-soft);
-  border-radius:14px;border:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
+  margin-top:18px;padding:18px 14px;border-radius:16px;
+  background:rgba(8,12,26,.6);border:1px solid var(--line);
+  display:flex;justify-content:space-around;align-items:stretch;gap:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.nm-block{text-align:center}
-.nm-label{font-size:11px;font-weight:600;color:var(--ink-soft);letter-spacing:.03em;text-transform:uppercase}
-.nm-val{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
-.nm-sub{font-size:11px;color:var(--ink-soft)}
+.nm-block{text-align:center;flex:1;padding:0 8px}
+.nm-block+.nm-block{border-left:1px solid var(--line-soft)}
+.nm-label{font-size:10px;font-weight:600;color:var(--ink-soft);letter-spacing:.08em;margin-bottom:4px}
+.nm-val{font-family:var(--disp);font-size:30px;font-weight:700;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.nm-sub{font-size:10.5px;color:var(--ink-soft)}
 
-/* ============================
-   HENSACHI INPUT
-   ============================ */
-.score-toggle{display:flex;gap:8px;margin-bottom:16px}
-.score-toggle-btn{
-  flex:1;padding:9px 8px;border-radius:8px;
-  font-size:13px;font-weight:500;
-  border:1px solid var(--border);background:#fff;
-  color:var(--ink-soft);cursor:pointer;transition:all .15s;
-  text-align:center;
-}
-.score-toggle-btn:hover{color:var(--ink)}
-.score-toggle-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-
-/* ============================
-   JUDGE BUTTON
-   ============================ */
-.judge-section{padding:28px 0 48px}
+/* ================================================================
+   JUDGE BUTTON — 周回する光のリング＋シーン＋立体押下
+   ================================================================ */
+.judge-section{padding:34px 0 52px}
 .btn-judge{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;padding:17px;
-  background:var(--ink);
-  color:#fff;font-family:inherit;
-  font-size:15px;font-weight:600;
-  border:none;border-radius:12px;cursor:pointer;
-  box-shadow:var(--shadow-sm);
-  transition:background .15s,transform .1s,box-shadow .15s;
-  letter-spacing:-.005em;
-  letter-spacing:-.01em;
+  position:relative;display:block;width:100%;height:66px;
+  border:none;border-radius:18px;padding:0;background:transparent;
+  cursor:pointer;isolation:isolate;
+  transition:transform .16s cubic-bezier(.3,1.2,.4,1),opacity .2s;
 }
-.btn-judge:hover{background:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.btn-judge:active{transform:scale(.99);box-shadow:var(--shadow-xs)}
-.btn-judge svg{width:18px;height:18px;flex-shrink:0}
+.btn-judge:hover{transform:translateY(-2px)}
+.btn-judge:active{transform:translateY(1px) scale(.99)}
+.btn-judge:disabled{cursor:default;transform:none}
+.bj-ring{position:absolute;inset:0;border-radius:18px;overflow:hidden;z-index:0}
+.bj-ring::before{
+  content:"";position:absolute;inset:-45%;
+  background:conic-gradient(from 0deg,
+    transparent 0 55%,
+    rgba(124,138,255,.05) 62%,
+    rgba(124,138,255,.9) 76%,
+    rgba(125,232,255,.95) 84%,
+    rgba(124,138,255,.05) 92%,
+    transparent 96%);
+  animation:bjSpin 3.4s linear infinite;
+}
+@keyframes bjSpin{to{transform:rotate(1turn)}}
+.bj-in{
+  position:absolute;inset:1.5px;border-radius:16.5px;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(180deg,#161f3f 0%,#0c1226 100%);
+  color:#fff;font-family:inherit;font-size:16px;font-weight:700;letter-spacing:.01em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 16px 40px -14px rgba(91,108,255,.55);
+  transition:box-shadow .2s;
+}
+.btn-judge:hover .bj-in{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 48px -12px rgba(91,108,255,.75)}
+.btn-judge:active .bj-in{box-shadow:inset 0 2px 6px rgba(0,0,0,.4),0 8px 22px -10px rgba(91,108,255,.5)}
+.bj-in svg{width:19px;height:19px;flex-shrink:0}
+.bj-sheen{position:absolute;inset:1.5px;border-radius:16.5px;overflow:hidden;z-index:2;pointer-events:none}
+.bj-sheen::before{
+  content:"";position:absolute;top:-30%;bottom:-30%;left:0;width:36%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.13),transparent);
+  transform:translateX(-160%) skewX(-18deg);
+  animation:bjSheen 4.8s ease-in-out infinite;
+}
+@keyframes bjSheen{0%,58%{transform:translateX(-160%) skewX(-18deg)}82%,100%{transform:translateX(460%) skewX(-18deg)}}
+.btn-judge.busy{opacity:.6}
+.btn-judge.busy .bj-ring::before,.btn-judge.busy .bj-sheen::before{animation-play-state:paused}
 
-/* ============================
-   RESULT
-   ============================ */
+/* ================================================================
+   スキャンパネル（判定中）
+   ================================================================ */
+#loadingOverlay{display:none;padding:40px 0 8px}
+#loadingOverlay.show{display:block;animation:riseUp .35s ease both}
+.scan-panel{
+  --ck:rgba(125,232,255,.5);
+  max-width:420px;margin:0 auto;
+  background:rgba(13,19,40,.72);
+  border:1px solid var(--line);
+  border-radius:18px;padding:22px 22px 20px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.scan-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-soft);margin-bottom:16px}
+.scan-head-l{display:flex;align-items:center;gap:7px;color:var(--cyan)}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 1s steps(2,start) infinite}
+.scan-core{position:relative;width:128px;height:128px;margin:0 auto 16px}
+.scan-svg{width:100%;height:100%;display:block}
+.sr-track{fill:none;stroke:rgba(160,175,225,.12);stroke-width:5}
+.sr-tick{fill:none;stroke:rgba(160,175,225,.2);stroke-width:4;stroke-dasharray:1 5.9115}
+.sr-fill{
+  fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  stroke-dasharray:326.726;stroke-dashoffset:326.726;
+  filter:drop-shadow(0 0 8px rgba(124,138,255,.55));
+}
+.sr-sweep{transform-origin:60px 60px;animation:sweepSpin 1.15s linear infinite}
+.sr-sweep line{stroke:rgba(125,232,255,.85);stroke-width:2;stroke-linecap:round}
+@keyframes sweepSpin{to{transform:rotate(1turn)}}
+.scan-pct{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-size:26px;font-weight:700;color:var(--ink);
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.scan-log{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink);min-height:22px}
+.sl-caret{color:var(--cyan);font-size:11px;animation:blink 1s steps(2,start) infinite}
+#loadingText.tick{animation:msgTick .22s ease both}
+@keyframes msgTick{0%{opacity:0;transform:translateY(5px)}100%{opacity:1;transform:translateY(0)}}
+.scan-target{margin-top:9px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-soft)}
+
+/* ================================================================
+   RESULT — 円形ゲージ＋発光グレード
+   ================================================================ */
 #resultArea{display:none;padding-bottom:16px}
 #resultArea.show{display:block}
+#resultArea.show>*{animation:riseUp .55s cubic-bezier(.22,1,.32,1) both}
+#resultArea.show>*:nth-child(2){animation-delay:.07s}
+#resultArea.show>*:nth-child(3){animation-delay:.13s}
+#resultArea.show>*:nth-child(4){animation-delay:.19s}
+#resultArea.show>*:nth-child(5){animation-delay:.25s}
+#resultArea.show>*:nth-child(6){animation-delay:.31s}
+#resultArea.show>*:nth-child(7){animation-delay:.37s}
 
-/* 結果カード */
 .result-main{
-  position:relative;overflow:hidden;
-  border-radius:20px;
-  padding:44px 24px 32px;
-  text-align:center;
-  margin-bottom:14px;
-  background:#fff;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow-lg);
+  position:relative;overflow:hidden;border-radius:20px;
+  padding:38px 24px 30px;text-align:center;margin-bottom:14px;
+  background-color:rgba(13,19,40,.66);
+  border:1px solid var(--line);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  --ck:rgba(160,175,225,.4);
 }
+.scanline{
+  position:absolute;left:0;right:0;top:0;height:34%;pointer-events:none;opacity:0;z-index:1;
+  background:linear-gradient(180deg,transparent,rgba(124,138,255,.10) 45%,rgba(125,232,255,.15) 50%,rgba(124,138,255,.10) 55%,transparent);
+}
+.result-main.scanned .scanline{animation:scanDown .7s ease-out .05s both}
+@keyframes scanDown{0%{opacity:1;transform:translateY(-110%)}100%{opacity:0;transform:translateY(340%)}}
 
-.result-grade-ring{
-  width:128px;height:128px;
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;
-  margin:0 auto 24px;
-  border:2px solid currentColor;
-  background:
-    radial-gradient(circle at 50% 30%,rgba(0,0,0,.02),transparent 70%),
-    #fff;
-  position:relative;z-index:1;
-  box-shadow:var(--shadow-sm);
-}
-.result-grade-letter{
-  font-size:54px;font-weight:800;line-height:1;
-  letter-spacing:-.02em;
-  font-variant-numeric:tabular-nums;
-}
-.result-grade-label{
-  font-size:17px;font-weight:700;
-  position:relative;z-index:1;margin-bottom:5px;
-  color:var(--ink);letter-spacing:-.01em;
-}
-.result-grade-sub{
-  font-size:13px;font-weight:500;color:var(--ink-soft);
-  position:relative;z-index:1;margin-bottom:28px;
-}
 .result-school-tag{
-  display:inline-block;
-  background:var(--bg-soft);
-  border:1px solid var(--border);
-  border-radius:8px;padding:6px 15px;
+  display:inline-block;margin-bottom:20px;padding:7px 16px;border-radius:9px;
+  background:rgba(148,163,216,.07);border:1px solid var(--line);
   font-size:12px;font-weight:600;color:var(--ink-mid);
-  position:relative;z-index:1;margin-bottom:24px;
-}
-
-/* パーセントバー：合格可能性を主役にした表現 */
-.pct-bar-wrap{
   position:relative;z-index:1;
-  background:var(--border-soft);
-  border-radius:8px;height:10px;
-  overflow:hidden;margin-bottom:12px;
 }
-.pct-bar-fill{
-  height:100%;background:var(--ink);border-radius:8px;
-  transition:width 1.2s cubic-bezier(.4,0,.2,1);
-  width:0%;
+.gauge-wrap{position:relative;width:176px;height:176px;margin:2px auto 18px;z-index:1}
+.gauge{width:100%;height:100%;display:block}
+.g-track{fill:none;stroke:rgba(160,175,225,.12);stroke-width:6}
+.g-ticks{fill:none;stroke:rgba(160,175,225,.22);stroke-width:5;stroke-dasharray:1 5.283}
+.g-fill{
+  fill:none;stroke:var(--gc,#8b96ff);stroke-width:6;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  stroke-dasharray:439.823;stroke-dashoffset:439.823;
+  transition:stroke-dashoffset 1.25s cubic-bezier(.22,1,.3,1);
+  filter:drop-shadow(0 0 10px var(--gg,rgba(139,150,255,.4)));
 }
+.g-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.result-grade-letter{
+  font-family:var(--disp);font-size:64px;font-weight:700;line-height:1;
+  color:var(--gc,#eef2ff);
+  text-shadow:0 0 26px var(--gg,rgba(139,150,255,.4));
+  letter-spacing:-.02em;
+}
+.result-grade-letter.pop{animation:letterPop .5s cubic-bezier(.3,1.6,.4,1) both}
+@keyframes letterPop{0%{transform:scale(.55);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+.gauge-wrap.pulse{animation:gaugePulse .6s cubic-bezier(.3,1.4,.4,1)}
+@keyframes gaugePulse{0%{transform:scale(1)}35%{transform:scale(1.03)}100%{transform:scale(1)}}
+#sparkWrap{position:absolute;inset:0;pointer-events:none}
+#sparkWrap i{
+  position:absolute;left:calc(50% - 1px);top:calc(50% - 7px);
+  width:2px;height:14px;border-radius:1px;opacity:0;
+  animation:sparkFly .65s ease-out both;
+}
+@keyframes sparkFly{
+  0%{transform:rotate(var(--a,0deg)) translateY(-62px) scaleY(.3);opacity:1}
+  100%{transform:rotate(var(--a,0deg)) translateY(-112px) scaleY(1);opacity:0}
+}
+.result-grade-label{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:5px;letter-spacing:-.01em;position:relative;z-index:1}
+.result-grade-sub{font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:26px;position:relative;z-index:1}
 .pct-label{
-  font-size:12px;font-weight:500;
-  color:var(--ink-soft);
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:12px;font-size:12px;font-weight:500;color:var(--ink-soft);
   position:relative;z-index:1;
-  display:flex;justify-content:space-between;
-  align-items:baseline;margin-bottom:16px;
-  letter-spacing:.01em;
 }
-.pct-big{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pct-big{font-family:var(--disp);font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pct-bar-wrap{height:8px;border-radius:6px;background:rgba(160,175,225,.12);overflow:hidden;position:relative;z-index:1}
+.pct-bar-fill{
+  height:100%;width:0%;border-radius:6px;
+  background-color:var(--gc,#8b96ff);
+  box-shadow:0 0 14px var(--gg,rgba(139,150,255,.5));
+  transition:width 1.25s cubic-bezier(.22,1,.3,1);
+}
+@keyframes barShimmer{0%{background-position:-120px 0}100%{background-position:240px 0}}
+.pct-bar-fill.shimmer{
+  background-image:linear-gradient(90deg,transparent 40%,rgba(255,255,255,.45) 50%,transparent 60%);
+  background-size:240px 100%;
+  animation:barShimmer 1.3s linear infinite;
+}
 
 /* breakdown */
 .breakdown-card{
-  background:#fff;border-radius:16px;
-  padding:20px 22px;margin-bottom:12px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow-xs);
+  background:rgba(13,19,40,.55);border:1px solid var(--line);
+  border-radius:16px;padding:8px 20px 10px;margin-bottom:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.breakdown-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 0;border-bottom:1px solid var(--border-soft);
-}
+.breakdown-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line-soft)}
 .breakdown-row:last-child{border-bottom:none}
 .breakdown-name{font-size:13px;font-weight:500;color:var(--ink-soft)}
-.breakdown-val{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
-.breakdown-diff{
-  font-size:12px;font-weight:600;
-  padding:4px 11px;border-radius:7px;
-}
-.diff-ok{background:var(--accent-lt);color:var(--accent-dark)}
-.diff-ng{background:var(--bg-soft);color:var(--ink-mid);border:1px solid var(--border)}
+.breakdown-val{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.breakdown-diff{font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:8px;letter-spacing:.02em}
+.diff-ok{background:rgba(76,224,179,.12);color:#7ff0cd;border:1px solid rgba(76,224,179,.3)}
+.diff-ng{background:rgba(148,163,216,.07);color:var(--ink-mid);border:1px solid var(--line)}
+.bd-total{margin:4px -8px 4px;padding:13px 12px;background:rgba(124,138,255,.08);border:1px solid rgba(124,138,255,.22);border-radius:12px}
+.bd-total .breakdown-name{color:var(--ink);font-weight:600}
 
 /* アドバイスカード */
 .advice-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:16px;padding:20px 22px;
-  margin-bottom:12px;
-  box-shadow:var(--shadow-xs);
+  background:rgba(13,19,40,.55);border:1px solid var(--line);
+  border-radius:16px;padding:20px 22px;margin-bottom:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.advice-title{font-size:11px;font-weight:600;color:var(--ink-soft);margin-bottom:9px;letter-spacing:.05em;text-transform:uppercase}
-.advice-text{font-size:14px;color:var(--ink-mid);line-height:1.75}
+.advice-title{font-size:11px;font-weight:600;color:var(--ink-soft);margin-bottom:10px;letter-spacing:.14em}
+.advice-text{font-size:14px;color:var(--ink-mid);line-height:1.85}
 
 /* 差チップ群 */
-.gap-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.gap-chip{
-  padding:7px 14px;border-radius:8px;
-  font-size:12px;font-weight:500;
-  border:1px solid var(--border);
-}
-.gc-ok{background:var(--accent-lt);color:var(--accent-dark);border-color:#e0e7ff}
-.gc-ng{background:#fff;color:var(--ink-mid)}
+.gap-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.gap-chip{padding:8px 14px;border-radius:9px;font-size:12px;font-weight:500;border:1px solid var(--line);background:rgba(148,163,216,.05);color:var(--ink-mid)}
+.gc-ok{background:rgba(76,224,179,.10);color:#8df2d3;border-color:rgba(76,224,179,.3)}
+.gc-ng{color:var(--ink-mid)}
 
 /* 近い高校 */
 .nearby-wrap{
-  background:#fff;border-radius:16px;
-  padding:22px;border:1px solid var(--border);
-  margin-bottom:16px;
-  box-shadow:var(--shadow-xs);
+  background:rgba(13,19,40,.55);border:1px solid var(--line);
+  border-radius:16px;padding:20px;margin-bottom:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.nearby-title{
-  font-size:13px;font-weight:600;color:var(--ink);
-  margin-bottom:14px;
-  display:flex;align-items:center;gap:6px;
-}
+.nearby-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px}
 .nearby-list{display:flex;flex-direction:column;gap:8px}
 .nearby-item{
-  display:flex;align-items:center;gap:12px;
-  padding:13px 15px;border-radius:12px;
-  background:var(--bg-soft);border:1px solid var(--border-soft);
-  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;
+  background:rgba(148,163,216,.05);border:1px solid var(--line-soft);cursor:pointer;
+  transition:transform .16s cubic-bezier(.3,1.3,.4,1),background .18s,border-color .18s,box-shadow .18s;
 }
-.nearby-item:hover{border-color:var(--ink-soft);background:#fff;box-shadow:var(--shadow-xs)}
+.nearby-item:hover{border-color:rgba(160,175,225,.3);background:rgba(148,163,216,.09);transform:translateY(-1px);box-shadow:0 8px 24px -12px rgba(0,0,0,.6)}
+.nearby-item:active{transform:scale(.985)}
 .nearby-badge{
-  width:36px;height:36px;border-radius:50%;
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;border:1.5px solid currentColor;
-  flex-shrink:0;background:#fff;
+  font-family:var(--disp);font-size:15px;font-weight:700;
+  border:1.5px solid currentColor;background:rgba(255,255,255,.03);
 }
-.nearby-txt{flex:1}
+.nearby-txt{flex:1;min-width:0}
 .nearby-school{font-size:13px;font-weight:600;color:var(--ink)}
 .nearby-dept{font-size:11px;font-weight:500;color:var(--ink-soft)}
-.nearby-arrow{font-size:14px;color:var(--ink-faint);transition:transform .15s}
-.nearby-item:hover .nearby-arrow{transform:translateX(2px)}
+.nearby-arrow{font-size:14px;color:var(--ink-faint);transition:transform .18s,color .18s}
+.nearby-item:hover .nearby-arrow{transform:translateX(3px);color:var(--accent)}
+.nearby-note{font-size:11px;color:var(--ink-soft);margin-top:12px}
 
-/* 注意書き */
-.note-card{
-  background:var(--bg-soft);border:1px solid var(--border);
-  border-radius:12px;padding:16px;
-  font-size:12px;line-height:1.75;color:var(--ink-soft);
-  margin-bottom:16px;
-}
-.note-card b{color:var(--ink-mid)}
-
-/* ============================
-   FOOTER
-   ============================ */
-footer{
-  background:#fff;padding:32px 20px;text-align:center;
-  border-top:1px solid var(--border-soft);
-}
-.ft-brand{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px}
-.ft-sub{font-size:12px;color:var(--ink-soft);line-height:1.7}
-.ft-sub a{color:var(--ink-mid)}
-.ft-copy{font-size:11px;color:var(--ink-faint);margin-top:12px}
-
-/* animations */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(28px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.fade-in{animation:fadeUp .5s ease both}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
-.reveal.in{opacity:1;transform:translateY(0)}
-
-/* ============================
-   TAP FEEDBACK（全タップ要素共通・控えめ）
-   ============================ */
-.school-chip,.area-tab,.grade-btn,.grade-year-btn,.input-toggle-btn,
-.score-toggle-btn,.btn-start,.btn-judge,.nearby-item,
-.share-btn{
-  transition:transform .1s ease,background .15s,border-color .15s,color .15s;
-}
-.school-chip:active,.area-tab:active,.grade-btn:active,.grade-year-btn:active,
-.input-toggle-btn:active,.score-toggle-btn:active,.nearby-item:active,
-.share-btn:active{
-  transform:scale(.97);
-}
-.btn-start:active,.btn-judge:active{
-  transform:scale(.98);
-}
-
-/* ============================
-   選択表示のフェードイン
-   ============================ */
-.selected-display{transform-origin:center top}
-@keyframes fadeInSoft{
-  0%{opacity:0;transform:translateY(-4px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-.selected-display.show{animation:fadeInSoft .25s ease both}
-
-/* ============================
-   数字カウントアップ表示
-   ============================ */
-.nm-val{
-  font-variant-numeric:tabular-nums;
-}
-
-/* ============================
-   ローディング演出（判定中・控えめ）
-   ============================ */
-#loadingOverlay{
-  display:none;
-  padding:56px 20px;
-  text-align:center;
-}
-#loadingOverlay.show{display:block;animation:fadeUp .3s ease both}
-.loading-ring-wrap{
-  position:relative;width:64px;height:64px;margin:0 auto 24px;
-}
-.loading-ring-svg{width:64px;height:64px;transform:rotate(-90deg)}
-.loading-ring-track{fill:none;stroke:var(--border);stroke-width:4}
-.loading-ring-fill{
-  fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;
-  stroke-dasharray:329;stroke-dashoffset:329;
-  transition:stroke-dashoffset .1s linear;
-}
-.loading-text{
-  font-size:14px;font-weight:600;color:var(--ink);
-  min-height:20px;
-}
-.loading-sub{font-size:12px;color:var(--ink-soft);margin-top:6px}
-
-/* カウントダウン数字（控えめ） */
-.countdown-num{
-  font-size:44px;font-weight:700;color:var(--ink);
-  animation:countdownFade .4s ease both;
-}
-@keyframes countdownFade{
-  0%{opacity:0;transform:scale(1.15)}
-  100%{opacity:1;transform:scale(1)}
-}
-
-/* ============================
-   判定発表シークエンス（控えめ）
-   ============================ */
-@keyframes gradeRevealSoft{
-  0%{opacity:0;transform:translateY(8px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-.grade-reveal{animation:gradeRevealSoft .4s ease both}
-
-.ring-pulse{}
-
-@keyframes shakeCard{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-3px)}
-  75%{transform:translateX(3px)}
-}
-.shake-in{animation:shakeCard .25s ease}
-
-/* ============================
-   結果ゲージバー：シマー＆カウントアップ
-   ============================ */
-@keyframes barShimmer{
-  0%{background-position:-100px 0}
-  100%{background-position:200px 0}
-}
-.pct-bar-fill.shimmer{
-  background-image:linear-gradient(90deg,transparent 0%,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%,transparent 100%);
-  background-size:200px 100%;
-  animation:barShimmer 1.4s linear infinite;
-}
-
-/* ============================
-   SHARE セクション
-   ============================ */
+/* シェア */
 .share-section{
-  background:#fff;border:1px solid var(--border);
-  border-radius:14px;padding:20px;margin-bottom:16px;
-  text-align:center;
+  background:rgba(13,19,40,.55);border:1px solid var(--line);
+  border-radius:16px;padding:20px;margin-bottom:14px;text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
 .share-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px}
 .share-sub{font-size:12px;color:var(--ink-soft);margin-bottom:16px}
 .share-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .share-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:9px 16px;border-radius:8px;
-  font-size:12px;font-weight:600;
-  border:1px solid var(--border);cursor:pointer;
-  font-family:inherit;
-  background:#fff;color:var(--ink-mid);
+  display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;
+  font-family:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);cursor:pointer;
+  background:rgba(148,163,216,.06);color:var(--ink-mid);
+  transition:transform .15s cubic-bezier(.3,1.3,.4,1),filter .2s,background .2s,color .2s,border-color .2s;
 }
+.share-btn:hover{filter:brightness(1.12)}
+.share-btn:active{transform:scale(.95)}
 .share-btn svg{width:16px;height:16px;flex-shrink:0}
-.share-x{background:var(--ink);color:#fff;border-color:var(--ink)}
-.share-line{background:#06c755;color:#fff;border-color:#06c755}
-.share-copy{background:#fff;color:var(--ink-mid);border-color:var(--border)}
-.share-copy.copied{background:var(--accent-lt);color:var(--accent-dark);border-color:#e0e7ff}
+.share-line{background:#06c755;color:#fff;border-color:transparent}
+.share-x{background:#eef2ff;color:#05070f;border-color:transparent}
+.share-copy.copied{background:rgba(76,224,179,.14);color:#8df2d3;border-color:rgba(76,224,179,.35)}
+
+/* 注意書き */
+.note-card{
+  background:rgba(148,163,216,.04);border:1px solid var(--line-soft);
+  border-radius:14px;padding:16px;
+  font-size:12px;line-height:1.8;color:var(--ink-soft);margin-bottom:20px;
+}
+.note-card b{color:var(--ink-mid)}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+footer{
+  padding:36px 20px calc(28px + env(safe-area-inset-bottom,0px));
+  text-align:center;border-top:1px solid var(--line-soft);
+}
+.ft-brand{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.ft-sub{font-size:12px;color:var(--ink-soft);line-height:1.8}
+.ft-sub a{color:var(--ink-mid)}
+.ft-copy{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--ink-faint);margin-top:14px}
+
+/* ================================================================
+   スクロール連動リビール／シェイク／トースト
+   ================================================================ */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s cubic-bezier(.2,.8,.2,1),transform .65s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+@keyframes shakeCard{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake-in{animation:shakeCard .28s ease}
+
+#toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  transform:translate(-50%,16px);
+  background:rgba(18,25,48,.92);
+  border:1px solid var(--line);
+  color:var(--ink);font-size:13px;font-weight:600;
+  padding:12px 20px;border-radius:12px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;z-index:300;
+  transition:opacity .25s,transform .25s cubic-bezier(.3,1.3,.4,1);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  max-width:calc(100% - 40px);text-align:center;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ================================================================
+   REDUCED MOTION
+   ================================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
 </style>
 
 </head>
 <body>
+
+<div class="ambient" aria-hidden="true"><i class="au a1"></i><i class="au a2"></i><i class="gridfx"></i></div>
+<div id="flash" aria-hidden="true"></div>
 
 <!-- HEADER -->
 <header class="hd">
   <div class="hd-logo">
     沖縄県立高校 合格判定シミュレーター
   </div>
+  <div class="hd-meta"><i class="hd-dot"></i>DATA&nbsp;/&nbsp;2025</div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-rings" aria-hidden="true"></div>
   <div class="hero-inner">
+    <div class="hero-eyebrow"><i class="he-dot"></i>PASS&nbsp;PROBABILITY&nbsp;SIMULATOR</div>
     <h1>
       志望校との距離を、<br>
       <span>今すぐ数値で</span>確認する。
@@ -674,10 +730,7 @@ footer{
 
 <!-- ======================== STEP 1 ======================== -->
 <section class="step-section" id="step1">
-  <div class="step-badge">
-    <span class="step-num">1</span>
-    <span style="font-weight:600;color:var(--ink)">志望校</span>
-  </div>
+  <div class="step-eyebrow"><span class="se-num">01</span><span class="se-line"></span><span class="se-tag">TARGET</span></div>
   <h2 class="step-title">志望校を選択してください</h2>
   <p class="step-sub">地域を選び、該当する学校をタップしてください</p>
 
@@ -690,41 +743,41 @@ footer{
 
   <div class="school-chips" id="schoolChips"></div>
 
-  <div class="selected-display" id="selectedDisplay">
-    <div class="selected-label">選択中の志望校</div>
+  <div class="selected-display corners" id="selectedDisplay">
+    <div class="selected-label"><span>選択中の志望校</span><span class="sl-lock">LOCKED</span></div>
     <div class="selected-name" id="selectedName">-</div>
   </div>
 </section>
 
 <!-- ======================== STEP 2 ======================== -->
 <section class="step-section" id="step2">
-  <div class="step-badge">
-    <span class="step-num">2</span>
-    <span style="font-weight:600;color:var(--ink)">内申点</span>
-  </div>
+  <div class="step-eyebrow"><span class="se-num">02</span><span class="se-line"></span><span class="se-tag">NAISHIN</span></div>
   <h2 class="step-title">内申点を入力してください</h2>
   <p class="step-sub">165点満点です。不明な場合は評定から自動計算できます</p>
 
-  <div class="input-toggle">
-    <button class="input-toggle-btn on" id="toggleDirect" onclick="switchNaishin('direct')">内申点を入力</button>
-    <button class="input-toggle-btn" id="toggleCalc" onclick="switchNaishin('calc')">評定から計算する</button>
+  <div class="seg" id="naishinSeg">
+    <span class="seg-thumb" aria-hidden="true"></span>
+    <button class="seg-btn on" id="toggleDirect" onclick="switchNaishin('direct')">内申点を入力</button>
+    <button class="seg-btn" id="toggleCalc" onclick="switchNaishin('calc')">評定から計算する</button>
   </div>
 
   <!-- 直接入力 -->
   <div id="panelDirect">
-    <div class="big-input-wrap">
+    <div class="big-input-wrap glare">
       <div class="big-input-label">内申点（165点満点）</div>
       <input class="big-input" type="number" id="naishinInput" placeholder="120" min="0" max="165" inputmode="numeric">
+      <div class="bi-meter"><i id="naiMeter"></i></div>
       <div class="big-input-max">/ 165点</div>
     </div>
   </div>
 
   <!-- 評定から -->
   <div id="panelCalc" class="grades-panel">
-    <div class="grade-year-tabs">
-      <button class="grade-year-btn on" data-y="1" onclick="switchYear(1)">中1</button>
-      <button class="grade-year-btn" data-y="2" onclick="switchYear(2)">中2</button>
-      <button class="grade-year-btn" data-y="3" onclick="switchYear(3)">中3</button>
+    <div class="seg seg-3" id="yearSeg">
+      <span class="seg-thumb" aria-hidden="true"></span>
+      <button class="seg-btn grade-year-btn on" data-y="1" onclick="switchYear(1)">中1</button>
+      <button class="seg-btn grade-year-btn" data-y="2" onclick="switchYear(2)">中2</button>
+      <button class="seg-btn grade-year-btn" data-y="3" onclick="switchYear(3)">中3</button>
     </div>
     <div id="gradeGrid"></div>
     <div class="naishin-meter">
@@ -744,30 +797,30 @@ footer{
 
 <!-- ======================== STEP 3 ======================== -->
 <section class="step-section" id="step3">
-  <div class="step-badge">
-    <span class="step-num">3</span>
-    <span style="font-weight:600;color:var(--ink)">学力の目安</span>
-  </div>
+  <div class="step-eyebrow"><span class="se-num">03</span><span class="se-line"></span><span class="se-tag">SCORE</span></div>
   <h2 class="step-title">偏差値または点数を入力してください</h2>
   <p class="step-sub">任意項目です。入力すると判定の精度が上がります</p>
 
-  <div class="score-toggle">
-    <button class="score-toggle-btn on" id="toggleDev" onclick="switchScore('dev')">偏差値で入力</button>
-    <button class="score-toggle-btn" id="toggleScore" onclick="switchScore('score')">5教科の点数で入力</button>
+  <div class="seg" id="scoreSeg">
+    <span class="seg-thumb" aria-hidden="true"></span>
+    <button class="seg-btn on" id="toggleDev" onclick="switchScore('dev')">偏差値で入力</button>
+    <button class="seg-btn" id="toggleScore" onclick="switchScore('score')">5教科の点数で入力</button>
   </div>
 
   <div id="panelDev">
-    <div class="big-input-wrap" id="devWrap">
+    <div class="big-input-wrap glare" id="devWrap">
       <div class="big-input-label">偏差値（プレ入試・県模試など）</div>
       <input class="big-input" type="number" id="devInput" placeholder="52" min="20" max="80" inputmode="numeric">
+      <div class="bi-meter"><i id="devMeter"></i></div>
       <div class="big-input-max">/ 20〜80の範囲</div>
     </div>
   </div>
 
   <div id="panelScore" style="display:none">
-    <div class="big-input-wrap">
+    <div class="big-input-wrap glare">
       <div class="big-input-label">5教科合計（300点満点）</div>
       <input class="big-input" type="number" id="scoreInput" placeholder="180" min="0" max="300" inputmode="numeric">
+      <div class="bi-meter"><i id="scoreMeter"></i></div>
       <div class="big-input-max">点 ／ 偏差値に自動換算されます</div>
     </div>
   </div>
@@ -776,31 +829,51 @@ footer{
 <!-- ======================== JUDGE BUTTON ======================== -->
 <div class="judge-section">
   <button class="btn-judge" id="judgeBtn" onclick="runJudge(event)">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10M12 8l4 4-4 4"/><path d="M22 2 12 12"/></svg>
-    判定する
+    <span class="bj-ring" aria-hidden="true"></span>
+    <span class="bj-in">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10M12 8l4 4-4 4"/><path d="M22 2 12 12"/></svg>
+      判定する
+    </span>
+    <span class="bj-sheen" aria-hidden="true"></span>
   </button>
 </div>
 
-<!-- ======================== LOADING ======================== -->
+<!-- ======================== LOADING（スキャンパネル） ======================== -->
 <div id="loadingOverlay">
-  <div class="loading-ring-wrap">
-    <svg class="loading-ring-svg" viewBox="0 0 120 120">
-      <circle class="loading-ring-track" cx="60" cy="60" r="52"/>
-      <circle class="loading-ring-fill" id="loadingRingFill" cx="60" cy="60" r="52"/>
-    </svg>
+  <div class="scan-panel corners">
+    <div class="scan-head">
+      <span class="scan-head-l"><i class="sp-dot"></i>ANALYZING</span>
+      <span class="scan-head-r">OKINAWA&nbsp;/&nbsp;2025</span>
+    </div>
+    <div class="scan-core">
+      <svg class="scan-svg" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="sr-track" cx="60" cy="60" r="52"/>
+        <circle class="sr-tick" cx="60" cy="60" r="44"/>
+        <circle class="sr-fill" id="scanRingFill" cx="60" cy="60" r="52"/>
+        <g class="sr-sweep"><line x1="60" y1="60" x2="60" y2="14"/></g>
+      </svg>
+      <div class="scan-pct" id="scanPct">0%</div>
+    </div>
+    <div class="scan-log"><span class="sl-caret">▸</span><span id="loadingText">診断しています</span></div>
+    <div class="scan-target" id="scanTarget">—</div>
   </div>
-  <div class="loading-text" id="loadingText">診断しています</div>
-  <div class="loading-sub">内申点と偏差値を照合しています</div>
 </div>
 
 <!-- ======================== RESULT ======================== -->
 <div id="resultArea">
 
   <!-- メイン判定 -->
-  <div class="result-main fade-in" id="resultMain">
+  <div class="result-main corners glare" id="resultMain">
+    <i class="scanline" aria-hidden="true"></i>
     <div class="result-school-tag" id="rSchoolTag">─</div>
-    <div class="result-grade-ring" id="rRing">
-      <span class="result-grade-letter" id="rLetter">─</span>
+    <div class="gauge-wrap" id="rRing">
+      <svg class="gauge" viewBox="0 0 160 160" aria-hidden="true">
+        <circle class="g-track" cx="80" cy="80" r="70"/>
+        <circle class="g-ticks" cx="80" cy="80" r="60"/>
+        <circle class="g-fill" id="gaugeFill" cx="80" cy="80" r="70"/>
+      </svg>
+      <div class="g-center"><span class="result-grade-letter" id="rLetter">─</span></div>
+      <span id="sparkWrap" aria-hidden="true"></span>
     </div>
     <div class="result-grade-label" id="rLabel">─</div>
     <div class="result-grade-sub" id="rSub">─</div>
@@ -814,7 +887,7 @@ footer{
   </div>
 
   <!-- ブレークダウン -->
-  <div class="breakdown-card fade-in" id="bdCard">
+  <div class="breakdown-card" id="bdCard">
     <div class="breakdown-row">
       <span class="breakdown-name">内申判定</span>
       <span class="breakdown-val" id="bdNai">—</span>
@@ -825,9 +898,9 @@ footer{
       <span class="breakdown-val" id="bdDev">—</span>
       <span class="breakdown-diff" id="bdDevDiff"></span>
     </div>
-    <div class="breakdown-row" style="background:var(--bg-soft);border-radius:8px;padding:12px">
-      <span class="breakdown-name" style="color:var(--ink);font-weight:600">総合判定</span>
-      <span class="breakdown-val" id="bdOverall" style="color:var(--ink)">—</span>
+    <div class="breakdown-row bd-total">
+      <span class="breakdown-name">総合判定</span>
+      <span class="breakdown-val" id="bdOverall">—</span>
       <span></span>
     </div>
   </div>
@@ -836,22 +909,22 @@ footer{
   <div class="gap-chips" id="gapChips"></div>
 
   <!-- アドバイス -->
-  <div class="advice-card fade-in" id="adviceCard">
+  <div class="advice-card" id="adviceCard">
     <div class="advice-title">アドバイス</div>
     <div class="advice-text" id="adviceText">─</div>
   </div>
 
   <!-- 近い高校 -->
-  <div class="nearby-wrap fade-in" id="nearbyWrap" style="display:none">
+  <div class="nearby-wrap" id="nearbyWrap" style="display:none">
     <div class="nearby-title">
       近いレベルの高校候補
     </div>
     <div class="nearby-list" id="nearbyList"></div>
-    <p style="font-size:11px;color:var(--ink-soft);margin-top:12px">※タップすると上の判定に反映されます</p>
+    <p class="nearby-note">※タップすると上の判定に反映されます</p>
   </div>
 
   <!-- シェア -->
-  <div class="share-section fade-in">
+  <div class="share-section">
     <div class="share-title" id="shareTitleText">この結果をシェアする</div>
     <div class="share-sub">友だちや保護者に結果を送ってみよう</div>
     <div class="share-btns">
@@ -871,7 +944,7 @@ footer{
   </div>
 
   <!-- 注意書き -->
-  <div class="note-card fade-in">
+  <div class="note-card">
     この判定は過去データや入力内容にもとづく<b>目安</b>です。実際の合否は倍率、面接、調査書、特色選抜、学校ごとの選抜方法などによって変わります。学校や塾の先生とあわせてご活用ください。
   </div>
 
@@ -892,7 +965,14 @@ footer{
 </footer>
 </main>
 
+<div id="toast" role="alert" aria-live="polite"></div>
+
 <script>
+/* ================================================================
+   モーション設定（OSの「視差効果を減らす」を尊重）
+   ================================================================ */
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* ================================================================
    振動フィードバック（対応端末のみ・控えめに使用）
    ================================================================ */
@@ -904,7 +984,8 @@ function vibrate(pattern){
    スクロール連動フェードイン（Intersection Observer）
    ================================================================ */
 function initScrollReveal(){
-  const targets=document.querySelectorAll(".step-section, footer");
+  const targets=document.querySelectorAll(".step-section, .judge-section, footer");
+  if(!("IntersectionObserver" in window)){return}
   targets.forEach(el=>el.classList.add("reveal"));
   const io=new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
@@ -1092,12 +1173,14 @@ const Z80=0.8416212,SIGMA=4/Z80;
 function passProb(m){return Math.max(2,Math.min(98,Math.round(100*ncdf(m/SIGMA+Z80))))}
 function score2dev(s){return Math.max(20,Math.min(80,Math.round(20+(s/300)*60)))}
 
+/* 判定グレード定義：ランク・ラベル・基準は従来と完全に同一。
+   色のみダークHUD用の発光色（bg=カード上部の色ワッシュ / ring=計器色 / glow=発光） */
 const GRADE_DEF=[
-  {r:"A",label:"A判定",sub:"合格圏",bg:"#fafafa",ring:"#0a0a0a",icon:""},
-  {r:"B",label:"B判定",sub:"合格ラインまであと一歩",bg:"#fafafa",ring:"#404040",icon:""},
-  {r:"C",label:"C判定",sub:"ボーダーライン",bg:"#fafafa",ring:"#737373",icon:""},
-  {r:"D",label:"D判定",sub:"挑戦圏",bg:"#fafafa",ring:"#a3a3a3",icon:""},
-  {r:"E",label:"E判定",sub:"要対策",bg:"#fafafa",ring:"#c7c7c7",icon:""},
+  {r:"A",label:"A判定",sub:"合格圏",bg:"radial-gradient(140% 110% at 50% -20%,rgba(76,224,179,.16),rgba(76,224,179,0) 55%)",ring:"#4ce0b3",glow:"rgba(76,224,179,.45)"},
+  {r:"B",label:"B判定",sub:"合格ラインまであと一歩",bg:"radial-gradient(140% 110% at 50% -20%,rgba(139,150,255,.16),rgba(139,150,255,0) 55%)",ring:"#8b96ff",glow:"rgba(139,150,255,.45)"},
+  {r:"C",label:"C判定",sub:"ボーダーライン",bg:"radial-gradient(140% 110% at 50% -20%,rgba(184,194,221,.12),rgba(184,194,221,0) 55%)",ring:"#b8c2dd",glow:"rgba(184,194,221,.35)"},
+  {r:"D",label:"D判定",sub:"挑戦圏",bg:"radial-gradient(140% 110% at 50% -20%,rgba(242,177,85,.14),rgba(242,177,85,0) 55%)",ring:"#f2b155",glow:"rgba(242,177,85,.4)"},
+  {r:"E",label:"E判定",sub:"要対策",bg:"radial-gradient(140% 110% at 50% -20%,rgba(242,120,154,.13),rgba(242,120,154,0) 55%)",ring:"#f2789a",glow:"rgba(242,120,154,.4)"},
 ];
 const RANK={A:4,B:3,C:2,D:1,E:0};
 const DEV_PER_NAISHIN=2.4;
@@ -1175,16 +1258,11 @@ let naishinMode="direct";
 let scoreMode="dev";
 
 /* ================================================================
-   INIT
-   ================================================================ */
-
-
-/* ================================================================
    SCHOOL CHIPS
    ================================================================ */
 function switchArea(area,btn){
   currentArea=area;
-    document.querySelectorAll(".area-tab").forEach(b=>b.classList.remove("on"));
+  document.querySelectorAll(".area-tab").forEach(b=>b.classList.remove("on"));
   btn.classList.add("on");
   renderChips();
 }
@@ -1202,7 +1280,7 @@ function renderChips(){
 }
 function selectSchool(id){
   selectedId=id;
-    vibrate(15);
+  vibrate(15);
   renderChips();
   const s=SCHOOLS.find(x=>x.id===id);
   const disp=document.getElementById("selectedDisplay");
@@ -1218,7 +1296,8 @@ renderChips();
    ================================================================ */
 function switchNaishin(mode){
   naishinMode=mode;
-    document.getElementById("toggleDirect").classList.toggle("on",mode==="direct");
+  document.getElementById("naishinSeg").style.setProperty("--i",mode==="direct"?0:1);
+  document.getElementById("toggleDirect").classList.toggle("on",mode==="direct");
   document.getElementById("toggleCalc").classList.toggle("on",mode==="calc");
   document.getElementById("panelDirect").style.display=mode==="direct"?"":"none";
   const pc=document.getElementById("panelCalc");
@@ -1228,7 +1307,8 @@ function switchNaishin(mode){
 }
 function switchYear(y){
   gradeYear=y;
-    document.querySelectorAll(".grade-year-btn").forEach(b=>b.classList.toggle("on",Number(b.dataset.y)===y));
+  document.getElementById("yearSeg").style.setProperty("--i",y-1);
+  document.querySelectorAll(".grade-year-btn").forEach(b=>b.classList.toggle("on",Number(b.dataset.y)===y));
   renderGrades();
 }
 function renderGrades(){
@@ -1283,6 +1363,7 @@ function calcNaishin(){
   animateCountTo(document.getElementById("nmProjected"),proj);
   if(proj!==null)document.getElementById("naishinInput").value=proj;
   else if(conf!==null)document.getElementById("naishinInput").value=conf;
+  syncMeters();
 }
 
 /* ================================================================
@@ -1290,10 +1371,40 @@ function calcNaishin(){
    ================================================================ */
 function switchScore(mode){
   scoreMode=mode;
-    document.getElementById("toggleDev").classList.toggle("on",mode==="dev");
+  document.getElementById("scoreSeg").style.setProperty("--i",mode==="dev"?0:1);
+  document.getElementById("toggleDev").classList.toggle("on",mode==="dev");
   document.getElementById("toggleScore").classList.toggle("on",mode==="score");
   document.getElementById("panelDev").style.display=mode==="dev"?"":"none";
   document.getElementById("panelScore").style.display=mode==="score"?"":"none";
+}
+
+/* ================================================================
+   入力メーター（ビッグ数字入力の下の発光バー）
+   ================================================================ */
+function syncMeters(){
+  const set=(barId,inputId,min,max)=>{
+    const bar=document.getElementById(barId),inp=document.getElementById(inputId);
+    if(!bar||!inp)return;
+    let v=parseFloat(inp.value);
+    if(isNaN(v))v=min;
+    v=Math.max(min,Math.min(max,v));
+    bar.style.width=((v-min)/(max-min)*100)+"%";
+  };
+  set("naiMeter","naishinInput",0,165);
+  set("devMeter","devInput",20,80);
+  set("scoreMeter","scoreInput",0,300);
+}
+
+/* ================================================================
+   トースト（alertの代替・非ブロッキング）
+   ================================================================ */
+let __toastT=null;
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;
+  t.classList.remove("show");void t.offsetWidth;t.classList.add("show");
+  clearTimeout(__toastT);
+  __toastT=setTimeout(()=>t.classList.remove("show"),2400);
 }
 
 /* ================================================================
@@ -1303,7 +1414,7 @@ function runJudge(){
   if(!selectedId){
     vibrate([30,40,30]);
     shakeElement(document.getElementById("step1"));
-    alert("志望校を選んでください。");
+    showToast("志望校を選んでください。");
     return;
   }
   const school=SCHOOLS.find(s=>s.id===selectedId);
@@ -1322,7 +1433,7 @@ function runJudge(){
   if(nai===null&&dev===null){
     vibrate([30,40,30]);
     shakeElement(document.getElementById("step2"));
-    alert("内申点か偏差値（点数）を入力してください。");
+    showToast("内申点か偏差値（点数）を入力してください。");
     return;
   }
   playJudgeSequence(school,d,nai,dev);
@@ -1336,81 +1447,62 @@ function shakeElement(el){
 }
 
 /* ================================================================
-   判定処理シークエンス：ローディング → カウントダウン → 結果表示
+   判定処理シークエンス：スキャン(約1.5秒) → フラッシュ → 結果表示
    ================================================================ */
 function playJudgeSequence(school,d,nai,dev){
   const btn=document.getElementById("judgeBtn");
-  btn.style.opacity=".5";btn.style.pointerEvents="none";
+  btn.disabled=true;btn.classList.add("busy");
+  vibrate(12);
 
   const overlay=document.getElementById("loadingOverlay");
   const resultArea=document.getElementById("resultArea");
   resultArea.classList.remove("show");resultArea.style.display="none";
   overlay.classList.add("show");
+  document.getElementById("scanTarget").textContent="TARGET: "+school.name+"高校 "+school.dept;
   setTimeout(()=>overlay.scrollIntoView({behavior:"smooth",block:"center"}),60);
 
-  const ringFill=document.getElementById("loadingRingFill");
-  const loadingText=document.getElementById("loadingText");
-  const CIRC=2*Math.PI*52;
-  ringFill.style.strokeDasharray=CIRC;
-  ringFill.style.strokeDashoffset=CIRC;
+  const fill=document.getElementById("scanRingFill");
+  const pctEl=document.getElementById("scanPct");
+  const logEl=document.getElementById("loadingText");
+  const C=326.726;
+  fill.style.strokeDasharray=C;
+  fill.style.strokeDashoffset=C;
 
   const messages=["志望校データを照合しています","内申点を分析しています","偏差値を照合しています","過去の合否データと比較しています"];
-  let msgIdx=0;
-  loadingText.textContent=messages[0];
+  let lastMsg=-1;
+  logEl.textContent=messages[0];
 
-  const totalMs=1200;
+  const totalMs=RM?400:1500;
   const startT=performance.now();
-  const msgInterval=setInterval(()=>{
-    msgIdx=(msgIdx+1)%messages.length;
-    loadingText.textContent=messages[msgIdx];
-  },totalMs/messages.length);
 
-  function ringStep(now){
+  function step(now){
     const p=Math.min(1,(now-startT)/totalMs);
-    ringFill.style.strokeDashoffset=CIRC*(1-p);
-    if(p<1) requestAnimationFrame(ringStep);
-  }
-  requestAnimationFrame(ringStep);
-
-  setTimeout(()=>{
-    clearInterval(msgInterval);
-    overlay.classList.remove("show");
-    runCountdown(()=>{
-      renderResult(school,d,nai,dev);
-      btn.style.opacity="";btn.style.pointerEvents="";
-    });
-  },totalMs);
-}
-
-/* カウントダウン「3・2・1」演出（控えめ） */
-function runCountdown(onDone){
-  const overlay=document.getElementById("loadingOverlay");
-  overlay.classList.add("show");
-  overlay.innerHTML='<div class="countdown-num" id="countdownNum">3</div><div class="loading-sub">結果を表示します</div>';
-  let n=3;
-  const iv=setInterval(()=>{
-    n--;
-    if(n>=1){
-      const el=document.getElementById("countdownNum");
-      el.textContent=n;
-      el.style.animation="none";void el.offsetWidth;el.style.animation="";
-      vibrate(15);
-    }else{
-      clearInterval(iv);
-      overlay.classList.remove("show");
-      /* オーバーレイのinnerHTMLを元に戻す（次回のローディングに備える） */
-      overlay.innerHTML=`
-        <div class="loading-ring-wrap">
-          <svg class="loading-ring-svg" viewBox="0 0 120 120">
-            <circle class="loading-ring-track" cx="60" cy="60" r="52"/>
-            <circle class="loading-ring-fill" id="loadingRingFill" cx="60" cy="60" r="52"/>
-          </svg>
-        </div>
-        <div class="loading-text" id="loadingText">診断しています</div>
-        <div class="loading-sub">内申点と偏差値を照合しています</div>`;
-      onDone();
+    fill.style.strokeDashoffset=C*(1-p);
+    pctEl.textContent=Math.round(p*100)+"%";
+    const mi=Math.min(messages.length-1,Math.floor(p*messages.length));
+    if(mi!==lastMsg){
+      lastMsg=mi;
+      logEl.textContent=messages[mi];
+      logEl.classList.remove("tick");void logEl.offsetWidth;logEl.classList.add("tick");
+      if(mi>0)vibrate(6);
     }
-  },380);
+    if(p<1){requestAnimationFrame(step)}
+    else{finish()}
+  }
+  requestAnimationFrame(step);
+
+  function finish(){
+    vibrate(20);
+    const done=()=>{
+      overlay.classList.remove("show");
+      renderResult(school,d,nai,dev);
+      btn.disabled=false;btn.classList.remove("busy");
+    };
+    if(RM){done();return}
+    const flash=document.getElementById("flash");
+    flash.classList.remove("go");void flash.offsetWidth;flash.classList.add("go");
+    setTimeout(done,170);
+  }
 }
 
 /* ================================================================
@@ -1441,37 +1533,53 @@ function renderResult(school,d,nai,dev){
   /* 結果をグローバルに保持（シェア機能から参照） */
   window.__lastResult={school,pct,overall,label:gi.label};
 
-  /* メインカード：ポップ演出付きで表示 */
+  /* メインカード：グレード色の光ワッシュ＋スキャンライン演出 */
   const rm=document.getElementById("resultMain");
-  rm.classList.remove("grade-reveal");
+  rm.style.setProperty("--gc",gi.ring);
+  rm.style.setProperty("--gg",gi.glow);
+  rm.style.backgroundImage=gi.bg;
+  rm.classList.remove("scanned");
   void rm.offsetWidth;
-  rm.style.background=gi.bg;
-  rm.classList.add("grade-reveal");
+  rm.classList.add("scanned");
   document.getElementById("rSchoolTag").textContent=school.name+"高校 "+school.dept+(d.dummy?"（参考値）":"");
-  const ring=document.getElementById("rRing");
-  ring.style.borderColor=gi.ring;ring.style.color=gi.ring;
-  ring.classList.remove("ring-pulse");
-  document.getElementById("rLetter").textContent=gi.r;
+
+  const letter=document.getElementById("rLetter");
+  letter.textContent=gi.r;
+  letter.classList.remove("pop");void letter.offsetWidth;letter.classList.add("pop");
   document.getElementById("rLabel").textContent=gi.label;
   document.getElementById("rSub").textContent=gi.sub;
 
+  /* 円形ゲージ：合格可能性%ぶんだけ弧が描かれる */
+  const gf=document.getElementById("gaugeFill");
+  const C2=439.823;
+  gf.style.transition="none";
+  gf.style.strokeDasharray=C2;
+  gf.style.strokeDashoffset=C2;
+  void gf.getBoundingClientRect();
+  gf.style.transition="";
+
+  const ring=document.getElementById("rRing");
+  ring.classList.remove("pulse");
+
   /* 効果音・振動：判定ランクに応じて演出強度を変える */
-    if(overall==="A") vibrate([0,60,40,60,40,90]);
+  if(overall==="A") vibrate([0,60,40,60,40,90]);
   else if(overall==="B") vibrate([0,50,30,70]);
   else vibrate(40);
-  setTimeout(()=>ring.classList.add("ring-pulse"),80);
 
-  /* パーセント：0からカウントアップ */
+  /* パーセント：0からカウントアップ（ゲージ・バーと同期） */
   const pctNumEl=document.getElementById("rPctNum");
   pctNumEl.textContent="0%";
   const pctBar=document.getElementById("rPctBar");
   pctBar.style.width="0%";
   pctBar.classList.add("shimmer");
   setTimeout(()=>{
+    gf.style.strokeDashoffset=C2*(1-pct/100);
     pctBar.style.width=pct+"%";
     animateCountPct(pctNumEl,pct);
+    ring.classList.add("pulse");
+    if(overall==="A"&&!RM) spawnSparks(gi.ring);
     setTimeout(()=>pctBar.classList.remove("shimmer"),1300);
-  },250);
+  },280);
 
   /* breakdown：色はGRADE_DEFのring値を単一ソースとして使う（二重管理を避ける） */
   const formatGrade=(g)=>g?`<span style="color:${gInfo(g).ring};font-weight:700">${g}判定</span>`:`<span style="color:var(--ink-faint)">—</span>`;
@@ -1482,9 +1590,9 @@ function renderResult(school,d,nai,dev){
   const naiDiff=nai!==null&&d.nai!=null?(nai>=d.nai?{t:"クリア",ok:true}:{t:`あと${Math.round(d.nai-nai)}点`,ok:false}):null;
   const devDiff=dev!==null&&d.dev!=null?(dev>=d.dev?{t:"クリア",ok:true}:{t:`あと${Math.round(d.dev-dev)}点`,ok:false}):null;
   const bd=document.getElementById("bdNaiDiff");
-  if(naiDiff){bd.className="breakdown-diff "+(naiDiff.ok?"diff-ok":"diff-ng");bd.textContent=naiDiff.t}else{bd.textContent=""}
+  if(naiDiff){bd.className="breakdown-diff "+(naiDiff.ok?"diff-ok":"diff-ng");bd.textContent=naiDiff.t}else{bd.className="breakdown-diff";bd.textContent=""}
   const bd2=document.getElementById("bdDevDiff");
-  if(devDiff){bd2.className="breakdown-diff "+(devDiff.ok?"diff-ok":"diff-ng");bd2.textContent=devDiff.t}else{bd2.textContent=""}
+  if(devDiff){bd2.className="breakdown-diff "+(devDiff.ok?"diff-ok":"diff-ng");bd2.textContent=devDiff.t}else{bd2.className="breakdown-diff";bd2.textContent=""}
 
   /* gap chips */
   const chips=document.getElementById("gapChips");chips.innerHTML="";
@@ -1512,6 +1620,21 @@ function renderResult(school,d,nai,dev){
 
   /* nearby */
   renderNearby(school,nai,dev);
+}
+
+/* A判定のみ：ゲージから放射する細い光のスパーク（上品に一度だけ） */
+function spawnSparks(color){
+  const w=document.getElementById("sparkWrap");
+  if(!w)return;
+  w.innerHTML="";
+  for(let i=0;i<12;i++){
+    const s=document.createElement("i");
+    s.style.setProperty("--a",(i*30+(Math.random()*12-6)).toFixed(1)+"deg");
+    s.style.background=color;
+    s.style.animationDelay=(Math.random()*.08).toFixed(2)+"s";
+    w.appendChild(s);
+  }
+  setTimeout(()=>{w.innerHTML=""},900);
 }
 
 /* パーセント専用カウントアップ（%記号付き） */
@@ -1604,12 +1727,47 @@ function selectAndJudge(id){
    GLOBAL INIT
    ================================================================ */
 initScrollReveal();
+syncMeters();
+
+/* 入力メーターの同期 */
+["naishinInput","devInput","scoreInput"].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener("input",syncMeters);
+});
 
 /* type="number" のホイールスクロールで値が変わるPC限定バグを防ぐ */
 document.querySelectorAll("input[type='number']").forEach(el=>{
   el.addEventListener("wheel",function(e){e.preventDefault();},{passive:false});
   el.addEventListener("mousedown",function(){this.focus();});
 });
+
+/* ================================================================
+   磁力ホバー＆スペキュラ光（ホバー対応デバイスのみ・rAF不要の軽量実装）
+   ================================================================ */
+if(window.matchMedia&&window.matchMedia("(hover:hover) and (pointer:fine)").matches&&!RM){
+  document.querySelectorAll(".school-chips,.area-tabs").forEach(wrap=>{
+    wrap.addEventListener("pointermove",e=>{
+      const t=e.target.closest("button");
+      if(!t||!wrap.contains(t))return;
+      const r=t.getBoundingClientRect();
+      const dx=(e.clientX-(r.left+r.width/2))/r.width;
+      const dy=(e.clientY-(r.top+r.height/2))/r.height;
+      t.style.setProperty("--mx",(dx*6).toFixed(1)+"px");
+      t.style.setProperty("--my",(dy*4).toFixed(1)+"px");
+    });
+    wrap.addEventListener("pointerout",e=>{
+      const t=e.target.closest("button");
+      if(t){t.style.setProperty("--mx","0px");t.style.setProperty("--my","0px");}
+    });
+  });
+  document.querySelectorAll(".glare").forEach(el=>{
+    el.addEventListener("pointermove",e=>{
+      const r=el.getBoundingClientRect();
+      el.style.setProperty("--gx",((e.clientX-r.left)/r.width*100).toFixed(1)+"%");
+      el.style.setProperty("--gy",((e.clientY-r.top)/r.height*100).toFixed(1)+"%");
+    });
+  });
+}
 </script>
 <!-- Service Worker registration -->
 <script>
