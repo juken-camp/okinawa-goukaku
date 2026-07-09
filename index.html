@@ -167,7 +167,12 @@ input{font-family:inherit}
 .scene-sub{font-size:12.5px;color:var(--mid);margin-bottom:16px}
 
 /* ---------------- タイトルシーン ---------------- */
-#sceneTitle{justify-content:center;text-align:center;padding-bottom:40px}
+#sceneTitle{justify-content:center;text-align:center;padding-bottom:96px}
+.title-footer{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:0 20px calc(22px + var(--sab));
+  text-align:center;
+}
 .title-scope{
   width:168px;height:168px;margin:0 auto 30px;position:relative;border-radius:50%;
   border:1px solid rgba(255,184,77,.35);
@@ -205,17 +210,20 @@ input{font-family:inherit}
 }
 .btn-launch:hover{transform:translateY(-1px);box-shadow:0 12px 34px rgba(255,184,77,.4),inset 0 1px 0 rgba(255,255,255,.4)}
 .btn-launch:active{transform:scale(.97)}
-.title-foot{margin-top:14px;font-family:var(--num);font-size:9.5px;letter-spacing:.22em;color:var(--soft)}
+.title-foot{font-family:var(--num);font-size:9.5px;letter-spacing:.22em;color:var(--soft)}
 .title-by{
-  display:inline-flex;align-items:center;gap:8px;margin:22px auto 0;
+  display:inline-flex;align-items:center;gap:8px;margin:12px auto 0;
   text-decoration:none;cursor:pointer;
-  padding:8px 16px;border:1px solid var(--line);border-radius:999px;
+  padding:7px 15px;border:1px solid var(--line);border-radius:999px;
   color:var(--soft);transition:border-color .2s,color .2s,box-shadow .2s;
 }
 .title-by .tb-en{font-family:var(--num);font-size:8.5px;font-weight:600;letter-spacing:.24em}
 .title-by b{font-size:12px;font-weight:900;color:var(--mid);letter-spacing:.03em;transition:color .2s}
-.title-by:hover{border-color:var(--amber);color:var(--amber);box-shadow:0 0 14px var(--amber-glow)}
-.title-by:hover b{color:var(--amber)}
+.title-by:active{transform:scale(.96)}
+@media (hover:hover){
+  .title-by:hover{border-color:var(--amber);color:var(--amber);box-shadow:0 0 14px var(--amber-glow)}
+  .title-by:hover b{color:var(--amber)}
+}
 
 /* ---------------- シーン1：志望校ロックオン ---------------- */
 .area-tabs{display:flex;gap:6px;margin-bottom:12px}
@@ -751,11 +759,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
         無料で判定する
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
-        <span class="tb-en">MADE BY</span>
-        <b>JUKEN CAMP</b>
-      </a>
-      <div class="title-foot">OKINAWA PREF. HIGH SCHOOL — PASS SIMULATOR</div>
+      <div class="title-footer">
+        <div class="title-foot">OKINAWA PREF. HIGH SCHOOL — PASS SIMULATOR</div>
+        <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
+          <span class="tb-en">MADE BY</span>
+          <b>JUKEN CAMP</b>
+        </a>
+      </div>
     </section>
 
     <!-- ============ SCENE 1：志望校 ============ -->
