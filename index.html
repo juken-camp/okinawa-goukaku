@@ -45,7 +45,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定シミュレーター","url":"https://okinawa-goukaku.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定シミュレーター","url":"https://okinawa-goukaku.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap');
@@ -205,7 +205,17 @@ input{font-family:inherit}
 }
 .btn-launch:hover{transform:translateY(-1px);box-shadow:0 12px 34px rgba(255,184,77,.4),inset 0 1px 0 rgba(255,255,255,.4)}
 .btn-launch:active{transform:scale(.97)}
-.title-foot{margin-top:26px;font-family:var(--num);font-size:9.5px;letter-spacing:.22em;color:var(--soft)}
+.title-foot{margin-top:14px;font-family:var(--num);font-size:9.5px;letter-spacing:.22em;color:var(--soft)}
+.title-by{
+  display:inline-flex;align-items:center;gap:8px;margin:22px auto 0;
+  text-decoration:none;cursor:pointer;
+  padding:8px 16px;border:1px solid var(--line);border-radius:999px;
+  color:var(--soft);transition:border-color .2s,color .2s,box-shadow .2s;
+}
+.title-by .tb-en{font-family:var(--num);font-size:8.5px;font-weight:600;letter-spacing:.24em}
+.title-by b{font-size:12px;font-weight:900;color:var(--mid);letter-spacing:.03em;transition:color .2s}
+.title-by:hover{border-color:var(--amber);color:var(--amber);box-shadow:0 0 14px var(--amber-glow)}
+.title-by:hover b{color:var(--amber)}
 
 /* ---------------- シーン1：志望校ロックオン ---------------- */
 .area-tabs{display:flex;gap:6px;margin-bottom:12px}
@@ -741,6 +751,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
         無料で判定する
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
+      <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
+        <span class="tb-en">MADE BY</span>
+        <b>JUKEN CAMP</b>
+      </a>
       <div class="title-foot">OKINAWA PREF. HIGH SCHOOL — PASS SIMULATOR</div>
     </section>
 
@@ -995,7 +1009,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
         <div class="result-foot">
           <div class="ft-brand">沖縄県立高校入試 合格判定シミュレーター</div>
           <div class="ft-sub">
-            運営：<a href="https://www.juken-camp.online/" target="_blank" rel="noopener">JUKEN CAMP（受験キャンプ）</a><br>
+            運営：<a href="https://www.juken-camp.online/" target="_blank" rel="noopener">沖縄の高校受験専門塾 JUKEN CAMP（受験キャンプ）</a><br>
             <a href="/privacy.html">プライバシーポリシー</a><br>
             判定は参考情報です。実際の入試制度・日程は沖縄県教育委員会および各高校の最新情報をご確認ください。
           </div>
