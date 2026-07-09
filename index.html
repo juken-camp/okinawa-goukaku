@@ -120,7 +120,7 @@ input{font-family:inherit}
 
 /* ---------------- トップバー（工程レール） ---------------- */
 .rail{
-  padding:calc(12px + var(--sat)) 18px 10px;
+  padding:calc(12px + var(--sat)) 64px 10px 18px;
   display:none;align-items:center;gap:10px;
 }
 .rail.show{display:flex}
@@ -579,6 +579,13 @@ input{font-family:inherit}
 .note-card b{color:var(--mid)}
 
 .result-actions{display:flex;gap:8px;margin-bottom:20px}
+.btn-home{
+  flex-shrink:0;display:flex;align-items:center;gap:6px;
+  padding:14px 16px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--line-lt);background:var(--panel);
+  color:var(--mid);font-size:13.5px;font-weight:900;transition:all .15s;
+}
+.btn-home:hover{border-color:var(--amber);color:var(--amber)}
 .btn-again{
   flex:1;padding:14px;border-radius:12px;cursor:pointer;
   border:1px solid var(--line-lt);background:var(--panel);
@@ -614,6 +621,79 @@ input{font-family:inherit}
 @keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .shake-in{animation:shakeX .26s ease}
 
+/* ---------------- FXモード（効果音＋大げさ演出） ---------------- */
+.fx-toggle{
+  position:absolute;top:calc(12px + var(--sat));right:14px;z-index:260;
+  width:40px;height:40px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(22,31,56,.85);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  color:var(--soft);display:grid;place-items:center;
+  transition:border-color .2s,color .2s,box-shadow .25s,transform .12s;
+}
+.fx-toggle:hover{border-color:var(--line-lt);color:var(--mid)}
+.fx-toggle:active{transform:scale(.92)}
+.fx-toggle .fxi-on{display:none;align-items:flex-end;gap:2.5px;height:14px}
+.fx-toggle .fxi-on i{width:3px;border-radius:2px;background:var(--amber);height:5px}
+.fx-toggle.on{border-color:var(--amber);color:var(--amber);box-shadow:0 0 18px var(--amber-glow)}
+.fx-toggle.on .fxi-off{display:none}
+.fx-toggle.on .fxi-on{display:flex}
+.fx-toggle.on .fxi-on i{animation:fxEq .8s ease-in-out infinite}
+.fx-toggle.on .fxi-on i:nth-child(2){animation-delay:.15s}
+.fx-toggle.on .fxi-on i:nth-child(3){animation-delay:.3s}
+@keyframes fxEq{0%,100%{height:5px}50%{height:14px}}
+
+/* タップ波紋（ソナー波） */
+.fx-wave{
+  position:fixed;z-index:400;width:14px;height:14px;margin:-7px 0 0 -7px;
+  border-radius:50%;border:2px solid var(--amber);
+  box-shadow:0 0 14px var(--amber-glow);pointer-events:none;
+  animation:fxWave .5s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes fxWave{0%{transform:scale(.4);opacity:.9}100%{transform:scale(4.6);opacity:0}}
+
+/* ボタンのスカッシュ＆ストレッチ */
+.fx-boing{animation:fxBoing .34s cubic-bezier(.34,1.8,.4,1) both}
+@keyframes fxBoing{
+  0%{transform:scale(1)}
+  30%{transform:scale(.88,.92) rotate(-1deg)}
+  65%{transform:scale(1.06,1.04) rotate(.6deg)}
+  100%{transform:scale(1)}
+}
+
+/* スタンプ着弾：画面シェイク＋フラッシュ */
+.fx-shake{animation:fxShake .42s ease both}
+@keyframes fxShake{
+  0%,100%{transform:translate(0,0) rotate(0)}
+  15%{transform:translate(-7px,4px) rotate(-.5deg)}
+  30%{transform:translate(6px,-5px) rotate(.5deg)}
+  45%{transform:translate(-4px,3px) rotate(-.25deg)}
+  60%{transform:translate(3px,-2px)}
+  78%{transform:translate(-2px,1px)}
+}
+.fx-flash{
+  position:fixed;inset:0;z-index:390;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 50% 38%,rgba(255,224,160,.55),rgba(255,184,77,.14) 55%,transparent 78%);
+}
+.fx-flash.hit{animation:fxFlash .5s ease-out both}
+@keyframes fxFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+
+/* 満点チャージ時のパッド発光 */
+.pad.fx-max{animation:fxPadMax .55s ease both}
+@keyframes fxPadMax{
+  0%{box-shadow:0 0 0 0 rgba(255,184,77,.55)}
+  100%{box-shadow:0 0 0 22px rgba(255,184,77,0)}
+}
+
+/* FXモード中：発射ボタンが呼吸する */
+.fx-on .btn-launch{animation:fxBreath 2.6s ease-in-out infinite}
+@keyframes fxBreath{
+  0%,100%{box-shadow:0 8px 28px rgba(255,184,77,.32),inset 0 1px 0 rgba(255,255,255,.4)}
+  50%{box-shadow:0 10px 46px rgba(255,184,77,.58),inset 0 1px 0 rgba(255,255,255,.4)}
+}
+
+/* キーボードフォーカスの可視化 */
+button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
@@ -627,6 +707,12 @@ input{font-family:inherit}
 <div class="sky" aria-hidden="true"></div>
 
 <div class="app">
+
+  <!-- FXモード切り替え（効果音＋演出） -->
+  <button class="fx-toggle" id="fxToggle" onclick="toggleFX()" aria-pressed="false" aria-label="効果音と演出をオンにする">
+    <svg class="fxi-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    <span class="fxi-on" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
 
   <!-- 工程レール -->
   <div class="rail" id="rail">
@@ -899,6 +985,10 @@ input{font-family:inherit}
         </div>
 
         <div class="result-actions">
+          <button class="btn-home" onclick="goHome()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>
+            ホーム
+          </button>
           <button class="btn-again" onclick="railJump(1)">入力を変えてもう一度判定する</button>
         </div>
 
@@ -939,6 +1029,9 @@ input{font-family:inherit}
 <!-- トースト -->
 <div class="toast" id="toast"></div>
 
+<!-- FX：スタンプ着弾フラッシュ -->
+<div class="fx-flash" id="fxFlash" aria-hidden="true"></div>
+
 <script>
 /* ================================================================
    振動フィードバック（対応端末のみ・控えめに使用）
@@ -946,6 +1039,189 @@ input{font-family:inherit}
 function vibrate(pattern){
   if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} }
 }
+
+/* ================================================================
+   FXモード ─ 効果音エンジン（Web Audio API・外部ファイル不使用）
+   デフォルトOFF。トグルONで「管制室」世界観のシンセ音が解放される。
+   ================================================================ */
+const FX=(()=>{
+  let ctx=null,master=null;
+  const api={enabled:false};
+
+  function ensure(){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return null;
+    if(!ctx){
+      ctx=new AC();
+      const comp=ctx.createDynamicsCompressor();
+      comp.threshold.value=-18;comp.knee.value=20;comp.ratio.value=6;
+      master=ctx.createGain();master.gain.value=0.45;
+      master.connect(comp);comp.connect(ctx.destination);
+    }
+    if(ctx.state==="suspended")ctx.resume();
+    return ctx;
+  }
+  /* 単音（オシレーター） */
+  function tone(o){
+    const t0=ctx.currentTime+(o.at||0);
+    const dur=o.dur||.15;
+    const osc=ctx.createOscillator();
+    osc.type=o.type||"sine";
+    osc.frequency.setValueAtTime(o.f,t0);
+    if(o.f2)osc.frequency.exponentialRampToValueAtTime(Math.max(1,o.f2),t0+dur);
+    const g=ctx.createGain();
+    const v=o.vol!=null?o.vol:.25;
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(v,t0+0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    osc.connect(g);g.connect(master);
+    osc.start(t0);osc.stop(t0+dur+.05);
+  }
+  /* ノイズ（フィルター付き） */
+  function noise(o){
+    const t0=ctx.currentTime+(o.at||0);
+    const dur=o.dur||.12;
+    const len=Math.max(1,Math.floor(ctx.sampleRate*dur));
+    const buf=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    const src=ctx.createBufferSource();src.buffer=buf;
+    const f=ctx.createBiquadFilter();
+    f.type=o.ftype||"bandpass";
+    f.frequency.setValueAtTime(o.f||2000,t0);
+    if(o.f2)f.frequency.exponentialRampToValueAtTime(o.f2,t0+dur);
+    f.Q.value=o.q||1;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(o.vol||.2,t0+0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    src.connect(f);f.connect(g);g.connect(master);
+    src.start(t0);src.stop(t0+dur+.05);
+  }
+
+  const S={
+    /* 汎用タップ：管制卓のキー音 */
+    tap(){tone({f:1150,f2:900,type:"triangle",dur:.05,vol:.13});noise({f:4200,dur:.03,vol:.05,q:2});},
+    /* スライダー：値に応じて音程が上がる（チャージ感の核） */
+    tick(r){tone({f:520+Math.max(0,Math.min(1,r))*1040,type:"square",dur:.03,vol:.07});},
+    /* 満点チャージ */
+    max(){tone({f:1318,type:"triangle",dur:.09,vol:.2});tone({f:1760,type:"triangle",dur:.18,vol:.2,at:.07});noise({f:6000,dur:.2,vol:.06,at:.07});},
+    /* 評定5 */
+    five(){tone({f:1568,type:"triangle",dur:.08,vol:.13});tone({f:2093,type:"triangle",dur:.12,vol:.11,at:.06});},
+    /* 志望校ロックオン：ソナーピング＋確認チャープ */
+    lock(){
+      tone({f:1500,f2:1420,dur:.22,vol:.2});
+      tone({f:1500,f2:1420,dur:.3,vol:.07,at:.18});
+      tone({f:880,type:"square",dur:.06,vol:.16,at:.12});
+      tone({f:1320,type:"square",dur:.1,vol:.16,at:.19});
+    },
+    /* シーン移動 */
+    whoosh(){noise({f:600,f2:2600,dur:.28,vol:.15,q:1.2});},
+    back(){noise({f:2400,f2:500,dur:.24,vol:.12,q:1.2});},
+    /* FXモード起動音 */
+    powerOn(){
+      tone({f:220,f2:880,type:"sawtooth",dur:.4,vol:.11});
+      tone({f:659,type:"triangle",dur:.18,vol:.15,at:.32});
+      tone({f:880,type:"triangle",dur:.22,vol:.15,at:.4});
+      tone({f:1318,type:"triangle",dur:.4,vol:.13,at:.48});
+      noise({f:5000,dur:.3,vol:.05,at:.42});
+    },
+    /* ミッション開始 */
+    launch(){tone({f:180,f2:720,type:"sawtooth",dur:.35,vol:.13});noise({f:900,f2:3200,dur:.4,vol:.11});},
+    clear(){tone({f:900,f2:300,type:"triangle",dur:.18,vol:.14});},
+    err(){tone({f:150,type:"square",dur:.09,vol:.15});tone({f:110,type:"square",dur:.14,vol:.15,at:.11});},
+    /* 一括入力：9教科ラチェット（数字が大きいほど高音） */
+    ratchet(n){for(let i=0;i<9;i++)tone({f:480+i*95+n*45,type:"square",dur:.035,vol:.08,at:i*.03});},
+    /* オール5 */
+    perfect(){[1046,1318,1568,2093].forEach((f,i)=>tone({f,type:"triangle",dur:.22,vol:.15,at:.02+i*.07}));noise({f:7000,dur:.35,vol:.06,at:.2});},
+    /* スキャン */
+    scanStart(){noise({f:400,f2:2800,dur:.4,vol:.13});tone({f:1240,f2:1180,dur:.2,vol:.13,at:.1});},
+    scanPing(hi){tone({f:hi?1680:1240,f2:hi?1600:1180,dur:.16,vol:.11});},
+    count(n){const f=[0,1174,932,784][n]||784;tone({f,type:"square",dur:.1,vol:.17});tone({f:f*1.005,type:"triangle",dur:.12,vol:.09});},
+    /* スタンプ着弾：低音ドロップ＋衝撃ノイズ */
+    stamp(){tone({f:170,f2:50,dur:.22,vol:.5});noise({ftype:"lowpass",f:900,dur:.12,vol:.32});noise({f:220,dur:.06,vol:.18,q:.7});},
+    /* 判定ランク別ファンファーレ */
+    fanfare(rank){
+      if(rank==="A"){
+        [[523,0],[659,.09],[784,.18],[1046,.27]].forEach(([f,at])=>{
+          tone({f,type:"square",dur:.16,vol:.11,at});
+          tone({f:f*2,type:"triangle",dur:.16,vol:.07,at});
+        });
+        [1046,1318,1568].forEach(f=>tone({f,type:"triangle",dur:.7,vol:.09,at:.4}));
+        noise({f:8000,dur:.6,vol:.05,at:.4});
+      }else if(rank==="B"){
+        [[587,0],[740,.1],[880,.2]].forEach(([f,at])=>tone({f,type:"triangle",dur:.2,vol:.14,at}));
+        tone({f:1174,type:"triangle",dur:.45,vol:.11,at:.3});
+      }else if(rank==="C"){
+        tone({f:660,type:"triangle",dur:.18,vol:.14});
+        tone({f:784,type:"triangle",dur:.3,vol:.12,at:.16});
+      }else{
+        /* D/E：落胆させない「ここからだ」の上昇モチーフ */
+        tone({f:330,type:"triangle",dur:.22,vol:.15});
+        tone({f:392,type:"triangle",dur:.22,vol:.14,at:.2});
+        tone({f:523,type:"triangle",dur:.42,vol:.14,at:.4});
+      }
+    },
+    copy(){tone({f:1174,type:"triangle",dur:.07,vol:.15});tone({f:1760,type:"triangle",dur:.12,vol:.15,at:.07});},
+  };
+
+  api.ensure=()=>{try{ensure()}catch(e){}};
+  api.play=(name,...args)=>{
+    if(!api.enabled)return;
+    try{ if(!ensure())return; (S[name]||function(){})(...args); }catch(e){}
+  };
+  return api;
+})();
+
+/* ---- FXモード切り替え ---- */
+function setFX(on,silent){
+  FX.enabled=on;
+  document.body.classList.toggle("fx-on",on);
+  const btn=document.getElementById("fxToggle");
+  btn.classList.toggle("on",on);
+  btn.setAttribute("aria-pressed",on?"true":"false");
+  btn.setAttribute("aria-label",on?"効果音と演出をオフにする":"効果音と演出をオンにする");
+  try{localStorage.setItem("fxmode",on?"1":"0")}catch(e){}
+  if(!silent){
+    if(on){FX.ensure();FX.play("powerOn");vibrate([10,30,10,30,20]);toast("FXモード ON ─ 音と動きが解放されました");}
+    else{toast("FXモード OFF");}
+  }
+}
+function toggleFX(){ setFX(!FX.enabled); }
+
+/* ---- FXモード：モーションレイヤー（波紋・バウンス・衝撃） ---- */
+function fxReduced(){return window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}
+function spawnWave(x,y){
+  if(fxReduced())return;
+  const w=document.createElement("span");
+  w.className="fx-wave";
+  w.style.left=x+"px";w.style.top=y+"px";
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(),520);
+}
+function boing(el){
+  if(fxReduced())return;
+  el.classList.remove("fx-boing");void el.offsetWidth;el.classList.add("fx-boing");
+  el.addEventListener("animationend",()=>el.classList.remove("fx-boing"),{once:true});
+}
+function fxImpact(){
+  if(fxReduced())return;
+  const app=document.querySelector(".app");
+  app.classList.remove("fx-shake");void app.offsetWidth;app.classList.add("fx-shake");
+  const fl=document.getElementById("fxFlash");
+  fl.classList.remove("hit");void fl.offsetWidth;fl.classList.add("hit");
+}
+
+/* 全ボタン共通：波紋＋バウンス。専用音を持つボタン以外は汎用タップ音 */
+const FX_SPECIAL=".school-row,.nearby-item,.btn-launch,#dockBtn,.gy-bulk-btns button,.pad-clear,.gy-bulk-clear,#fxToggle";
+document.addEventListener("pointerdown",e=>{
+  if(!FX.enabled)return;
+  const btn=e.target.closest("button");
+  if(!btn||btn.disabled)return;
+  spawnWave(e.clientX,e.clientY);
+  boing(btn);
+  if(!btn.matches(FX_SPECIAL))FX.play("tap");
+},{passive:true});
 
 /* ================================================================
    DATA（判定基準・学校データは変更しない）
@@ -1240,11 +1516,12 @@ function go(n){
     b.classList.toggle("done",s<n);
   });
   updateDock();
-  if(prev!==n) vibrate(8);
+  if(prev!==n){ vibrate(8); FX.play(n<prev?"back":"whoosh"); }
 }
 function goBack(){ if(scene>1) go(scene-1); else go(0); }
+function goHome(){ go(0); }
 function railJump(n){ go(n); }
-function startMission(){ vibrate(15); go(1); }
+function startMission(){ vibrate(15); FX.play("launch"); go(1); }
 
 /* 下部ドック：シーンごとに役割が変わる */
 function updateDock(){
@@ -1307,6 +1584,7 @@ function renderSchools(){
 function selectSchool(id){
   selectedId=id;
   vibrate(15);
+  FX.play("lock");
   renderSchools();
   updateDock();
 }
@@ -1338,21 +1616,41 @@ function initPad(key){
   const p=PADS[key];
   const input=document.getElementById(p.input);
   const slider=document.getElementById(p.slider);
-  let lastTick=null;
+  let lastTick=null,wasMax=false;
+  /* 満点チャージ：到達した瞬間だけ特殊音＋パッド発光 */
+  const maxCheck=()=>{
+    const v=input.value===""?null:Number(input.value);
+    const isMax=v!==null&&v>=p.max;
+    if(isMax&&!wasMax&&FX.enabled){
+      FX.play("max");
+      vibrate([10,20,10]);
+      const pad=input.closest(".pad");
+      if(pad&&!fxReduced()){pad.classList.remove("fx-max");void pad.offsetWidth;pad.classList.add("fx-max");}
+    }
+    wasMax=isMax;
+  };
   slider.addEventListener("input",()=>{
     input.value=slider.value;
     padGauge(key);
-    if(slider.value!==lastTick){lastTick=slider.value;vibrate(4)}
+    if(slider.value!==lastTick){
+      lastTick=slider.value;
+      vibrate(4);
+      FX.play("tick",(Number(slider.value)-p.min)/(p.max-p.min));
+    }
+    maxCheck();
     updateDock();
   });
   input.addEventListener("input",()=>{
     if(input.value!==""){
       const v=Math.max(p.min,Math.min(p.max,Number(input.value)||p.min));
       slider.value=v;
+      /* 手打ち入力：1打ごとに値に応じた音程のティック音 */
+      FX.play("tick",(v-p.min)/(p.max-p.min));
     }else{
       slider.value=p.min;
     }
     padGauge(key);
+    maxCheck();
     updateDock();
   });
   padGauge(key);
@@ -1363,6 +1661,7 @@ function clearField(key){
   document.getElementById(p.slider).value=p.min;
   padGauge(key);
   vibrate(8);
+  FX.play("clear");
   updateDock();
 }
 
@@ -1458,7 +1757,20 @@ function renderPills(){
 function bulkSet(n){
   SUBS.forEach(sj=>{grades[gradeYear][sj]=n;});
   vibrate(n===0?[18,26,18]:12);
+  if(n===0)FX.play("clear");
+  else{
+    FX.play("ratchet",n);
+    if(n===5)setTimeout(()=>FX.play("perfect"),300);
+  }
   renderPills();syncPicker();updateRing();updateYearTabs();calcNaishin();
+  /* FXモード：9教科ピルが順番に跳ねる */
+  if(FX.enabled&&n>0&&!fxReduced()){
+    document.querySelectorAll(".gy-pill").forEach((p,i)=>{
+      p.style.animationDelay=(i*30)+"ms";
+      p.classList.add("fx-boing");
+      p.addEventListener("animationend",()=>{p.classList.remove("fx-boing");p.style.animationDelay=""},{once:true});
+    });
+  }
   const btns=document.querySelectorAll(".gy-bulk-btns button");
   btns.forEach(b=>b.classList.toggle("flash",Number(b.dataset.n)===n));
   if(n>0)setTimeout(()=>btns.forEach(b=>b.classList.remove("flash")),480);
@@ -1477,6 +1789,8 @@ function setupGradePanel(){
     if(cm){cm.val.textContent=gradeDisp(v,art);cm.chip.classList.toggle("empty",v===0);}
     updateRing();updateYearTabs();
     vibrate(4);
+    FX.play("tick",v/5);
+    if(v===5)FX.play("five");
     calcNaishin();
   });
 }
@@ -1543,6 +1857,7 @@ function switchScore(mode){
 function runJudge(){
   if(!selectedId){
     vibrate([30,40,30]);
+    FX.play("err");
     toast("志望校を選んでください。");
     go(1);
     return;
@@ -1562,6 +1877,7 @@ function runJudge(){
   }
   if(nai===null&&dev===null){
     vibrate([30,40,30]);
+    FX.play("err");
     shakeElement(document.getElementById(scene===3?(scoreMode==="dev"?"devPad":"scorePad"):"naishinPad"));
     toast("内申点か偏差値（点数）を入力してください。");
     return;
@@ -1586,6 +1902,11 @@ function playJudgeSequence(school,d,nai,dev){
   text.textContent=messages[0];
   sub.textContent="SCANNING…";
 
+  /* FX：ソナーピング（高低交互） */
+  FX.play("scanStart");
+  let pingHi=false;
+  const pingIv=setInterval(()=>{FX.play("scanPing",(pingHi=!pingHi))},300);
+
   const totalMs=1200;
   const msgInterval=setInterval(()=>{
     msgIdx=(msgIdx+1)%messages.length;
@@ -1594,17 +1915,20 @@ function playJudgeSequence(school,d,nai,dev){
 
   setTimeout(()=>{
     clearInterval(msgInterval);
+    clearInterval(pingIv);
     /* カウントダウン 3・2・1 */
     radar.style.display="none";
     sub.textContent="結果を表示します";
     let n=3;
     text.innerHTML='<span class="scan-count">3</span>';
     vibrate(15);
+    FX.play("count",3);
     const iv=setInterval(()=>{
       n--;
       if(n>=1){
         text.innerHTML='<span class="scan-count">'+n+'</span>';
         vibrate(15);
+        FX.play("count",n);
       }else{
         clearInterval(iv);
         stage.classList.remove("show");
@@ -1656,6 +1980,12 @@ function renderResult(school,d,nai,dev){
   seal.classList.remove("stamp-in");
   void seal.offsetWidth;
   seal.classList.add("stamp-in");
+
+  /* FX：スタンプ着弾（衝撃音＋画面シェイク＋フラッシュ）→ ランク別ファンファーレ */
+  if(FX.enabled){
+    setTimeout(()=>{FX.play("stamp");fxImpact();},260);
+    setTimeout(()=>FX.play("fanfare",overall),720);
+  }
 
   /* 効果音・振動：判定ランクに応じて演出強度を変える */
   if(overall==="A") vibrate([0,60,40,60,40,90]);
@@ -1733,7 +2063,8 @@ function animatePct(numEl,fillEl,circ,target){
 function spawnConfetti(container,color){
   if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const colors=[color,"#ffb84d","#eef2ff"];
-  for(let i=0;i<36;i++){
+  const N=FX.enabled?84:36;
+  for(let i=0;i<N;i++){
     const c=document.createElement("span");
     c.className="confetti";
     const size=4+Math.random()*5;
@@ -1767,6 +2098,7 @@ function shareResult(kind){
     const full=text+"\n"+url;
     const doneUI=()=>{
       vibrate(15);
+      FX.play("copy");
       const btn=document.getElementById("copyBtn");
       const btnText=document.getElementById("copyBtnText");
       btn.classList.add("copied");
@@ -1816,6 +2148,7 @@ function renderNearby(school,nai,dev){
 function selectAndJudge(id){
   selectedId=id;
   vibrate(15);
+  FX.play("lock");
   const s=SCHOOLS.find(x=>x.id===id);
   currentArea=s.area;
   document.querySelectorAll(".area-tab").forEach(b=>{
@@ -1832,6 +2165,14 @@ function selectAndJudge(id){
 renderSchools();
 initPad("naishin");initPad("dev");initPad("score");
 updateDock();
+
+/* FXモード：前回の設定を復元（音声コンテキストは初回タップで解錠） */
+(function(){
+  let saved=null;
+  try{saved=localStorage.getItem("fxmode")}catch(e){}
+  if(saved==="1")setFX(true,true);
+  document.addEventListener("pointerdown",()=>{if(FX.enabled)FX.ensure()},{once:true});
+})();
 
 /* type="number" のホイールスクロールで値が変わるPC限定バグを防ぐ */
 document.querySelectorAll("input[type='number']").forEach(el=>{
