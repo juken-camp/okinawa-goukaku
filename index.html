@@ -289,15 +289,15 @@ input{font-family:inherit}
   transition:border-color .28s,box-shadow .28s,background .35s;
 }
 .pad>*{position:relative;z-index:1}
-.pad::before{
-  content:"";position:absolute;inset:-45%;z-index:0;pointer-events:none;opacity:0;
-  background:conic-gradient(from 0deg,transparent 0 28%,var(--power-glow) 33%,transparent 38% 62%,var(--power-glow) 67%,transparent 72%);
-  transition:opacity .35s;
-}
 .pad:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow)}
 .pad-label{font-family:var(--num);font-size:9.5px;font-weight:600;letter-spacing:.24em;color:var(--soft);margin-bottom:14px}
 .pad-dial{position:relative;width:190px;height:190px;margin:0 auto 6px}
-.pad-dial svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.pad-dial::before{
+  content:"";position:absolute;inset:-115px;z-index:0;pointer-events:none;opacity:0;
+  background:conic-gradient(from 0deg,transparent 0 28%,var(--power-glow) 33%,transparent 38% 62%,var(--power-glow) 67%,transparent 72%);
+  transform-origin:50% 50%;transition:opacity .35s;
+}
+.pad-dial svg{position:absolute;inset:0;z-index:1;transform:rotate(-90deg)}
 .dial-track{fill:none;stroke:var(--line);stroke-width:7}
 .dial-fill{
   fill:none;stroke:var(--power-color,var(--amber));stroke-width:7;stroke-linecap:round;
@@ -305,7 +305,7 @@ input{font-family:inherit}
   transition:stroke-dashoffset .18s ease,stroke .32s,filter .32s;
 }
 .pad-num{
-  position:absolute;inset:0;width:100%;height:100%;
+  position:absolute;inset:0;z-index:2;width:100%;height:100%;
   background:transparent;border:none;outline:none;
   font-family:var(--num);font-size:58px;font-weight:700;
   color:var(--power-color,var(--ink));text-align:center;
@@ -360,13 +360,13 @@ input{font-family:inherit}
 .pr-next{font-size:10.5px;font-weight:700;color:var(--mid)}
 .pad.power-t2{border-color:color-mix(in srgb,var(--power-color) 45%,var(--line));box-shadow:0 0 26px var(--power-glow)}
 .pad.power-t3,.pad.power-t4,.pad.power-t5{border-color:var(--power-color);box-shadow:0 0 36px var(--power-glow),inset 0 0 24px var(--power-glow)}
-.pad.power-t3::before,.pad.power-t4::before,.pad.power-t5::before{opacity:.58;animation:powerOrbit 6s linear infinite}
+.pad.power-t3 .pad-dial::before,.pad.power-t4 .pad-dial::before,.pad.power-t5 .pad-dial::before{opacity:.58;animation:powerOrbit 6s linear infinite}
 .pad.power-t4 .power-readout,.pad.power-t5 .power-readout{box-shadow:0 0 22px var(--power-glow),inset 0 0 16px var(--power-glow)}
 .pad.power-t5{background:linear-gradient(160deg,#211d39,var(--panel) 48%,#182d35)}
 @keyframes powerOrbit{to{transform:rotate(360deg)}}
 .tier-pulse{animation:tierPulse .7s cubic-bezier(.2,1.2,.4,1) both}
 @keyframes tierPulse{0%{transform:scale(.96)}42%{transform:scale(1.018);box-shadow:0 0 52px var(--power-glow)}100%{transform:scale(1)}}
-.power-spark{position:absolute;left:50%;top:48%;z-index:4;width:5px;height:5px;border-radius:50%;background:var(--spark);box-shadow:0 0 9px var(--spark);pointer-events:none;animation:powerSpark .72s ease-out both}
+.power-spark{position:absolute;left:50%;top:50%;z-index:4;width:5px;height:5px;border-radius:50%;background:var(--spark);box-shadow:0 0 9px var(--spark);pointer-events:none;animation:powerSpark .72s ease-out both}
 @keyframes powerSpark{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}100%{transform:translate(calc(-50% + var(--sx)),calc(-50% + var(--sy))) scale(0);opacity:0}}
 
 /* ---------------- 評定グリッド ---------------- */
@@ -1765,6 +1765,7 @@ function powerTierFor(key,value){
 
 function spawnMilestoneBurst(container,color){
   if(!container||fxReduced())return;
+  const sparkHost=container.classList.contains("pad")?(container.querySelector(".pad-dial")||container):container;
   for(let i=0;i<18;i++){
     const s=document.createElement("span");
     const a=(Math.PI*2*i/18)+(Math.random()*.18);
@@ -1773,7 +1774,7 @@ function spawnMilestoneBurst(container,color){
     s.style.setProperty("--spark",color);
     s.style.setProperty("--sx",Math.cos(a)*dist+"px");
     s.style.setProperty("--sy",Math.sin(a)*dist+"px");
-    container.appendChild(s);
+    sparkHost.appendChild(s);
     setTimeout(()=>s.remove(),820);
   }
 }
