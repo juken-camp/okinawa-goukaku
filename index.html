@@ -281,11 +281,18 @@ input{font-family:inherit}
 .mode-btn.on{background:var(--panel-2);color:var(--amber);box-shadow:0 1px 6px rgba(0,0,0,.3)}
 
 .pad{
+  --power-color:var(--amber);--power-glow:var(--amber-glow);
   position:relative;border-radius:20px;padding:26px 20px 22px;
   border:1px solid var(--line);
   background:linear-gradient(180deg,var(--panel-2),var(--panel));
   text-align:center;overflow:hidden;
-  transition:border-color .2s,box-shadow .2s;
+  transition:border-color .28s,box-shadow .28s,background .35s;
+}
+.pad>*{position:relative;z-index:1}
+.pad::before{
+  content:"";position:absolute;inset:-45%;z-index:0;pointer-events:none;opacity:0;
+  background:conic-gradient(from 0deg,transparent 0 28%,var(--power-glow) 33%,transparent 38% 62%,var(--power-glow) 67%,transparent 72%);
+  transition:opacity .35s;
 }
 .pad:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow)}
 .pad-label{font-family:var(--num);font-size:9.5px;font-weight:600;letter-spacing:.24em;color:var(--soft);margin-bottom:14px}
@@ -293,15 +300,17 @@ input{font-family:inherit}
 .pad-dial svg{position:absolute;inset:0;transform:rotate(-90deg)}
 .dial-track{fill:none;stroke:var(--line);stroke-width:7}
 .dial-fill{
-  fill:none;stroke:var(--amber);stroke-width:7;stroke-linecap:round;
-  filter:drop-shadow(0 0 6px var(--amber-glow));
-  transition:stroke-dashoffset .18s ease;
+  fill:none;stroke:var(--power-color,var(--amber));stroke-width:7;stroke-linecap:round;
+  filter:drop-shadow(0 0 7px var(--power-glow,var(--amber-glow)));
+  transition:stroke-dashoffset .18s ease,stroke .32s,filter .32s;
 }
 .pad-num{
   position:absolute;inset:0;width:100%;height:100%;
   background:transparent;border:none;outline:none;
   font-family:var(--num);font-size:58px;font-weight:700;
-  color:var(--ink);text-align:center;
+  color:var(--power-color,var(--ink));text-align:center;
+  text-shadow:0 0 24px var(--power-glow,transparent);
+  transition:color .28s,text-shadow .28s;
   -moz-appearance:textfield;
 }
 .pad-num::-webkit-outer-spin-button,.pad-num::-webkit-inner-spin-button{-webkit-appearance:none}
@@ -314,16 +323,16 @@ input{font-family:inherit}
 }
 .fat-slider::-webkit-slider-runnable-track{
   height:10px;border-radius:6px;
-  background:linear-gradient(90deg,var(--amber) 0%,var(--amber) var(--p,0%),var(--line) var(--p,0%));
+  background:linear-gradient(90deg,var(--power-color,var(--amber)) 0%,var(--power-color,var(--amber)) var(--p,0%),var(--line) var(--p,0%));
 }
 .fat-slider::-webkit-slider-thumb{
   -webkit-appearance:none;width:30px;height:30px;border-radius:50%;
-  margin-top:-10px;background:#fff;border:3px solid var(--amber);
-  box-shadow:0 3px 12px rgba(0,0,0,.45),0 0 0 5px var(--amber-glow);
+  margin-top:-10px;background:#fff;border:3px solid var(--power-color,var(--amber));
+  box-shadow:0 3px 12px rgba(0,0,0,.45),0 0 0 5px var(--power-glow,var(--amber-glow));
 }
 .fat-slider::-moz-range-track{height:10px;border-radius:6px;background:var(--line)}
-.fat-slider::-moz-range-progress{height:10px;border-radius:6px;background:var(--amber)}
-.fat-slider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--amber);box-shadow:0 3px 12px rgba(0,0,0,.45)}
+.fat-slider::-moz-range-progress{height:10px;border-radius:6px;background:var(--power-color,var(--amber))}
+.fat-slider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--power-color,var(--amber));box-shadow:0 3px 12px rgba(0,0,0,.45)}
 .pad-tools{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
 .pad-hint{font-size:10.5px;color:var(--soft)}
 .pad-clear{
@@ -337,6 +346,28 @@ input{font-family:inherit}
   letter-spacing:.14em;color:var(--gb);border:1px solid rgba(76,195,255,.4);
   border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:2px;
 }
+
+/* 成績が上がるほど解放されるパワーティア */
+.power-readout{
+  min-height:43px;margin:-4px 0 8px;padding:7px 10px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
+  border:1px solid color-mix(in srgb,var(--power-color,var(--amber)) 28%,var(--line));
+  background:color-mix(in srgb,var(--power-color,var(--amber)) 8%,transparent);
+  transition:border-color .3s,background .3s,box-shadow .3s;
+}
+.pr-level{display:inline-flex;align-items:center;gap:6px;font-family:var(--num);font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--power-color,var(--amber));white-space:nowrap}
+.pr-level::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.pr-next{font-size:10.5px;font-weight:700;color:var(--mid)}
+.pad.power-t2{border-color:color-mix(in srgb,var(--power-color) 45%,var(--line));box-shadow:0 0 26px var(--power-glow)}
+.pad.power-t3,.pad.power-t4,.pad.power-t5{border-color:var(--power-color);box-shadow:0 0 36px var(--power-glow),inset 0 0 24px var(--power-glow)}
+.pad.power-t3::before,.pad.power-t4::before,.pad.power-t5::before{opacity:.58;animation:powerOrbit 6s linear infinite}
+.pad.power-t4 .power-readout,.pad.power-t5 .power-readout{box-shadow:0 0 22px var(--power-glow),inset 0 0 16px var(--power-glow)}
+.pad.power-t5{background:linear-gradient(160deg,#211d39,var(--panel) 48%,#182d35)}
+@keyframes powerOrbit{to{transform:rotate(360deg)}}
+.tier-pulse{animation:tierPulse .7s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes tierPulse{0%{transform:scale(.96)}42%{transform:scale(1.018);box-shadow:0 0 52px var(--power-glow)}100%{transform:scale(1)}}
+.power-spark{position:absolute;left:50%;top:48%;z-index:4;width:5px;height:5px;border-radius:50%;background:var(--spark);box-shadow:0 0 9px var(--spark);pointer-events:none;animation:powerSpark .72s ease-out both}
+@keyframes powerSpark{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}100%{transform:translate(calc(-50% + var(--sx)),calc(-50% + var(--sy))) scale(0);opacity:0}}
 
 /* ---------------- 評定グリッド ---------------- */
 .grades-panel{display:none}
@@ -352,15 +383,19 @@ input{font-family:inherit}
 .year-btn.filled::after{content:"";position:absolute;top:6px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
 
 /* 円形リング */
-.gy-ring-wrap{position:relative;width:180px;height:180px;margin:18px auto 6px}
+.gy-ring-wrap{--power-color:var(--amber);--power-glow:var(--amber-glow);position:relative;width:180px;height:180px;margin:18px auto 6px;border-radius:50%;transition:filter .3s}
 .gy-ring{position:absolute;inset:0;transform:rotate(-90deg)}
 .gy-track{fill:none;stroke:var(--line);stroke-width:11}
-.gy-fill{fill:none;stroke:var(--amber);stroke-width:11;stroke-linecap:round;filter:drop-shadow(0 0 8px var(--amber-glow));transition:stroke-dashoffset .28s cubic-bezier(.22,.61,.36,1)}
+.gy-fill{fill:none;stroke:var(--power-color,var(--amber));stroke-width:11;stroke-linecap:round;filter:drop-shadow(0 0 8px var(--power-glow,var(--amber-glow)));transition:stroke-dashoffset .28s cubic-bezier(.22,.61,.36,1),stroke .3s,filter .3s}
 .gy-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
 .gy-num{font-family:var(--num);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-.gy-num #gyNum{font-size:46px;color:var(--amber)}
+.gy-num #gyNum{font-size:46px;color:var(--power-color,var(--amber));text-shadow:0 0 20px var(--power-glow,transparent);transition:color .3s,text-shadow .3s}
 .gy-den{font-size:15px;color:var(--soft);margin-left:3px}
 .gy-lbl{font-size:11px;color:var(--mid);margin-top:7px;font-weight:600;letter-spacing:.04em}
+.gy-power{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.14em;color:var(--power-color,var(--amber));margin-top:4px;min-height:12px}
+.gy-ring-wrap.power-t3,.gy-ring-wrap.power-t4,.gy-ring-wrap.power-t5{filter:drop-shadow(0 0 18px var(--power-glow))}
+.gy-ring-wrap.power-t5::after{content:"";position:absolute;inset:-5px;border:1px solid var(--power-color);border-radius:50%;animation:ringVictory 1.5s ease-in-out infinite;pointer-events:none}
+@keyframes ringVictory{0%,100%{transform:scale(.94);opacity:.2}50%{transform:scale(1.06);opacity:.75}}
 
 /* 一括入力 */
 .gy-bulk{margin-top:16px;padding:13px 14px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
@@ -397,24 +432,35 @@ input{font-family:inherit}
 .gy-pill.empty .gp-val{color:var(--soft)}
 .gy-pill.sel{border-color:var(--amber);background:var(--amber-glow)}
 .gy-pill.sel .gp-name{color:var(--amber)}
+.gy-pill.grade-4{border-color:rgba(76,195,255,.52);background:rgba(76,195,255,.075)}
+.gy-pill.grade-4 .gp-val{color:#4cc3ff;text-shadow:0 0 11px rgba(76,195,255,.38)}
+.gy-pill.grade-5{border-color:rgba(254,240,138,.68);background:linear-gradient(145deg,rgba(167,139,250,.12),rgba(254,240,138,.08))}
+.gy-pill.grade-5 .gp-val{color:#fef08a;text-shadow:0 0 13px rgba(254,240,138,.5)}
+.gy-pill.grade-5.sel{box-shadow:0 0 20px rgba(254,240,138,.18),inset 0 0 12px rgba(167,139,250,.1)}
 
 /* 選択中の教科スライダー */
-.gy-picker{margin-top:14px;padding:15px 16px 12px;border-radius:14px;border:1px solid var(--line-lt);background:var(--panel-2)}
+.gy-picker{--power-color:var(--amber);--power-glow:var(--amber-glow);position:relative;overflow:hidden;margin-top:14px;padding:15px 16px 12px;border-radius:14px;border:1px solid var(--line-lt);background:var(--panel-2);transition:border-color .25s,box-shadow .25s,background .25s}
+.gy-picker>*{position:relative;z-index:1}
+.gy-picker.grade-4{--power-color:#4cc3ff;--power-glow:rgba(76,195,255,.25);border-color:#4cc3ff;box-shadow:0 0 20px var(--power-glow)}
+.gy-picker.grade-5{--power-color:#fef08a;--power-glow:rgba(254,240,138,.26);border-color:#fef08a;background:linear-gradient(145deg,rgba(167,139,250,.12),var(--panel-2));box-shadow:0 0 28px var(--power-glow)}
 .gy-pick-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
 .gy-pick-name{font-size:14.5px;font-weight:700;color:var(--ink)}
 .gy-pick-name .gc-x{font-style:normal;font-family:var(--num);font-size:9px;color:var(--amber);margin-left:6px;letter-spacing:.03em}
-.gy-pick-val{font-family:var(--num);font-size:23px;font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums}
+.gy-pick-val{font-family:var(--num);font-size:23px;font-weight:700;color:var(--power-color,var(--amber));font-variant-numeric:tabular-nums;text-shadow:0 0 14px var(--power-glow,transparent)}
 .gy-slider{width:100%;height:40px}
 .gy-pick-hint{font-size:10.5px;color:var(--soft);text-align:center;margin-top:1px}
 .naishin-meter{
+  --power-color:var(--amber);--power-glow:var(--amber-glow);
   margin-top:14px;padding:14px 16px;border-radius:14px;
   border:1px solid var(--line);background:var(--panel);
   display:flex;justify-content:space-around;align-items:center;
+  transition:border-color .3s,box-shadow .3s,background .3s;
 }
 .nm-block{text-align:center}
 .nm-label{font-family:var(--num);font-size:8.5px;font-weight:600;letter-spacing:.18em;color:var(--soft)}
-.nm-val{font-family:var(--num);font-size:26px;font-weight:700;color:var(--amber)}
+.nm-val{font-family:var(--num);font-size:26px;font-weight:700;color:var(--power-color,var(--amber));text-shadow:0 0 14px var(--power-glow,transparent);transition:color .3s,text-shadow .3s}
 .nm-sub{font-size:10px;color:var(--soft)}
+.naishin-meter.power-t2,.naishin-meter.power-t3,.naishin-meter.power-t4,.naishin-meter.power-t5{border-color:var(--power-color);box-shadow:0 0 22px var(--power-glow);background:linear-gradient(145deg,color-mix(in srgb,var(--power-color) 7%,var(--panel)),var(--panel))}
 
 /* ---------------- 下部ドック ---------------- */
 .dock{
@@ -491,6 +537,22 @@ input{font-family:inherit}
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(ellipse 90% 55% at 50% 0%,var(--vglow,transparent),transparent 70%);
 }
+.verdict>*{position:relative;z-index:2}
+.verdict::after{content:"";position:absolute;inset:-45%;z-index:0;pointer-events:none;opacity:0;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.09),transparent 18%,transparent 48%,rgba(255,255,255,.07),transparent 66%)}
+.achievement-badge{
+  display:none;width:max-content;max-width:100%;margin:-8px auto 14px;padding:5px 12px;border-radius:999px;
+  border:1px solid var(--vcol,var(--amber));background:color-mix(in srgb,var(--vcol,var(--amber)) 11%,var(--panel));
+  font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.19em;color:var(--vcol,var(--amber));
+  box-shadow:0 0 17px var(--vglow,transparent);
+}
+.verdict.rank-a .achievement-badge,.verdict.rank-aa .achievement-badge,.verdict.rank-aaa .achievement-badge{display:block;animation:achievementBadge .6s .55s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes achievementBadge{0%{opacity:0;transform:translateY(-9px) scale(.85)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.verdict.rank-a{border-color:rgba(61,220,132,.48);box-shadow:0 0 24px rgba(61,220,132,.12)}
+.verdict.rank-aa{border-color:#6ee7d0;background:linear-gradient(155deg,rgba(61,220,132,.13),var(--panel-2) 44%,rgba(76,195,255,.09),var(--panel));box-shadow:0 0 38px rgba(61,220,132,.2),inset 0 0 28px rgba(76,195,255,.07)}
+.verdict.rank-aa::after{opacity:.5;animation:resultOrbit 8s linear infinite}
+.verdict.rank-aaa{border-color:#fef08a;background:linear-gradient(145deg,#25233d 0%,#182f37 43%,#2d2439 74%,#1b2545 100%);box-shadow:0 0 54px rgba(254,240,138,.25),0 0 90px rgba(167,139,250,.1),inset 0 0 36px rgba(110,231,208,.08)}
+.verdict.rank-aaa::after{opacity:.78;background:conic-gradient(from 0deg,transparent 0 10%,rgba(254,240,138,.17) 13%,transparent 17% 32%,rgba(110,231,208,.13) 36%,transparent 40% 61%,rgba(167,139,250,.17) 65%,transparent 70%);animation:resultOrbit 5.5s linear infinite}
+@keyframes resultOrbit{to{transform:rotate(360deg)}}
 .v-school{
   display:inline-block;position:relative;
   border:1px solid var(--line-lt);border-radius:8px;padding:5px 14px;
@@ -507,10 +569,19 @@ input{font-family:inherit}
   content:"";position:absolute;inset:7px;border-radius:50%;
   border:1.5px dashed var(--vcol,var(--amber));opacity:.55;
 }
+.seal::after{content:"";position:absolute;inset:-15px;border-radius:50%;border:1px solid var(--vcol,var(--amber));opacity:0;pointer-events:none}
+.verdict.rank-aa .seal::after,.verdict.rank-aaa .seal::after{animation:sealWave 1.75s .6s ease-out infinite}
+@keyframes sealWave{0%{transform:scale(.82);opacity:.7}100%{transform:scale(1.35);opacity:0}}
 .seal-letter{
   font-family:var(--num);font-size:78px;font-weight:700;line-height:1;
   color:var(--vcol,var(--amber));text-shadow:0 0 22px var(--vglow,transparent);
 }
+.seal-letter.multi{font-size:48px;letter-spacing:-.05em}
+.verdict.rank-aaa .seal{border-color:#fef08a;box-shadow:0 0 38px rgba(254,240,138,.34),0 0 70px rgba(110,231,208,.17),inset 0 0 24px rgba(167,139,250,.12)}
+.verdict.rank-aaa .seal.stamp-in{animation:stampIn .5s cubic-bezier(.2,1.4,.4,1) both,aaaFloat 2.4s 1s ease-in-out infinite}
+.verdict.rank-aaa .seal-letter{background:linear-gradient(90deg,#fef08a,#6ee7d0,#c4b5fd,#fef08a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:aaaShimmer 2.2s linear infinite}
+@keyframes aaaFloat{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-5px)}}
+@keyframes aaaShimmer{to{background-position:220% 0}}
 .stamp-in{animation:stampIn .5s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes stampIn{
   0%{opacity:0;transform:rotate(4deg) scale(2.4)}
@@ -624,6 +695,10 @@ input{font-family:inherit}
   85%{opacity:1}
   100%{transform:translateY(var(--fall)) rotate(var(--rot));opacity:0}
 }
+.victory-star{position:absolute;z-index:3;left:50%;top:40%;width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 11px var(--star);pointer-events:none;animation:victoryStar var(--dur) cubic-bezier(.12,.72,.2,1) both}
+@keyframes victoryStar{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}12%{opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(0);opacity:0}}
+.screen-victory{position:fixed;inset:0;z-index:395;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 42%,rgba(254,240,138,.48),rgba(110,231,208,.15) 34%,rgba(167,139,250,.08) 57%,transparent 74%);animation:screenVictory .9s ease-out both}
+@keyframes screenVictory{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
 
 /* ---------------- トースト ---------------- */
 .toast{
@@ -806,6 +881,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
               <input class="pad-num" type="number" id="naishinInput" placeholder="—" min="0" max="165" inputmode="numeric" aria-label="内申点（165点満点）">
             </div>
             <div class="pad-max">内申点（165点満点）</div>
+            <div class="power-readout" id="naishinPower">
+              <span class="pr-level">CHARGE</span><span class="pr-next">99点でオール3ライン</span>
+            </div>
             <input type="range" class="fat-slider" id="naishinSlider" min="0" max="165" step="1" value="0" aria-label="内申点スライダー">
             <div class="pad-tools">
               <span class="pad-hint">スライダーでも直接入力でもOK</span>
@@ -830,6 +908,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
               <div>
                 <div class="gy-num"><span id="gyNum">0</span><span class="gy-den">/ 55</span></div>
                 <div class="gy-lbl" id="gyYearLbl">中1の内申点</div>
+                <div class="gy-power" id="gyPower">CHARGE</div>
               </div>
             </div>
           </div>
@@ -862,7 +941,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
           <div class="gy-grp-lbl">実技4教科<span class="gy-x">×1.5</span></div>
           <div class="gy-pills" id="gyPillsA"></div>
 
-          <div class="naishin-meter">
+          <div class="naishin-meter" id="naishinMeter">
             <div class="nm-block">
               <div class="nm-label">確定内申点</div>
               <div class="nm-val" id="nmConfirmed">—</div>
@@ -901,6 +980,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
               <input class="pad-num" type="number" id="devInput" placeholder="—" min="20" max="80" inputmode="numeric" aria-label="偏差値（プレ入試・県模試など）">
             </div>
             <div class="pad-max">偏差値（プレ入試・県模試など）</div>
+            <div class="power-readout" id="devPower">
+              <span class="pr-level">CHARGE</span><span class="pr-next">偏差値50で標準ライン</span>
+            </div>
             <input type="range" class="fat-slider" id="devSlider" min="20" max="80" step="1" value="20" aria-label="偏差値スライダー">
             <div class="pad-tools">
               <span class="pad-hint">スライダーでも直接入力でもOK</span>
@@ -920,6 +1002,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
               <input class="pad-num" type="number" id="scoreInput" placeholder="—" min="0" max="300" inputmode="numeric" aria-label="5教科合計（300点満点）">
             </div>
             <div class="pad-max">5教科合計（300点満点）→ 偏差値に自動換算</div>
+            <div class="power-readout" id="scorePower">
+              <span class="pr-level">CHARGE</span><span class="pr-next">150点で標準ライン</span>
+            </div>
             <input type="range" class="fat-slider" id="scoreSlider" min="0" max="300" step="1" value="0" aria-label="5教科合計スライダー">
             <div class="pad-tools">
               <span class="pad-hint">スライダーでも直接入力でもOK</span>
@@ -937,6 +1022,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
 
         <div class="verdict" id="verdictCard">
           <div class="v-school" id="rSchoolTag">─</div>
+          <div class="achievement-badge" id="achievementBadge">A-CLASS CLEAR</div>
           <div class="seal" id="seal"><span class="seal-letter" id="rLetter">─</span></div>
           <div class="v-label" id="rLabel">─</div>
           <div class="v-sub" id="rSub">─</div>
@@ -1128,6 +1214,12 @@ const FX=(()=>{
     tap(){tone({f:1150,f2:900,type:"triangle",dur:.05,vol:.13});noise({f:4200,dur:.03,vol:.05,q:2});},
     /* スライダー：値に応じて音程が上がる（チャージ感の核） */
     tick(r){tone({f:520+Math.max(0,Math.min(1,r))*1040,type:"square",dur:.03,vol:.07});},
+    /* 成績ライン突破：段階が上がるほど和音も高くなる */
+    milestone(level){
+      const root=[0,0,659,784,988,1174][Math.max(0,Math.min(5,level))]||659;
+      [1,1.25,1.5].forEach((m,i)=>tone({f:root*m,type:i===0?"square":"triangle",dur:.16+i*.05,vol:.12,at:i*.055}));
+      noise({f:5200+level*420,dur:.2,vol:.035,at:.1});
+    },
     /* 満点チャージ */
     max(){tone({f:1318,type:"triangle",dur:.09,vol:.2});tone({f:1760,type:"triangle",dur:.18,vol:.2,at:.07});noise({f:6000,dur:.2,vol:.06,at:.07});},
     /* 評定5 */
@@ -1185,6 +1277,17 @@ const FX=(()=>{
         tone({f:392,type:"triangle",dur:.22,vol:.14,at:.2});
         tone({f:523,type:"triangle",dur:.42,vol:.14,at:.4});
       }
+    },
+    /* AA／AAA専用：Aファンファーレとは別の“上位解放”サウンド */
+    achievement(level){
+      const notes=level>=3?[523,659,784,1046,1318,1568]:[587,740,880,1174,1480];
+      notes.forEach((f,i)=>{
+        tone({f,type:"triangle",dur:.22,vol:.14,at:i*.075});
+        if(level>=3)tone({f:f*2,type:"sine",dur:.24,vol:.055,at:i*.075});
+      });
+      const chord=level>=3?[1046,1318,1568,2093]:[880,1174,1480];
+      chord.forEach(f=>tone({f,type:"triangle",dur:level>=3?.95:.68,vol:.085,at:.43}));
+      noise({f:8500,dur:.72,vol:.055,at:.38});
     },
     copy(){tone({f:1174,type:"triangle",dur:.07,vol:.15});tone({f:1760,type:"triangle",dur:.12,vol:.15,at:.07});},
   };
@@ -1616,13 +1719,100 @@ function selectSchool(id){
 /* ================================================================
    チャージパッド（数字入力＋スライダー＋リングゲージの同期）
    ================================================================ */
+/*
+  パワーティアは3つの尺度で同じ“段階感”になるよう設計。
+  内申：オール3=99、オール4=132、オール5=165。
+  学力：偏差値50/55/60/65と、アプリ内換算で対応する150/175/200/225点。
+  判定基準や学校データには影響せず、入力体験の演出にのみ使用する。
+*/
+const POWER_CONFIG={
+  naishin:{readout:"naishinPower",tiers:[
+    {min:0,code:"CHARGE",jp:"入力待ち",color:"#ffb84d",glow:"rgba(255,184,77,.22)"},
+    {min:99,code:"SOLID",jp:"オール3ライン",color:"#ffc94a",glow:"rgba(255,201,74,.24)"},
+    {min:132,code:"BRILLIANT",jp:"オール4ライン",color:"#4cc3ff",glow:"rgba(76,195,255,.28)"},
+    {min:150,code:"ELITE",jp:"150点チャージ",color:"#a78bfa",glow:"rgba(167,139,250,.3)"},
+    {min:160,code:"LEGEND",jp:"160点オーバー",color:"#6ee7d0",glow:"rgba(110,231,208,.3)"},
+    {min:165,code:"PERFECT",jp:"165点満点",color:"#fef08a",glow:"rgba(254,240,138,.34)"}
+  ]},
+  dev:{readout:"devPower",tiers:[
+    {min:20,code:"CHARGE",jp:"入力待ち",color:"#ffb84d",glow:"rgba(255,184,77,.22)"},
+    {min:50,code:"STANDARD",jp:"偏差値50",color:"#ffc94a",glow:"rgba(255,201,74,.24)"},
+    {min:55,code:"HIGH GEAR",jp:"偏差値55",color:"#4cc3ff",glow:"rgba(76,195,255,.28)"},
+    {min:60,code:"EXCELLENT",jp:"偏差値60",color:"#a78bfa",glow:"rgba(167,139,250,.3)"},
+    {min:65,code:"ELITE",jp:"偏差値65",color:"#6ee7d0",glow:"rgba(110,231,208,.3)"},
+    {min:80,code:"PERFECT",jp:"偏差値80",color:"#fef08a",glow:"rgba(254,240,138,.34)"}
+  ]},
+  score:{readout:"scorePower",tiers:[
+    {min:0,code:"CHARGE",jp:"入力待ち",color:"#ffb84d",glow:"rgba(255,184,77,.22)"},
+    {min:150,code:"STANDARD",jp:"150点ライン",color:"#ffc94a",glow:"rgba(255,201,74,.24)"},
+    {min:175,code:"HIGH GEAR",jp:"175点ライン",color:"#4cc3ff",glow:"rgba(76,195,255,.28)"},
+    {min:200,code:"EXCELLENT",jp:"200点突破",color:"#a78bfa",glow:"rgba(167,139,250,.3)"},
+    {min:225,code:"ELITE",jp:"225点ライン",color:"#6ee7d0",glow:"rgba(110,231,208,.3)"},
+    {min:300,code:"PERFECT",jp:"300点満点",color:"#fef08a",glow:"rgba(254,240,138,.34)"}
+  ]}
+};
+const padPowerLast={naishin:0,dev:0,score:0};
+
+function powerTierFor(key,value){
+  const tiers=POWER_CONFIG[key].tiers;
+  let idx=0;
+  if(value!==null&&value!==""&&!isNaN(Number(value))){
+    const v=Number(value);
+    tiers.forEach((t,i)=>{if(v>=t.min)idx=i;});
+  }
+  return{idx,info:tiers[idx],next:tiers[idx+1]||null};
+}
+
+function spawnMilestoneBurst(container,color){
+  if(!container||fxReduced())return;
+  for(let i=0;i<18;i++){
+    const s=document.createElement("span");
+    const a=(Math.PI*2*i/18)+(Math.random()*.18);
+    const dist=70+Math.random()*72;
+    s.className="power-spark";
+    s.style.setProperty("--spark",color);
+    s.style.setProperty("--sx",Math.cos(a)*dist+"px");
+    s.style.setProperty("--sy",Math.sin(a)*dist+"px");
+    container.appendChild(s);
+    setTimeout(()=>s.remove(),820);
+  }
+}
+
+function applyPadPower(key,value,announce){
+  const cfg=POWER_CONFIG[key];
+  const input=document.getElementById(PADS[key].input);
+  const pad=input.closest(".pad");
+  const readout=document.getElementById(cfg.readout);
+  const v=value===null||value===""||isNaN(Number(value))?null:Math.max(PADS[key].min,Math.min(PADS[key].max,Number(value)));
+  const state=powerTierFor(key,v);
+  for(let i=0;i<=5;i++)pad.classList.toggle("power-t"+i,i===state.idx);
+  pad.style.setProperty("--power-color",state.info.color);
+  pad.style.setProperty("--power-glow",state.info.glow);
+  readout.querySelector(".pr-level").textContent=state.info.code+(state.idx?" · "+state.info.jp:"");
+  if(state.next){
+    readout.querySelector(".pr-next").textContent=v===null?state.next.min+"で "+state.next.jp:"あと"+Math.max(0,state.next.min-v)+"で "+state.next.jp;
+  }else{
+    readout.querySelector(".pr-next").textContent="MAXIMUM CHARGE";
+  }
+  if(announce&&state.idx>padPowerLast[key]){
+    pad.classList.remove("tier-pulse");void pad.offsetWidth;pad.classList.add("tier-pulse");
+    spawnMilestoneBurst(pad,state.info.color);
+    if(state.idx===5)FX.play("max");else FX.play("milestone",state.idx);
+    if(state.idx>=2){
+      vibrate(state.idx>=4?[12,24,12,24,20]:[10,18,12]);
+      toast(state.info.code+" ─ "+state.info.jp+" 解放");
+    }
+  }
+  padPowerLast[key]=state.idx;
+}
+
 const DIAL_CIRC=2*Math.PI*86;
 const PADS={
   naishin:{input:"naishinInput",slider:"naishinSlider",dial:"naishinDial",min:0,max:165},
   dev:{input:"devInput",slider:"devSlider",dial:"devDial",min:20,max:80},
   score:{input:"scoreInput",slider:"scoreSlider",dial:"scoreDial",min:0,max:300},
 };
-function padGauge(key){
+function padGauge(key,announce){
   const p=PADS[key];
   const input=document.getElementById(p.input);
   const slider=document.getElementById(p.slider);
@@ -1635,6 +1825,7 @@ function padGauge(key){
   }
   dial.style.strokeDashoffset=DIAL_CIRC*(1-ratio);
   slider.style.setProperty("--p",(ratio*100)+"%");
+  applyPadPower(key,input.value,!!announce);
 }
 function initPad(key){
   const p=PADS[key];
@@ -1646,7 +1837,6 @@ function initPad(key){
     const v=input.value===""?null:Number(input.value);
     const isMax=v!==null&&v>=p.max;
     if(isMax&&!wasMax&&FX.enabled){
-      FX.play("max");
       vibrate([10,20,10]);
       const pad=input.closest(".pad");
       if(pad&&!fxReduced()){pad.classList.remove("fx-max");void pad.offsetWidth;pad.classList.add("fx-max");}
@@ -1655,7 +1845,7 @@ function initPad(key){
   };
   slider.addEventListener("input",()=>{
     input.value=slider.value;
-    padGauge(key);
+    padGauge(key,true);
     if(slider.value!==lastTick){
       lastTick=slider.value;
       vibrate(4);
@@ -1673,17 +1863,17 @@ function initPad(key){
     }else{
       slider.value=p.min;
     }
-    padGauge(key);
+    padGauge(key,true);
     maxCheck();
     updateDock();
   });
-  padGauge(key);
+  padGauge(key,false);
 }
 function clearField(key){
   const p=PADS[key];
   document.getElementById(p.input).value="";
   document.getElementById(p.slider).value=p.min;
-  padGauge(key);
+  padGauge(key,false);
   vibrate(8);
   FX.play("clear");
   updateDock();
@@ -1719,8 +1909,35 @@ let gradePanelReady=false;
 
 function yearPts(y){let t=0;SUBS.forEach(sj=>{const v=grades[y][sj]||0;t+=v*(ARTS.includes(sj)?1.5:1)});return t;}
 
+const YEAR_POWER_TIERS=[
+  {min:0,code:"CHARGE",color:"#ffb84d",glow:"rgba(255,184,77,.22)"},
+  {min:33,code:"ALL 3 LINE",color:"#ffc94a",glow:"rgba(255,201,74,.24)"},
+  {min:44,code:"ALL 4 LINE",color:"#4cc3ff",glow:"rgba(76,195,255,.28)"},
+  {min:50,code:"ELITE YEAR",color:"#a78bfa",glow:"rgba(167,139,250,.3)"},
+  {min:53,code:"LEGEND YEAR",color:"#6ee7d0",glow:"rgba(110,231,208,.3)"},
+  {min:55,code:"PERFECT YEAR",color:"#fef08a",glow:"rgba(254,240,138,.34)"}
+];
+const yearPowerLast={1:0,2:0,3:0};
+
+function updateYearPower(t,announce){
+  let idx=0;YEAR_POWER_TIERS.forEach((x,i)=>{if(t>=x.min)idx=i;});
+  const info=YEAR_POWER_TIERS[idx];
+  const wrap=document.querySelector(".gy-ring-wrap");
+  for(let i=0;i<=5;i++)wrap.classList.toggle("power-t"+i,i===idx);
+  wrap.style.setProperty("--power-color",info.color);
+  wrap.style.setProperty("--power-glow",info.glow);
+  document.getElementById("gyPower").textContent=info.code;
+  if(announce&&idx>yearPowerLast[gradeYear]){
+    wrap.classList.remove("tier-pulse");void wrap.offsetWidth;wrap.classList.add("tier-pulse");
+    spawnMilestoneBurst(wrap,info.color);
+    if(idx===5)FX.play("perfect");else FX.play("milestone",idx);
+    if(idx>=2){vibrate(idx>=4?[12,22,12,22,18]:[10,18,12]);toast(info.code+" ─ 中"+gradeYear+"の評定ライン突破");}
+  }
+  yearPowerLast[gradeYear]=idx;
+}
+
 /* 円形リング更新 */
-function updateRing(){
+function updateRing(announce){
   const t=yearPts(gradeYear);
   const C=2*Math.PI*76;
   const fill=document.getElementById("gyFill");
@@ -1728,6 +1945,7 @@ function updateRing(){
   fill.style.strokeDashoffset=C*(1-Math.min(1,t/YEAR_MAX));
   document.getElementById("gyNum").textContent=fmtPts(t);
   document.getElementById("gyYearLbl").textContent="中"+gradeYear+"の内申点";
+  updateYearPower(t,!!announce);
 }
 
 /* 学年タブの入力済みインジケーター */
@@ -1745,16 +1963,29 @@ function updatePickVal(v,art){
   document.getElementById("gyPickHint").textContent=v===0?"未入力（左端）":"評定 "+v+" を選択中";
 }
 
+function styleGradePicker(v,art,announce){
+  const picker=document.querySelector(".gy-picker");
+  picker.classList.toggle("grade-4",v===4);
+  picker.classList.toggle("grade-5",v===5);
+  const color=v===5?"#fef08a":v===4?"#4cc3ff":art?"#ffb84d":"#eef2ff";
+  const glow=v===5?"rgba(254,240,138,.3)":v===4?"rgba(76,195,255,.28)":art?"rgba(255,184,77,.22)":"rgba(238,242,255,.12)";
+  picker.style.setProperty("--power-color",color);
+  picker.style.setProperty("--power-glow",glow);
+  if(announce&&v>=4){
+    picker.classList.remove("tier-pulse");void picker.offsetWidth;picker.classList.add("tier-pulse");
+    spawnMilestoneBurst(picker,color);
+  }
+}
+
 /* 選択中教科をスライダー／ヘッダーに反映 */
 function syncPicker(){
   const sj=gradeSel,art=ARTS.includes(sj),v=grades[gradeYear][sj]||0;
   document.getElementById("gyPickName").innerHTML=sj+(art?'<span class="gc-x">×1.5</span>':"");
-  const pv=document.getElementById("gyPickVal");
-  pv.style.color=art?"var(--amber)":"var(--ink)";
   const sl=document.getElementById("gySlider");
   sl.value=v;
   sl.style.setProperty("--p",(v/5*100)+"%");
   updatePickVal(v,art);
+  styleGradePicker(v,art,false);
 }
 
 /* 教科ピル描画（5教科／実技で分ける） */
@@ -1762,7 +1993,7 @@ function pillFor(sj){
   const art=ARTS.includes(sj);
   const v=grades[gradeYear][sj]||0;
   const pill=document.createElement("button");pill.type="button";
-  pill.className="gy-pill"+(art?" art":"")+(sj===gradeSel?" sel":"")+(v===0?" empty":"");
+  pill.className="gy-pill"+(art?" art":"")+(sj===gradeSel?" sel":"")+(v===0?" empty":"")+(v===4?" grade-4":"")+(v===5?" grade-5":"");
   const nm=document.createElement("span");nm.className="gp-name";nm.textContent=SHORT[sj];
   const val=document.createElement("span");val.className="gp-val";val.textContent=gradeDisp(v,art);
   pill.appendChild(nm);pill.appendChild(val);
@@ -1784,9 +2015,8 @@ function bulkSet(n){
   if(n===0)FX.play("clear");
   else{
     FX.play("ratchet",n);
-    if(n===5)setTimeout(()=>FX.play("perfect"),300);
   }
-  renderPills();syncPicker();updateRing();updateYearTabs();calcNaishin();
+  renderPills();syncPicker();updateRing(n>0);updateYearTabs();calcNaishin();
   /* FXモード：9教科ピルが順番に跳ねる */
   if(FX.enabled&&n>0&&!fxReduced()){
     document.querySelectorAll(".gy-pill").forEach((p,i)=>{
@@ -1810,10 +2040,15 @@ function setupGradePanel(){
     sl.style.setProperty("--p",(v/5*100)+"%");
     updatePickVal(v,art);
     const cm=gyChipMap[sj];
-    if(cm){cm.val.textContent=gradeDisp(v,art);cm.chip.classList.toggle("empty",v===0);}
-    updateRing();updateYearTabs();
+    if(cm){
+      cm.val.textContent=gradeDisp(v,art);cm.chip.classList.toggle("empty",v===0);
+      cm.chip.classList.toggle("grade-4",v===4);cm.chip.classList.toggle("grade-5",v===5);
+    }
+    styleGradePicker(v,art,true);
+    updateRing(true);updateYearTabs();
     vibrate(4);
     FX.play("tick",v/5);
+    if(v===4)FX.play("milestone",2);
     if(v===5)FX.play("five");
     calcNaishin();
   });
@@ -1823,7 +2058,7 @@ function renderGrades(){
   setupGradePanel();
   renderPills();
   syncPicker();
-  updateRing();
+  updateRing(false);
   updateYearTabs();
 }
 
@@ -1853,6 +2088,11 @@ function calcNaishin(){
   if(cnt>0){const m=sum/cnt;let p=0;[1,2,3].forEach(y=>SUBS.forEach(sj=>{const v=grades[y][sj];p+=(v>0?v:m)*(ARTS.includes(sj)?1.5:1)}));proj=Math.min(165,Math.round(p));}
   animateCountTo(document.getElementById("nmConfirmed"),conf);
   animateCountTo(document.getElementById("nmProjected"),proj);
+  const meter=document.getElementById("naishinMeter");
+  const meterState=powerTierFor("naishin",proj);
+  for(let i=0;i<=5;i++)meter.classList.toggle("power-t"+i,i===meterState.idx);
+  meter.style.setProperty("--power-color",meterState.info.color);
+  meter.style.setProperty("--power-glow",meterState.info.glow);
   if(proj!==null)document.getElementById("naishinInput").value=proj;
   else if(conf!==null)document.getElementById("naishinInput").value=conf;
   else document.getElementById("naishinInput").value="";
@@ -1965,6 +2205,18 @@ function playJudgeSequence(school,d,nai,dev){
 /* ================================================================
    RESULT
    ================================================================ */
+function achievementFor(overall,ng,dg,pct){
+  const gi=gInfo(overall);
+  if(overall!=="A")return{code:overall,label:gi.label,sub:gi.sub,level:0,color:gi.ring,badge:""};
+  if(ng==="A"&&dg==="A"&&pct>=90){
+    return{code:"AAA",label:"AAA判定",sub:"内申・学力ともにA ＋ 合格可能性90%以上",level:3,color:"#fef08a",badge:"TRIPLE A · TOP CLEAR"};
+  }
+  if(ng==="A"&&dg==="A"){
+    return{code:"AA",label:"AA判定",sub:"内申・学力ともにA判定",level:2,color:"#6ee7d0",badge:"DOUBLE A · BOTH CLEAR"};
+  }
+  return{code:"A",label:"A判定",sub:"合格圏",level:1,color:gi.ring,badge:"A-CLASS CLEAR"};
+}
+
 function renderResult(school,d,nai,dev){
   go(4);
   document.getElementById("resultScroll").scrollTop=0;
@@ -1985,22 +2237,30 @@ function renderResult(school,d,nai,dev){
   else if(naiMargin!==null) margin=naiMargin;
   else margin=0;
   const pct=passProb(margin);
+  const achievement=achievementFor(overall,ng,dg,pct);
 
   /* 結果をグローバルに保持（シェア機能から参照） */
-  window.__lastResult={school,pct,overall,label:gi.label};
+  window.__lastResult={school,pct,overall:achievement.code,label:achievement.label};
 
   /* 判定カラーをカード全体に適用 */
   const card=document.getElementById("verdictCard");
-  card.style.setProperty("--vcol",gi.ring);
-  card.style.setProperty("--vglow",gi.ring+"33");
+  card.classList.remove("rank-a","rank-aa","rank-aaa");
+  if(achievement.level===1)card.classList.add("rank-a");
+  if(achievement.level===2)card.classList.add("rank-aa");
+  if(achievement.level===3)card.classList.add("rank-aaa");
+  card.style.setProperty("--vcol",achievement.color);
+  card.style.setProperty("--vglow",achievement.level===3?"rgba(254,240,138,.27)":achievement.color+"33");
 
   document.getElementById("rSchoolTag").textContent=school.name+"高校 "+school.dept+(d.dummy?"（参考値）":"");
-  document.getElementById("rLabel").textContent=gi.label;
-  document.getElementById("rSub").textContent=gi.sub;
+  document.getElementById("achievementBadge").textContent=achievement.badge;
+  document.getElementById("rLabel").textContent=achievement.label;
+  document.getElementById("rSub").textContent=achievement.sub;
 
   /* スタンプ演出 */
   const seal=document.getElementById("seal");
-  document.getElementById("rLetter").textContent=gi.r;
+  const letter=document.getElementById("rLetter");
+  letter.textContent=achievement.code;
+  letter.classList.toggle("multi",achievement.code.length>1);
   seal.classList.remove("stamp-in");
   void seal.offsetWidth;
   seal.classList.add("stamp-in");
@@ -2008,16 +2268,20 @@ function renderResult(school,d,nai,dev){
   /* FX：スタンプ着弾（衝撃音＋画面シェイク＋フラッシュ）→ ランク別ファンファーレ */
   if(FX.enabled){
     setTimeout(()=>{FX.play("stamp");fxImpact();},260);
-    setTimeout(()=>FX.play("fanfare",overall),720);
+    setTimeout(()=>achievement.level>=2?FX.play("achievement",achievement.level):FX.play("fanfare",overall),720);
   }
 
   /* 効果音・振動：判定ランクに応じて演出強度を変える */
-  if(overall==="A") vibrate([0,60,40,60,40,90]);
+  if(achievement.level===3) vibrate([0,70,35,70,35,70,45,110]);
+  else if(achievement.level===2) vibrate([0,65,35,65,35,95]);
+  else if(overall==="A") vibrate([0,60,40,60,40,90]);
   else if(overall==="B") vibrate([0,50,30,70]);
   else vibrate(40);
 
   /* 紙吹雪：A/Bのみ */
-  if(overall==="A"||overall==="B") spawnConfetti(card,gi.ring);
+  if(overall==="A"||overall==="B") spawnConfetti(card,achievement.color);
+  if(achievement.level>=2)spawnVictoryStars(card,achievement.level);
+  if(achievement.level===3)flashVictory();
 
   /* パーセントリング：0からカウントアップ＆描画 */
   const CIRC=2*Math.PI*70;
@@ -2025,7 +2289,7 @@ function renderResult(school,d,nai,dev){
   fill.style.strokeDasharray=CIRC;
   fill.style.strokeDashoffset=CIRC;
   const pctNumEl=document.getElementById("rPctNum");
-  pctNumEl.style.color=gi.ring;
+  pctNumEl.style.color=achievement.color;
   pctNumEl.textContent="0%";
   setTimeout(()=>{
     animatePct(pctNumEl,fill,CIRC,pct);
@@ -2035,7 +2299,7 @@ function renderResult(school,d,nai,dev){
   const formatGrade=(g)=>g?'<span style="color:'+gInfo(g).ring+'">'+g+'判定</span>':'<span style="color:var(--soft)">—</span>';
   document.getElementById("bdNai").innerHTML=ng?formatGrade(ng):"—";
   document.getElementById("bdDev").innerHTML=dg?formatGrade(dg):"—";
-  document.getElementById("bdOverall").innerHTML=formatGrade(overall);
+  document.getElementById("bdOverall").innerHTML='<span style="color:'+achievement.color+'">'+achievement.label+'</span>';
 
   const naiDiff=nai!==null&&d.nai!=null?(nai>=d.nai?{t:"クリア",ok:true}:{t:"あと"+Math.round(d.nai-nai)+"点",ok:false}):null;
   const devDiff=dev!==null&&d.dev!=null?(dev>=d.dev?{t:"クリア",ok:true}:{t:"あと"+Math.round(d.dev-dev)+"点",ok:false}):null;
@@ -2103,6 +2367,33 @@ function spawnConfetti(container,color){
     container.appendChild(c);
     setTimeout(()=>c.remove(),2600);
   }
+}
+
+/* AA／AAA：中心から放射する星粒。AAAは色数・粒数を増やす */
+function spawnVictoryStars(container,level){
+  if(fxReduced())return;
+  const colors=level>=3?["#fef08a","#6ee7d0","#c4b5fd","#ffffff"]:["#6ee7d0","#4cc3ff","#ffffff"];
+  const count=level>=3?42:24;
+  for(let i=0;i<count;i++){
+    const star=document.createElement("span");
+    const a=Math.random()*Math.PI*2;
+    const dist=80+Math.random()*(level>=3?180:125);
+    star.className="victory-star";
+    star.style.setProperty("--star",colors[i%colors.length]);
+    star.style.setProperty("--x",Math.cos(a)*dist+"px");
+    star.style.setProperty("--y",Math.sin(a)*dist+"px");
+    star.style.setProperty("--dur",(.75+Math.random()*.65)+"s");
+    star.style.animationDelay=(.24+Math.random()*.45)+"s";
+    container.appendChild(star);
+    setTimeout(()=>star.remove(),1900);
+  }
+}
+function flashVictory(){
+  if(fxReduced())return;
+  const glow=document.createElement("div");
+  glow.className="screen-victory";
+  document.body.appendChild(glow);
+  setTimeout(()=>glow.remove(),1100);
 }
 
 /* ================================================================
