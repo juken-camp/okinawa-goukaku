@@ -2408,7 +2408,8 @@ function shareResult(kind){
   const url="https://okinawa-goukaku.jp/";
 
   if(kind==="line"){
-    window.open("https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text),"_blank","noopener");
+    const full=text+"\n"+url;
+    window.location.href="https://line.me/R/share?text="+encodeURIComponent(full);
   }else if(kind==="x"){
     window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank","noopener");
   }else if(kind==="copy"){
