@@ -1105,7 +1105,8 @@ input{font-family:inherit}
 .time-orbit::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(255,255,255,.16)}
 @keyframes timeOrbitIn{from{opacity:0;transform:rotate(-100deg) scale(.75)}to{opacity:1;transform:rotate(0) scale(1)}}
 .time-orbit-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
-.time-total-num{font-family:var(--num);font-size:48px;font-weight:700;line-height:1;color:var(--time);text-shadow:0 0 22px var(--time-glow);font-variant-numeric:tabular-nums}
+.time-total-num{max-width:176px;font-family:var(--num);font-size:48px;font-weight:700;line-height:1;color:var(--time);text-shadow:0 0 22px var(--time-glow);font-variant-numeric:tabular-nums;white-space:nowrap}
+.time-total-num.is-long{font-size:40px}
 .time-total-unit{font-size:12px;font-weight:700;color:var(--mid);margin-top:5px}
 .time-days-left{font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--ink);margin-top:8px}
 .time-date-line{font-size:11px;color:var(--mid)}
@@ -3972,11 +3973,20 @@ function updateTimeDock(calculated){
 }
 function animateTimeTotal(el,target){
   const start=performance.now(),duration=1050;
+  const useWholeHours=Math.abs(Number(target)||0)>=1000;
+  const formatTotal=value=>useWholeHours
+    ?Math.round(value).toLocaleString("ja-JP")
+    :formatTimeHours(value);
+  const setValue=value=>{
+    const text=formatTotal(value);
+    el.textContent=text;
+    el.classList.toggle("is-long",text.length>6);
+  };
   function frame(now){
     const p=Math.min(1,(now-start)/duration);
     const eased=1-Math.pow(1-p,4);
-    el.textContent=formatTimeHours(target*eased);
-    if(p<1)requestAnimationFrame(frame);else el.textContent=formatTimeHours(target);
+    setValue(target*eased);
+    if(p<1)requestAnimationFrame(frame);else setValue(target);
   }
   requestAnimationFrame(frame);
 }
@@ -4179,7 +4189,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260713-28", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260713-29", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
