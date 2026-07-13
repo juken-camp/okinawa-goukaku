@@ -1076,7 +1076,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
       <div class="hub-scroll">
         <div class="hub-head">
           <div class="hub-kicker">OKINAWA EXAM CONTROL</div>
-          <h1 class="hub-title">合格までを、<em>2つのスキャン</em>で測る。</h1>
+          <h1 class="hub-title">合格までを、<br><em>2つのスキャン</em>で測る。</h1>
           <p class="hub-lead">現在地と残り時間。確認したい方を選んでください。</p>
         </div>
 
@@ -1118,7 +1118,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </section>
 
         <div class="hub-footer">
-          <div class="title-foot">沖縄県立高校入試 シミュレーター</div>
+          <div class="title-foot">沖縄県立高校入試 合格判定シミュレーター</div>
           <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
             <span class="tb-en">MADE BY</span><b>JUKEN CAMP</b>
           </a>
@@ -1421,8 +1421,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <span>目標の種類</span>
             <select class="time-select" id="timeGoalType">
               <option value="okinawa_exam" selected>沖縄県立高校入試</option>
-              <option value="other_exam">その他の高校入試</option>
-              <option value="custom">英検・資格・テスト・仕事など</option>
+              <option value="custom">その他</option>
             </select>
           </label>
           <label class="time-field">
@@ -1640,14 +1639,13 @@ const FX=(()=>{
   function ensure(){
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return null;
-    if(!ctx){
+    if(!ctx||ctx.state==="closed"){
       ctx=new AC();
       const comp=ctx.createDynamicsCompressor();
       comp.threshold.value=-18;comp.knee.value=20;comp.ratio.value=6;
       master=ctx.createGain();master.gain.value=0.45;
       master.connect(comp);comp.connect(ctx.destination);
     }
-    if(ctx.state==="suspended")ctx.resume();
     return ctx;
   }
   /* 単音（オシレーター） */
@@ -1771,10 +1769,30 @@ const FX=(()=>{
     copy(){tone({f:1174,type:"triangle",dur:.07,vol:.15});tone({f:1760,type:"triangle",dur:.12,vol:.15,at:.07});},
   };
 
-  api.ensure=()=>{try{ensure()}catch(e){}};
+  api.ensure=()=>{
+    try{
+      const c=ensure();
+      if(c&&c.state!=="running"&&c.resume){
+        const resumed=c.resume();
+        if(resumed&&resumed.catch)resumed.catch(()=>{});
+      }
+    }catch(e){}
+  };
   api.play=(name,...args)=>{
     if(!api.enabled)return;
-    try{ if(!ensure())return; (S[name]||function(){})(...args); }catch(e){}
+    try{
+      const c=ensure();
+      if(!c)return;
+      const playNow=()=>{
+        if(!api.enabled||ctx!==c||c.state!=="running")return;
+        try{(S[name]||function(){})(...args)}catch(e){}
+      };
+      if(c.state==="running")playNow();
+      else if(c.resume){
+        const resumed=c.resume();
+        if(resumed&&resumed.then)resumed.then(playNow).catch(()=>{});
+      }
+    }catch(e){}
   };
   return api;
 })();
@@ -3059,7 +3077,10 @@ function examDateForGrade(gradeIndex){
   return{year:examYear,date:predictedOkinawaExamDate(examYear),confirmed:false};
 }
 function goalUsesGrade(type){
-  return type==="okinawa_exam"||type==="other_exam";
+  return type==="okinawa_exam";
+}
+function normalizeGoalType(type){
+  return type==="okinawa_exam"?"okinawa_exam":"custom";
 }
 function updateGoalContext(){
   const type=document.getElementById("timeGoalType").value;
@@ -3076,13 +3097,8 @@ function updateExamDateStatus(){
   const restore=document.getElementById("restoreAutoDate");
   const type=document.getElementById("timeGoalType").value;
   status.className="date-status";
-  if(type==="other_exam"){
-    status.textContent="入試日を入力してください。現在の学年は「学年・年度ごと」の時間設定に使います。";
-    restore.classList.remove("show");
-    return;
-  }
   if(type!=="okinawa_exam"){
-    status.textContent="目標日を自由に設定してください。学年は使わず、資格・試験・仕事などに利用できます。";
+    status.textContent="目標日を手動で設定してください。学年は使わず、他県の入試・資格・試験・仕事などに利用できます。";
     restore.classList.remove("show");
     return;
   }
@@ -3263,8 +3279,7 @@ function renderSavedMissions(){
     const code=document.createElement("div");code.className="mission-code";
     if(mission.type==="okinawa_exam"){
       code.textContent=mission.manualDate?"EXAM / DATE EDITED":(Number(mission.examYear)===2027?"EXAM / CONFIRMED":"EXAM / PREDICTED");
-    }else if(mission.type==="other_exam")code.textContent="HIGH SCHOOL EXAM";
-    else code.textContent="CUSTOM GOAL";
+    }else code.textContent="OTHER GOAL";
     const name=document.createElement("div");name.className="mission-name";name.textContent=mission.goalName||"目標日";
     const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+(mission.type==="okinawa_exam"&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
     const stats=document.createElement("div");stats.className="mission-stats";
@@ -3342,11 +3357,12 @@ function saveCurrentTimeMission(){
 function loadTimeMission(id){
   const mission=readTimeMissions().find(item=>item.id===id);
   if(!mission)return;
+  const missionType=normalizeGoalType(mission.type);
   currentTimeMissionId=mission.id;
-  document.getElementById("timeGoalType").value=mission.type||"custom";
+  document.getElementById("timeGoalType").value=missionType;
   document.getElementById("timeGoalName").value=mission.goalName||"";
   document.getElementById("timeGrade").value=String(Number(mission.grade)||0);
-  document.getElementById("okinawaMemorial").checked=(mission.type==="okinawa_exam"&&mission.memorial!==false);
+  document.getElementById("okinawaMemorial").checked=(missionType==="okinawa_exam"&&mission.memorial!==false);
   timeInternalDateChange=true;
   document.getElementById("timeTargetDate").value=mission.targetDate||"";
   timeInternalDateChange=false;
@@ -3365,10 +3381,10 @@ function loadTimeMission(id){
   }else if(mission.subjectWeights&&typeof mission.subjectWeights==="object"){
     timeAllocations=Object.entries(mission.subjectWeights).map((entry,index)=>newAllocation(entry[0],entry[1],index));
   }else{
-    timeAllocations=defaultAllocationsForType(mission.type||"custom");
+    timeAllocations=defaultAllocationsForType(missionType);
   }
   renderAllocationControls();
-  if((mission.type||"custom")==="okinawa_exam"){
+  if(missionType==="okinawa_exam"){
     const auto=timeDateKey(examDateForGrade(mission.grade).date);
     timeDateManuallyEdited=mission.manualDate===true||mission.targetDate!==auto;
   }else timeDateManuallyEdited=false;
@@ -3728,13 +3744,6 @@ function initTimeScan(){
       document.getElementById("timeGoalName").value="沖縄県立高校入試";
       timeDateManuallyEdited=false;
       applyExamDate(true);
-    }else if(type==="other_exam"){
-      document.getElementById("timeGoalName").value="高校入試";
-      timeDateManuallyEdited=false;
-      timeInternalDateChange=true;target.value="";timeInternalDateChange=false;
-      updateExamDateStatus();
-      if(timeMode==="year")renderYearPeriods();
-      updateTimeSimulation();
     }else{
       document.getElementById("timeGoalName").value="";
       timeDateManuallyEdited=false;
@@ -3763,12 +3772,14 @@ initPad("naishin");initPad("dev");initPad("score");
 updateDock();
 initTimeScan();
 
-/* FXモード：前回の設定を復元（音声コンテキストは初回タップで解錠） */
+/* FXモード：前回の設定を復元。画面復帰後も次の操作で音声を再開する。 */
 (function(){
   let saved=null;
   try{saved=localStorage.getItem("fxmode")}catch(e){}
   if(saved==="1")setFX(true,true);
-  document.addEventListener("pointerdown",()=>{if(FX.enabled)FX.ensure()},{once:true});
+  document.addEventListener("pointerdown",()=>{if(FX.enabled)FX.ensure()},{passive:true});
+  document.addEventListener("keydown",()=>{if(FX.enabled)FX.ensure()});
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&FX.enabled)FX.ensure()});
 })();
 
 /* type="number" のホイールスクロールで値が変わるPC限定バグを防ぐ */
