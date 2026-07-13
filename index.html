@@ -19,7 +19,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="合格判定">
 <meta name="msapplication-TileColor" content="#0c111f">
-<link rel="manifest" id="appManifest" href="/manifest.webmanifest?build=20260713-21">
 <script>
 /* 外部ファイルを変更しなくても、ホーム画面名をこの1枚のHTMLから統一する。 */
 (()=>{
@@ -38,7 +37,11 @@
   };
   try{
     const manifestUrl=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/manifest+json;charset=utf-8"}));
-    document.getElementById("appManifest").href=manifestUrl;
+    const manifestLink=document.createElement("link");
+    manifestLink.rel="manifest";
+    manifestLink.id="appManifest";
+    manifestLink.href=manifestUrl;
+    document.head.appendChild(manifestLink);
     window.addEventListener("pagehide",()=>URL.revokeObjectURL(manifestUrl),{once:true});
   }catch(error){}
 })();
@@ -49,11 +52,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>沖縄県立高校入試 合格判定・残り時間シミュレーター</title>
+<title>合格判定</title>
 <meta name="description" content="沖縄県立高校入試の合格可能性と、目標日までに使える残り時間をブラウザ内で計算できる無料シミュレーター。">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://okinawa-goukaku.jp/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="合格判定">
 <meta property="og:title" content="沖縄県立高校入試 合格判定・残り時間シミュレーター">
 <meta property="og:description" content="合格までの現在地を測るTARGET SCANと、目標日までに使える時間を測るTIME SCAN。">
 <meta property="og:url" content="https://okinawa-goukaku.jp/">
@@ -908,6 +912,7 @@ input{font-family:inherit}
 .mission-icon svg{width:23px;height:23px}
 .mission-body{min-width:0}
 .mission-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.18em;color:var(--mission);margin-bottom:2px}
+.mission-role{margin:2px 0 1px;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--mid)}
 .mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
 .mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
 .mission-stats{display:flex;gap:14px;margin-top:9px}
@@ -930,6 +935,7 @@ input{font-family:inherit}
 .mission-target-origin{grid-column:1/-1;margin-top:1px;font-size:7.5px;line-height:1.5;color:var(--soft)}
 .mission-target-source{grid-column:1/-1;margin-top:1px;font-size:7px;line-height:1.5;color:var(--soft);opacity:.8}
 .mission-card.target-only .mission-target-snapshot{margin-top:8px}
+.mission-card.target-only .mission-name,.mission-card.exam-combined .mission-name{font-size:19px;letter-spacing:.01em}
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
@@ -3470,17 +3476,23 @@ function calculateSavedMission(mission){
   }
   return{valid:true,expired,days:records.length,total,target,weekdays,offdays};
 }
-function appendTargetSnapshot(body,target){
+function savedTargetSchoolLabel(target){
+  const raw=String(target.schoolName||"志望校").trim();
+  const school=/高校$/.test(raw)?raw:raw+"高校";
+  return school+(target.dept?" "+target.dept:"");
+}
+function appendTargetSnapshot(body,target,options){
+  options=options||{};
   const snapshot=document.createElement("div");snapshot.className="mission-target-snapshot";
   snapshot.style.setProperty("--target-color",target.color||"#ffb84d");
   const copy=document.createElement("div");copy.className="mission-target-copy";
-  const cap=document.createElement("div");cap.className="mission-target-cap";cap.textContent="TARGET SCAN / LATEST";
+  const cap=document.createElement("div");cap.className="mission-target-cap";cap.textContent=options.hideSchool?"TARGET SCAN / LATEST RESULT":"TARGET SCAN / LATEST";
   const school=document.createElement("div");school.className="mission-target-school";
-  school.textContent=(target.schoolName||"志望校")+"高校"+(target.dept?" "+target.dept:"");
+  school.textContent=savedTargetSchoolLabel(target);
   const verdict=document.createElement("div");verdict.className="mission-target-verdict";
   verdict.textContent="総合 "+(target.label||target.overall||"判定");
   const pct=document.createElement("small");pct.textContent="可能性 "+(Number(target.pct)||0)+"%";verdict.appendChild(pct);
-  copy.append(cap,school);snapshot.append(copy,verdict);
+  copy.appendChild(cap);if(!options.hideSchool)copy.appendChild(school);snapshot.append(copy,verdict);
 
   const savedSchool=SCHOOLS.find(item=>item.id===target.schoolId)||SCHOOLS.find(item=>item.name===target.schoolName&&item.dept===target.dept);
   const line=savedSchool?cur(savedSchool):null;
@@ -3524,13 +3536,11 @@ function appendTargetSnapshot(body,target){
 function renderSavedTargetOnly(list,target){
   const card=document.createElement("div");card.className="mission-card target-only";
   card.style.setProperty("--mission","#ffb84d");card.style.setProperty("--mission-glow","rgba(255,184,77,.2)");
-  const open=document.createElement("button");open.className="mission-open";open.type="button";
-  const icon=document.createElement("div");icon.className="mission-icon";icon.setAttribute("aria-hidden","true");
-  icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/></svg>';
+  const open=document.createElement("button");open.className="mission-open without-icon";open.type="button";
   const body=document.createElement("div");body.className="mission-body";
-  const code=document.createElement("div");code.className="mission-code";code.textContent="EXAM / TARGET SAVED";
-  const name=document.createElement("div");name.className="mission-name";name.textContent="沖縄県立高校入試";
-  body.append(code,name);appendTargetSnapshot(body,target);open.append(icon,body);
+  const code=document.createElement("div");code.className="mission-code";code.textContent="FIRST CHOICE / 合格目標";
+  const name=document.createElement("div");name.className="mission-name";name.textContent=savedTargetSchoolLabel(target);
+  body.append(code,name);appendTargetSnapshot(body,target,{hideSchool:true});open.append(body);
   open.setAttribute("aria-label","保存した合格判定を開く。長押しで削除");
   bindMissionCardLongPress(card,open,"saved_target","保存した判定",{open:openSavedTargetResult,remove:deleteSavedTargetResult});
   card.append(open);list.appendChild(card);
@@ -3564,15 +3574,16 @@ function renderSavedMissions(){
     const code=document.createElement("div");code.className="mission-code";
     if(isExam)code.textContent=mission.manualDate?"EXAM / DATE EDITED":(Number(mission.examYear)===2027?"EXAM / CONFIRMED":"EXAM / PREDICTED");
     else code.textContent="OTHER GOAL";
-    const name=document.createElement("div");name.className="mission-name";name.textContent=mission.goalName||"目標日";
+    const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
+    const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
     const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+(isExam&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
     dayStat.innerHTML=summary.expired?"終了":formatTimeHours(summary.days)+"<small>日</small>";
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHours(summary.total)+"<small>時間</small>";
-    stats.append(dayStat,hourStat);body.append(code,name,date,stats);
-    if(isCombinedExam)appendTargetSnapshot(body,savedTarget);
+    stats.append(dayStat,hourStat);body.appendChild(code);if(isCombinedExam)body.appendChild(role);body.append(name,date,stats);
+    if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標");
@@ -4158,7 +4169,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260713-21", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260713-22", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
