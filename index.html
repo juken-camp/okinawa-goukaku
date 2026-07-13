@@ -646,6 +646,8 @@ input{font-family:inherit}
 .bd-ref{font-size:11.5px;font-weight:600;color:var(--soft)}
 .bd-ref b{font-family:var(--num);font-size:14px;font-weight:700;color:var(--mid)}
 .bd-ref .line{color:var(--soft)}
+.bd-source{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:9px;line-height:1.65;color:var(--soft)}
+.bd-source b{color:var(--mid)}
 
 .advice-text{font-size:13.5px;color:var(--mid);line-height:1.85}
 
@@ -923,6 +925,8 @@ input{font-family:inherit}
 .mission-target-metric-top b{font-family:var(--num);font-size:10.5px;color:var(--grade-color,var(--mid))}
 .mission-target-gap{margin-top:2px;font-family:var(--num);font-size:7.5px;color:var(--soft);white-space:nowrap}
 .mission-target-gap strong{font-size:9px;color:var(--mid)}
+.mission-target-origin{grid-column:1/-1;margin-top:1px;font-size:7.5px;line-height:1.5;color:var(--soft)}
+.mission-target-source{grid-column:1/-1;margin-top:1px;font-size:7px;line-height:1.5;color:var(--soft);opacity:.8}
 .mission-card.target-only .mission-target-snapshot{margin-top:8px}
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
@@ -1449,6 +1453,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <span></span>
           </div>
           <div class="bd-refs" id="bdRefs"></div>
+          <div class="bd-source" id="bdSource"><b>判定データ：</b>沖縄県統一プレ入試 令和7年度入試（2025年3月）合否追跡調査</div>
         </div>
 
         <div class="card">
@@ -2134,7 +2139,15 @@ const SCHOOLS=[
 
 const SUBS=["国語","社会","数学","理科","英語","音楽","美術","保健体育","技術家庭"];
 const ARTS=["音楽","美術","保健体育","技術家庭"];
-const cur=s=>s.y[Math.max(...Object.keys(s.y).map(Number))];
+const dataYearFor=s=>Math.max(...Object.keys(s.y).map(Number));
+const cur=s=>s.y[dataYearFor(s)];
+function trackingSourceText(year,compact){
+  const y=Number(year)||2025;
+  const era=y-2018;
+  return compact
+    ?"根拠：沖縄県統一プレ入試 令和"+era+"年度 合否追跡調査"
+    :"沖縄県統一プレ入試 令和"+era+"年度入試（"+y+"年3月）合否追跡調査";
+}
 
 /* 判定ロジック（変更しない） */
 function erf(x){const sg=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return sg*y}
@@ -2763,13 +2776,13 @@ function runJudge(){
   let nai=null;
   const nr=document.getElementById("naishinInput").value;
   if(nr!==""){const v=Number(nr);if(!isNaN(v))nai=Math.max(0,Math.min(165,v))}
-  let dev=null;
+  let dev=null,rawScore=null;
   if(scoreMode==="dev"){
     const dr=document.getElementById("devInput").value;
     if(dr!==""){const v=Number(dr);if(!isNaN(v))dev=Math.max(20,Math.min(80,v))}
   }else{
     const sr=document.getElementById("scoreInput").value;
-    if(sr!==""){const v=Number(sr);if(!isNaN(v))dev=score2dev(v)}
+    if(sr!==""){const v=Number(sr);if(!isNaN(v)){rawScore=Math.max(0,Math.min(300,v));dev=score2dev(rawScore)}}
   }
   if(nai===null&&dev===null){
     vibrate([30,40,30]);
@@ -2778,13 +2791,13 @@ function runJudge(){
     toast("内申点か偏差値（点数）を入力してください。");
     return;
   }
-  playJudgeSequence(school,d,nai,dev);
+  playJudgeSequence(school,d,nai,dev,{mode:scoreMode,score:rawScore});
 }
 
 /* ================================================================
    スキャン演出：レーダー → カウントダウン → 結果
    ================================================================ */
-function playJudgeSequence(school,d,nai,dev){
+function playJudgeSequence(school,d,nai,dev,inputMeta){
   const stage=document.getElementById("scanStage");
   const radar=document.getElementById("radarBox");
   const text=document.getElementById("scanText");
@@ -2828,7 +2841,7 @@ function playJudgeSequence(school,d,nai,dev){
       }else{
         clearInterval(iv);
         stage.classList.remove("show");
-        renderResult(school,d,nai,dev);
+        renderResult(school,d,nai,dev,inputMeta);
       }
     },380);
   },totalMs);
@@ -2849,7 +2862,7 @@ function achievementFor(overall,ng,dg,pct){
   return{code:"A",label:"A判定",sub:"合格圏",level:1,color:gi.ring,badge:"A-CLASS CLEAR"};
 }
 
-function renderResult(school,d,nai,dev){
+function renderResult(school,d,nai,dev,inputMeta){
   go(4);
   document.getElementById("resultScroll").scrollTop=0;
 
@@ -2876,7 +2889,10 @@ function renderResult(school,d,nai,dev){
     school,pct,overall:achievement.code,label:achievement.label,color:achievement.color,nai,dev,
     naiGrade:ng,devGrade:dg,
     naiGap:nai!==null&&d.nai!=null?Math.round(nai-d.nai):null,
-    devGap:dev!==null&&d.dev!=null?Math.round(dev-d.dev):null
+    devGap:dev!==null&&d.dev!=null?Math.round(dev-d.dev):null,
+    inputMode:inputMeta&&inputMeta.mode==="score"?"score":"dev",
+    rawScore:inputMeta&&inputMeta.score!=null?Number(inputMeta.score):null,
+    dataYear:dataYearFor(school)
   };
 
   /* 判定カラーをカード全体に適用 */
@@ -2950,7 +2966,9 @@ function renderResult(school,d,nai,dev){
   let refHtml="";
   if(nai!==null&&d.nai!=null){refHtml+='<span class="bd-ref">内申 <b>'+nai+'</b><span class="line"> / '+Math.round(d.nai)+'</span></span>';}
   if(dev!==null&&d.dev!=null){refHtml+='<span class="bd-ref">偏差値 <b>'+dev+'</b><span class="line"> / '+Math.round(d.dev)+'</span></span>';}
-  if(refHtml){refs.innerHTML='<span class="bd-refs-cap">A判定ライン</span>'+refHtml;}
+  if(refHtml){refs.innerHTML='<span class="bd-refs-cap">80%合格基準</span>'+refHtml;}
+  const source=document.getElementById("bdSource");
+  source.innerHTML="<b>判定データ：</b>"+trackingSourceText(dataYearFor(school),false)+(d.dummy?"（追跡調査未収集のため参考値）":"")+"<br>偏差値・内申点はいずれも80%合格基準値です。偏差値は模試ごとに母集団が異なるため、別の模試から入力する場合は目安としてご覧ください。";
 
   /* アドバイス：内申×学力の組み合わせで分岐 */
   const naiGap=nai!==null&&d.nai!=null?nai-d.nai:null;
@@ -3088,6 +3106,8 @@ function saveTargetResultAndHome(){
     nai:result.nai==null?null:Number(result.nai),dev:result.dev==null?null:Number(result.dev),
     naiGrade:result.naiGrade||null,devGrade:result.devGrade||null,
     naiGap:result.naiGap==null?null:Number(result.naiGap),devGap:result.devGap==null?null:Number(result.devGap),
+    inputMode:result.inputMode==="score"?"score":"dev",rawScore:result.rawScore==null?null:Number(result.rawScore),
+    dataYear:Number(result.dataYear)||dataYearFor(result.school),
     savedAt:Date.now()
   };
   if(!writeSavedTargetResult(saved))return;
@@ -3104,11 +3124,19 @@ function openSavedTargetResult(){
   renderSchools();
   document.getElementById("naishinInput").value=saved.nai==null?"":saved.nai;
   document.getElementById("naishinSlider").value=saved.nai==null?0:saved.nai;
-  switchScore("dev");
-  document.getElementById("devInput").value=saved.dev==null?"":saved.dev;
-  document.getElementById("devSlider").value=saved.dev==null?20:saved.dev;
-  padGauge("naishin");padGauge("dev");updateDock();
-  renderResult(school,cur(school),saved.nai,saved.dev);
+  if(saved.inputMode==="score"&&saved.rawScore!=null){
+    switchScore("score");
+    document.getElementById("scoreInput").value=saved.rawScore;
+    document.getElementById("scoreSlider").value=saved.rawScore;
+    padGauge("score");
+  }else{
+    switchScore("dev");
+    document.getElementById("devInput").value=saved.dev==null?"":saved.dev;
+    document.getElementById("devSlider").value=saved.dev==null?20:saved.dev;
+    padGauge("dev");
+  }
+  padGauge("naishin");updateDock();
+  renderResult(school,cur(school),saved.nai,saved.dev,{mode:saved.inputMode,score:saved.rawScore});
 }
 function deleteSavedTargetResult(){
   try{localStorage.removeItem(TARGET_RESULT_KEY)}catch(e){}
@@ -3453,10 +3481,10 @@ function appendTargetSnapshot(body,target){
   const line=savedSchool?cur(savedSchool):null;
   const details=[];
   if(target.nai!=null){
-    details.push({name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),unit:"点"});
+    details.push({name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),lineLabel:"80%基準内申",unit:"点"});
   }
   if(target.dev!=null){
-    details.push({name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),unit:""});
+    details.push({name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),lineLabel:"80%基準偏差値",unit:""});
   }
   if(details.length){
     const breakdown=document.createElement("div");breakdown.className="mission-target-breakdown"+(details.length===1?" single":"");
@@ -3468,16 +3496,24 @@ function appendTargetSnapshot(body,target){
       const grade=document.createElement("b");grade.textContent=item.grade?item.grade+"判定":"—";
       top.append(label,grade);
       const gap=document.createElement("div");gap.className="mission-target-gap";
-      if(item.gap==null)gap.textContent="A判定ライン —";
+      if(item.gap==null)gap.textContent=item.lineLabel+" —";
       else{
         const value=item.gap===0?"±0":(item.gap>0?"+":"")+item.gap;
-        gap.append("A判定ライン ");
+        gap.append(item.lineLabel+" ");
         const strong=document.createElement("strong");strong.textContent=value+item.unit;gap.appendChild(strong);
       }
       metric.append(top,gap);breakdown.appendChild(metric);
     });
     snapshot.appendChild(breakdown);
   }
+  if(target.inputMode==="score"&&target.rawScore!=null&&target.dev!=null){
+    const origin=document.createElement("div");origin.className="mission-target-origin";
+    origin.textContent="得点入力 "+formatTimeHours(Number(target.rawScore))+"点 → アプリ内換算偏差値 "+formatTimeHours(Number(target.dev));
+    snapshot.appendChild(origin);
+  }
+  const source=document.createElement("div");source.className="mission-target-source";
+  source.textContent=trackingSourceText(target.dataYear||(savedSchool?dataYearFor(savedSchool):2025),true);
+  snapshot.appendChild(source);
   body.appendChild(snapshot);
 }
 function renderSavedTargetOnly(list,target){
