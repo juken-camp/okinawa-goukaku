@@ -13,11 +13,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#0c111f">
 <!-- PWA / icons -->
-<meta name="application-name" content="沖縄入試スキャン">
+<meta name="application-name" content="合格判定">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="沖縄入試スキャン">
+<meta name="apple-mobile-web-app-title" content="合格判定">
 <meta name="msapplication-TileColor" content="#0c111f">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -826,26 +826,49 @@ input{font-family:inherit}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
 
+/* スマートフォンで通常のブラウザから開いた時だけ表示するホーム画面追加案内 */
+.home-install{
+  position:relative;overflow:hidden;display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:11px;
+  margin-top:12px;padding:12px 13px;border:1px solid rgba(76,195,255,.28);border-radius:15px;
+  background:linear-gradient(155deg,rgba(28,42,72,.9),rgba(18,28,51,.94));box-shadow:0 8px 22px rgba(0,0,0,.15)
+}
+.home-install[hidden]{display:none}
+.home-install::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 0 50%,rgba(76,195,255,.12),transparent 48%)}
+.home-install>*{position:relative;z-index:1}
+.home-install-icon{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(76,195,255,.45);border-radius:11px;color:var(--time);background:rgba(76,195,255,.08)}
+.home-install-copy{min-width:0}
+.home-install-title{display:block;font-size:11px;font-weight:900;line-height:1.35;color:var(--ink)}
+.home-install-text{display:block;margin-top:2px;font-size:9.5px;line-height:1.55;color:var(--soft)}
+.home-install-btn{min-height:36px;padding:0 11px;border:1px solid rgba(76,195,255,.5);border-radius:10px;background:rgba(76,195,255,.1);color:var(--time);font-size:10px;font-weight:900;white-space:nowrap;cursor:pointer}
+.home-install-btn:active{transform:scale(.97)}
+.home-install-help{grid-column:2/-1;margin:0;padding:9px 10px;border:1px solid rgba(76,195,255,.2);border-radius:10px;background:rgba(7,13,28,.45);font-size:9.5px;line-height:1.65;color:var(--mid)}
+.home-install-help[hidden]{display:none}
+.home-install-help strong{color:var(--time)}
+@media(max-width:370px){.home-install{grid-template-columns:34px minmax(0,1fr);gap:9px}.home-install-icon{width:34px;height:34px}.home-install-btn{grid-column:1/-1;width:100%}.home-install-help{grid-column:1/-1}}
+
 /* 保存したTIME SCAN目標：小さな一覧ではなく、ホームの第3・第4パネルとして表示 */
 .saved-list{display:grid;gap:12px;margin-top:12px}
 .saved-list[hidden]{display:none}
 .mission-card{
-  --choice:var(--time);--choice-glow:var(--time-glow);position:relative;overflow:hidden;min-height:188px;padding:18px;border:1px solid var(--line);border-radius:18px;
-  background:linear-gradient(155deg,var(--panel-2),var(--panel));box-shadow:0 10px 28px rgba(0,0,0,.18);transition:border-color .2s,transform .15s,box-shadow .2s;animation:missionCardIn .52s cubic-bezier(.2,.82,.28,1.12) both;
+  --mission:var(--time);--mission-glow:var(--time-glow);position:relative;overflow:hidden;padding:15px 16px;border:1px solid var(--line);border-radius:17px;
+  background:linear-gradient(155deg,var(--panel-2),var(--panel));box-shadow:0 9px 25px rgba(0,0,0,.18);transition:border-color .2s,transform .15s,box-shadow .2s;animation:missionCardIn .52s cubic-bezier(.2,.82,.28,1.12) both;
 }
-.mission-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,var(--choice-glow),transparent 52%)}
+.mission-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 0 50%,var(--mission-glow),transparent 48%)}
 .mission-card>*{position:relative;z-index:1}
 .mission-card.holding{border-color:var(--ge);transform:scale(.985);box-shadow:0 0 0 3px rgba(255,115,133,.13),0 12px 34px rgba(0,0,0,.25)}
 @keyframes missionCardIn{0%{opacity:0;transform:translateY(-13px) scale(.975)}72%{opacity:1;transform:translateY(3px) scale(1)}100%{opacity:1;transform:none}}
-.mission-open{display:block;width:100%;min-height:150px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-.mission-code{font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--time);margin-bottom:6px}
-.mission-name{font-size:20px;font-weight:900;line-height:1.35;overflow-wrap:anywhere}
-.mission-date{font-size:11px;color:var(--soft);margin-top:5px}
-.mission-stats{display:flex;gap:16px;margin-top:17px}
-.mission-stat{font-family:var(--num);font-size:23px;font-weight:700;color:var(--time);white-space:nowrap}
+.mission-open{display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;gap:13px;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.mission-icon{width:46px;height:46px;border:1px solid color-mix(in srgb,var(--mission) 58%,var(--line));border-radius:50%;display:grid;place-items:center;color:var(--mission);background:color-mix(in srgb,var(--mission) 9%,transparent);box-shadow:0 0 16px var(--mission-glow)}
+.mission-icon svg{width:23px;height:23px}
+.mission-body{min-width:0}
+.mission-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.18em;color:var(--mission);margin-bottom:2px}
+.mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
+.mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
+.mission-stats{display:flex;gap:14px;margin-top:9px}
+.mission-stat{font-family:var(--num);font-size:20px;font-weight:700;color:var(--time);white-space:nowrap}
 .mission-stat:last-child{color:var(--amber)}
-.mission-stat small{font-family:var(--jp);font-size:10px;color:var(--soft);font-weight:700;margin-left:3px}
-@media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}}
+.mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
+@media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
 .hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:auto}
@@ -853,7 +876,8 @@ input{font-family:inherit}
 .hub-scroll.has-saved .hub-head{display:none}
 .hub-scroll.has-saved .saved-list{order:1;margin-top:0}
 .hub-scroll.has-saved .scan-choices{order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-.hub-scroll.has-saved .hub-footer{order:3;margin-top:16px}
+.hub-scroll.has-saved .home-install{order:3}
+.hub-scroll.has-saved .hub-footer{order:4;margin-top:16px}
 .hub-scroll.has-saved .scan-choice{min-width:0;padding:12px;border-radius:14px;box-shadow:0 7px 20px rgba(0,0,0,.16)}
 .hub-scroll.has-saved .choice-top{gap:8px;margin-bottom:9px}
 .hub-scroll.has-saved .choice-icon{width:34px;height:34px;flex-basis:34px;box-shadow:0 0 12px var(--choice-glow)}
@@ -863,6 +887,10 @@ input{font-family:inherit}
 .hub-scroll.has-saved .choice-desc{display:none}
 .hub-scroll.has-saved .choice-btn{min-height:36px;padding:0 5px;border-radius:9px;font-size:10px;gap:4px;white-space:nowrap}
 .hub-scroll.has-saved .choice-btn svg{width:12px;height:12px}
+
+/* 初回トップは説明込みの全体を、画面の見た目上の中央へ */
+.hub-scroll:not(.has-saved){display:block;padding:0}
+.hub-scroll:not(.has-saved) .hub-content{display:flex;flex-direction:column;justify-content:center;min-height:100%;padding:calc(72px + var(--sat)) 0 calc(18px + var(--sab))}
 
 /* TIME SCANの上部レール */
 .time-rail .rail-back{border-color:rgba(76,195,255,.28)}
@@ -881,7 +909,7 @@ input{font-family:inherit}
 .time-section-code{font-family:var(--num);font-size:8.5px;font-weight:700;letter-spacing:.18em;color:var(--time);white-space:nowrap;margin-top:3px}
 .time-note{font-size:10.5px;color:var(--soft);line-height:1.65;margin-top:9px}
 .time-note strong{color:var(--mid)}
-.time-field{display:block;margin-bottom:12px}
+.time-field{display:block;width:100%;min-width:0;margin-bottom:12px}
 .time-field:last-child{margin-bottom:0}
 .time-field>span{display:block;font-size:10.5px;font-weight:700;color:var(--mid);margin-bottom:5px}
 .time-input,.time-select{
@@ -890,9 +918,10 @@ input{font-family:inherit}
   transition:border-color .18s,box-shadow .18s;
 }
 .time-input:focus,.time-select:focus{border-color:var(--time);box-shadow:0 0 0 3px var(--time-glow)}
-.time-input[type=date]{color-scheme:dark}
+.time-input[type=date]{display:block;width:100%;max-width:100%;min-width:0;color-scheme:dark;-webkit-appearance:none;appearance:none}
 .time-field-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
 .time-field-grid.single{grid-template-columns:1fr}
+.time-field-grid>*{min-width:0}
 #timeGradeField[hidden],#timeMemorialRow[hidden],#timeYearModeButton[hidden]{display:none}
 .date-status{
   display:flex;gap:8px;align-items:flex-start;padding:9px 10px;border-radius:10px;
@@ -1036,7 +1065,6 @@ input{font-family:inherit}
   .hub-scroll{padding-top:14px}.hub-head{margin-bottom:14px}.scan-choice{padding:15px}.choice-icon{width:43px;height:43px;flex-basis:43px}.choice-name{font-size:18px}
   .time-field-grid{grid-template-columns:1fr}.time-control{grid-template-columns:70px minmax(58px,1fr) 70px;gap:7px}.time-section{padding:14px}.subject-control{grid-template-columns:minmax(72px,1fr) minmax(58px,1fr) 56px 30px;gap:6px}
 }
-@media (min-height:760px){#sceneTitle .hub-scroll:not(.has-saved){display:flex;flex-direction:column;justify-content:center}}
 
 .toast{max-width:calc(100vw - 28px);white-space:normal;text-align:center}
 
@@ -1127,6 +1155,18 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </div>
 
         <div class="saved-list" id="savedMissionList" hidden aria-label="保存した目標"></div>
+
+        <aside class="home-install" id="homeInstall" hidden aria-label="ホーム画面への追加案内">
+          <div class="home-install-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="home-install-copy">
+            <strong class="home-install-title">ホーム画面に置いて、すぐ確認</strong>
+            <span class="home-install-text">保存した目標の残り日数と時間を、アプリのようにすぐ開けます。</span>
+          </div>
+          <button class="home-install-btn" id="homeInstallBtn" type="button" onclick="requestHomeInstall()">追加する</button>
+          <p class="home-install-help" id="homeInstallHelp" hidden></p>
+        </aside>
 
         <div class="hub-footer">
           <div class="title-foot">沖縄県立高校入試 合格判定シミュレーター</div>
@@ -3019,6 +3059,7 @@ let timeDateManuallyEdited=false;
 let timeImpactMinutes=30;
 let lastTimeFxAt=0;
 const ALLOCATION_COLORS=["#ff9b7a","#4cc3ff","#c4b5fd","#6ee7d0","#ffc94a","#ff7385","#60a5fa","#a3e635","#f472b6","#fb923c","#2dd4bf","#e879f9"];
+const MISSION_GOAL_COLORS=["#4cc3ff","#c4b5fd","#6ee7d0","#ff9b7a","#f472b6","#ffc94a"];
 let allocationSerial=0;
 let timeAllocations=[];
 
@@ -3282,12 +3323,22 @@ function renderSavedMissions(){
   list.hidden=missions.length===0;
   document.querySelector(".hub-scroll").classList.toggle("has-saved",missions.length>0);
   list.innerHTML="";
+  let otherMissionIndex=0;
   missions.forEach(mission=>{
     const summary=calculateSavedMission(mission);
+    const isExam=mission.type==="okinawa_exam";
+    const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
     const card=document.createElement("div");card.className="mission-card";
+    card.style.setProperty("--mission",accent);
+    card.style.setProperty("--mission-glow","color-mix(in srgb,"+accent+" 20%,transparent)");
     const open=document.createElement("button");open.className="mission-open";open.type="button";
+    const icon=document.createElement("div");icon.className="mission-icon";icon.setAttribute("aria-hidden","true");
+    icon.innerHTML=isExam
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/></svg>'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 5h11l-2 3 2 3H5"/><circle cx="5" cy="4" r="1"/></svg>';
+    const body=document.createElement("div");body.className="mission-body";
     const code=document.createElement("div");code.className="mission-code";
-    if(mission.type==="okinawa_exam"){
+    if(isExam){
       code.textContent=mission.manualDate?"EXAM / DATE EDITED":(Number(mission.examYear)===2027?"EXAM / CONFIRMED":"EXAM / PREDICTED");
     }else code.textContent="OTHER GOAL";
     const name=document.createElement("div");name.className="mission-name";name.textContent=mission.goalName||"目標日";
@@ -3297,7 +3348,7 @@ function renderSavedMissions(){
     dayStat.innerHTML=summary.expired?"終了":formatTimeHours(summary.days)+"<small>日</small>";
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHours(summary.total)+"<small>時間</small>";
-    stats.append(dayStat,hourStat);open.append(code,name,date,stats);
+    stats.append(dayStat,hourStat);body.append(code,name,date,stats);open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標");
     card.append(open);list.appendChild(card);
@@ -3805,6 +3856,53 @@ renderSchools();
 initPad("naishin");initPad("dev");initPad("score");
 updateDock();
 initTimeScan();
+
+/* ホーム画面からの起動時は案内を隠し、通常のモバイルブラウザだけに表示する。 */
+let deferredHomeInstallPrompt=null;
+function isHomeScreenMode(){
+  return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+}
+function isMobileBrowser(){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(window.matchMedia("(max-width: 820px) and (pointer: coarse)").matches);
+}
+function isIOSDevice(){return /iPhone|iPad|iPod/i.test(navigator.userAgent)}
+function updateHomeInstallGuide(){
+  const guide=document.getElementById("homeInstall");
+  if(!guide)return;
+  guide.hidden=isHomeScreenMode()||!isMobileBrowser();
+  const btn=document.getElementById("homeInstallBtn");
+  if(!guide.hidden&&btn)btn.textContent=deferredHomeInstallPrompt?"追加する":(isIOSDevice()?"追加方法":"追加方法");
+}
+async function requestHomeInstall(){
+  FX.play("tap");
+  const help=document.getElementById("homeInstallHelp");
+  if(deferredHomeInstallPrompt){
+    deferredHomeInstallPrompt.prompt();
+    const choice=await deferredHomeInstallPrompt.userChoice;
+    deferredHomeInstallPrompt=null;
+    if(choice&&choice.outcome==="accepted")document.getElementById("homeInstall").hidden=true;
+    else updateHomeInstallGuide();
+    return;
+  }
+  const ios=isIOSDevice();
+  help.innerHTML=ios
+    ?"Safariの<strong>共有ボタン</strong>をタップし、<strong>「ホーム画面に追加」</strong> → <strong>「追加」</strong>を選んでください。"
+    :"ブラウザの<strong>メニュー</strong>を開き、<strong>「ホーム画面に追加」</strong>または<strong>「アプリをインストール」</strong>を選んでください。";
+  help.hidden=!help.hidden;
+}
+window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();
+  deferredHomeInstallPrompt=event;
+  updateHomeInstallGuide();
+});
+window.addEventListener("appinstalled",()=>{
+  deferredHomeInstallPrompt=null;
+  const guide=document.getElementById("homeInstall");
+  if(guide)guide.hidden=true;
+  toast("ホーム画面に追加しました");
+});
+window.matchMedia("(display-mode: standalone)").addEventListener?.("change",updateHomeInstallGuide);
+updateHomeInstallGuide();
 
 /* FXモード：前回の設定を復元。画面復帰後も次の操作で音声を再開する。 */
 (function(){
