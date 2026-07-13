@@ -1428,11 +1428,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
         <div class="result-save-choice target-save">
           <div class="result-save-code">SAVE RESULT / HOME MISSION</div>
-          <div class="result-save-title">この判定をホームに保存しますか？</div>
-          <p class="result-save-text">保存すると、志望校と最新判定が沖縄県立高校入試パネルに表示されます。</p>
+          <div class="result-save-title" id="targetSaveTitle">この判定をホームに保存しますか？</div>
+          <p class="result-save-text" id="targetSaveText">保存すると、志望校と最新判定が沖縄県立高校入試パネルに表示されます。</p>
           <div class="result-save-actions">
-            <button class="result-save-primary" type="button" onclick="saveTargetResultAndHome()">保存してホームへ</button>
-            <button class="result-save-skip" type="button" onclick="discardTargetResultAndHome()">保存せずホームへ</button>
+            <button class="result-save-primary" id="targetSavePrimary" type="button" onclick="saveTargetResultAndHome()">保存してホームへ</button>
+            <button class="result-save-skip" id="targetSaveSkip" type="button" onclick="discardTargetResultAndHome()">保存せずホームへ</button>
           </div>
         </div>
 
@@ -2906,6 +2906,15 @@ function renderResult(school,d,nai,dev,inputMeta){
     dataYear:dataYearFor(school)
   };
 
+  /* ホームに保存済みの判定がある場合は、新規保存ではなく更新であることを明示する。 */
+  const hasSavedTarget=!!readSavedTargetResult();
+  document.getElementById("targetSaveTitle").textContent=hasSavedTarget?"ホームの判定を更新しますか？":"この判定をホームに保存しますか？";
+  document.getElementById("targetSaveText").textContent=hasSavedTarget
+    ?"志望校・内申・学力を変更した場合も、ホームの最新判定をこの内容に更新します。"
+    :"保存すると、志望校と最新判定が沖縄県立高校入試パネルに表示されます。";
+  document.getElementById("targetSavePrimary").textContent=hasSavedTarget?"更新してホームへ":"保存してホームへ";
+  document.getElementById("targetSaveSkip").textContent=hasSavedTarget?"更新せずホームへ":"保存せずホームへ";
+
   /* 判定カラーをカード全体に適用 */
   const card=document.getElementById("verdictCard");
   card.classList.remove("rank-a","rank-aa","rank-aaa");
@@ -3111,6 +3120,7 @@ function writeSavedTargetResult(result){
 function saveTargetResultAndHome(){
   const result=window.__lastResult;
   if(!result||!result.school){toast("保存する判定がありません");return}
+  const wasUpdate=!!readSavedTargetResult();
   const saved={
     schoolId:result.school.id,schoolName:result.school.name,dept:result.school.dept,
     pct:Number(result.pct)||0,overall:result.overall,label:result.label,color:result.color,
@@ -3122,7 +3132,7 @@ function saveTargetResultAndHome(){
     savedAt:Date.now()
   };
   if(!writeSavedTargetResult(saved))return;
-  FX.play("lock");vibrate([18,30,30]);goHome();toast("判定をホームに保存しました");
+  FX.play("lock");vibrate([18,30,30]);goHome();toast(wasUpdate?"ホームの判定を更新しました":"判定をホームに保存しました");
 }
 function discardTargetResultAndHome(){goHome()}
 function openSavedTargetResult(){
@@ -4169,7 +4179,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260713-27", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260713-28", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
