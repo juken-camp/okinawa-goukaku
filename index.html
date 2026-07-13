@@ -1420,6 +1420,16 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
       <div class="scene-scroll" id="resultScroll">
         <div class="eyebrow" style="margin-top:6px">SCAN RESULT / 判定結果</div>
 
+        <div class="result-save-choice target-save">
+          <div class="result-save-code">SAVE RESULT / HOME MISSION</div>
+          <div class="result-save-title">この判定をホームに保存しますか？</div>
+          <p class="result-save-text">保存すると、志望校と最新判定が沖縄県立高校入試パネルに表示されます。</p>
+          <div class="result-save-actions">
+            <button class="result-save-primary" type="button" onclick="saveTargetResultAndHome()">保存してホームへ</button>
+            <button class="result-save-skip" type="button" onclick="discardTargetResultAndHome()">保存せずホームへ</button>
+          </div>
+        </div>
+
         <div class="verdict" id="verdictCard">
           <div class="v-school" id="rSchoolTag">─</div>
           <div class="achievement-badge" id="achievementBadge">A-CLASS CLEAR</div>
@@ -1493,16 +1503,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
         <div class="note-card">
           この判定は過去データや入力内容にもとづく<b>目安</b>です。実際の合否は倍率、面接、調査書、特色選抜、学校ごとの選抜方法などによって変わります。学校や塾の先生とあわせてご活用ください。
-        </div>
-
-        <div class="result-save-choice target-save">
-          <div class="result-save-code">SAVE RESULT / HOME MISSION</div>
-          <div class="result-save-title">この判定をホームに保存しますか？</div>
-          <p class="result-save-text">保存すると、志望校と最新判定が沖縄県立高校入試パネルに表示されます。</p>
-          <div class="result-save-actions">
-            <button class="result-save-primary" type="button" onclick="saveTargetResultAndHome()">保存してホームへ</button>
-            <button class="result-save-skip" type="button" onclick="discardTargetResultAndHome()">保存せずホームへ</button>
-          </div>
         </div>
 
         <div class="result-actions single">
@@ -1649,6 +1649,16 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
       <div class="scene-scroll" id="timeResultScroll">
         <div class="eyebrow" style="margin-top:6px">TIME SCAN RESULT / 計測結果</div>
 
+        <div class="result-save-choice">
+          <div class="result-save-code">SAVE GOAL / HOME MISSION</div>
+          <div class="result-save-title" id="timeSaveTitle">この目標をホームに保存しますか？</div>
+          <p class="result-save-text" id="timeSaveText">保存すると、残り日数と使える時間をホームからすぐ確認できます。</p>
+          <div class="result-save-actions">
+            <button class="result-save-primary" type="button" onclick="saveTimeResultAndHome()">保存してホームへ</button>
+            <button class="result-save-skip" type="button" onclick="discardTimeResultAndHome()">保存せずホームへ</button>
+          </div>
+        </div>
+
         <div class="time-verdict">
           <div class="time-goal-tag" id="trGoal">目標</div>
           <div class="time-orbit" id="timeOrbit">
@@ -1660,16 +1670,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           </div>
           <div class="time-date-line" id="trTargetDate">—</div>
           <div class="time-legend"><span style="--dot:var(--time)">平日</span><span style="--dot:var(--amber)">土日祝</span></div>
-        </div>
-
-        <div class="result-save-choice">
-          <div class="result-save-code">SAVE GOAL / HOME MISSION</div>
-          <div class="result-save-title" id="timeSaveTitle">この目標をホームに保存しますか？</div>
-          <p class="result-save-text" id="timeSaveText">保存すると、残り日数と使える時間をホームからすぐ確認できます。</p>
-          <div class="result-save-actions">
-            <button class="result-save-primary" type="button" onclick="saveTimeResultAndHome()">保存してホームへ</button>
-            <button class="result-save-skip" type="button" onclick="discardTimeResultAndHome()">保存せずホームへ</button>
-          </div>
         </div>
 
         <div class="time-metrics">
@@ -4158,7 +4158,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/service-worker.js", { updateViaCache: "none" })
+      .register("/service-worker.js?build=20260713-20", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
