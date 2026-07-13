@@ -13,11 +13,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#0c111f">
 <!-- PWA / icons -->
-<meta name="application-name" content="沖縄合格判定">
+<meta name="application-name" content="沖縄入試スキャン">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="沖縄合格判定">
+<meta name="apple-mobile-web-app-title" content="沖縄入試スキャン">
 <meta name="msapplication-TileColor" content="#0c111f">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -26,26 +26,26 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>沖縄県立高校入試 合格判定シミュレーター｜内申点・偏差値・志望校で合格可能性をチェック</title>
-<meta name="description" content="沖縄県立高校入試の合格可能性を、内申点・評定・偏差値・志望校からチェックできる無料シミュレーター。JUKEN CAMP運営。">
+<title>沖縄県立高校入試 合格判定・残り時間シミュレーター</title>
+<meta name="description" content="沖縄県立高校入試の合格可能性と、目標日までに使える残り時間をブラウザ内で計算できる無料シミュレーター。">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://okinawa-goukaku.jp/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="沖縄県立高校入試 合格判定シミュレーター">
-<meta property="og:description" content="内申点・偏差値・志望校を入力して、沖縄県立高校入試の合格可能性をすぐチェック。JUKEN CAMP運営。">
+<meta property="og:title" content="沖縄県立高校入試 合格判定・残り時間シミュレーター">
+<meta property="og:description" content="合格までの現在地を測るTARGET SCANと、目標日までに使える時間を測るTIME SCAN。">
 <meta property="og:url" content="https://okinawa-goukaku.jp/">
 <meta property="og:image" content="https://okinawa-goukaku.jp/og-image.png">
 <meta property="og:image:secure_url" content="https://okinawa-goukaku.jp/og-image.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1731">
 <meta property="og:image:height" content="909">
-<meta property="og:image:alt" content="沖縄県立高校入試 合格判定シミュレーター">
+<meta property="og:image:alt" content="沖縄県立高校入試 合格判定・残り時間シミュレーター">
 <meta name="twitter:image" content="https://okinawa-goukaku.jp/og-image.png">
-<meta name="twitter:image:alt" content="沖縄県立高校入試 合格判定シミュレーター">
+<meta name="twitter:image:alt" content="沖縄県立高校入試 合格判定・残り時間シミュレーター">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定シミュレーター","url":"https://okinawa-goukaku.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"沖縄県立高校入試 合格判定・残り時間シミュレーター","url":"https://okinawa-goukaku.jp/","applicationCategory":"EducationalApplication","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"},"publisher":{"@type":"EducationalOrganization","name":"JUKEN CAMP","url":"https://www.juken-camp.online/"}}
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap');
@@ -784,8 +784,247 @@ input{font-family:inherit}
   50%{box-shadow:0 10px 46px rgba(255,184,77,.58),inset 0 1px 0 rgba(255,255,255,.4)}
 }
 
+/* ================================================================
+   SCAN HUB / TIME SCAN
+   TARGET SCANと同じ管制室の中に、時間計測系統を追加する。
+   ================================================================ */
+:root{--time:#4cc3ff;--time-deep:#238dca;--time-glow:rgba(76,195,255,.2)}
+
+/* 2つのスキャンを選ぶホーム */
+#sceneTitle{justify-content:flex-start;text-align:left;padding-bottom:0}
+.hub-scroll{width:100%;flex:1;min-height:0;padding:22px 0 calc(34px + var(--sab));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.hub-head{text-align:center;margin-bottom:20px;padding:0 2px}
+.hub-kicker{font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.25em;color:var(--soft);margin-bottom:6px}
+.hub-title{font-size:clamp(22px,6vw,29px);font-weight:900;line-height:1.4;letter-spacing:.02em}
+.hub-title em{font-style:normal;color:var(--amber)}
+.hub-lead{font-size:12px;color:var(--mid);line-height:1.8;margin-top:6px}
+.scan-choices{display:grid;gap:12px}
+.scan-choice{
+  position:relative;overflow:hidden;padding:18px;border-radius:18px;
+  border:1px solid var(--line);background:linear-gradient(155deg,var(--panel-2),var(--panel));
+  box-shadow:0 10px 28px rgba(0,0,0,.18);transition:border-color .2s,transform .15s,box-shadow .2s;
+}
+.scan-choice::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,var(--choice-glow),transparent 52%)}
+.scan-choice>*{position:relative;z-index:1}
+.scan-choice.target{--choice:var(--amber);--choice-glow:var(--amber-glow)}
+.scan-choice.time{--choice:var(--time);--choice-glow:var(--time-glow)}
+.choice-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.choice-icon{
+  width:48px;height:48px;flex:0 0 48px;border:1px solid color-mix(in srgb,var(--choice) 55%,var(--line));border-radius:50%;
+  display:grid;place-items:center;color:var(--choice);background:color-mix(in srgb,var(--choice) 9%,transparent);box-shadow:0 0 18px var(--choice-glow)
+}
+.choice-code{font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.24em;color:var(--choice);line-height:1.2}
+.choice-name{font-size:20px;font-weight:900;line-height:1.35;margin-top:2px}
+.choice-desc{font-size:12px;color:var(--mid);line-height:1.7;margin:0 0 13px}
+.choice-btn{
+  width:100%;min-height:48px;border-radius:12px;cursor:pointer;border:1px solid color-mix(in srgb,var(--choice) 65%,var(--line));
+  background:color-mix(in srgb,var(--choice) 12%,var(--panel));color:var(--choice);font-size:14px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,background .18s,box-shadow .18s;
+}
+.scan-choice.target .choice-btn{background:linear-gradient(180deg,var(--amber),var(--amber-deep));border-color:transparent;color:#241500}
+.choice-btn:active{transform:scale(.975)}
+@media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
+.hub-footer{text-align:center;margin-top:18px}
+
+/* 保存したTIME SCAN目標 */ 
+.saved-missions{margin-top:14px;padding:15px;border:1px solid rgba(76,195,255,.24);border-radius:17px;background:rgba(17,25,49,.76)}
+.saved-missions[hidden]{display:none}
+.saved-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.saved-head-title{font-size:14px;font-weight:900}
+.saved-head-title small{display:block;font-family:var(--num);font-size:8px;letter-spacing:.19em;color:var(--time);margin-bottom:2px}
+.saved-count{font-family:var(--num);font-size:10px;font-weight:700;color:var(--soft)}
+.saved-list{display:grid;gap:8px}
+.mission-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:7px;padding:11px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(155deg,var(--panel-2),var(--panel))}
+.mission-open{min-width:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:0}
+.mission-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.15em;color:var(--time);margin-bottom:2px}
+.mission-name{font-size:13px;font-weight:900;line-height:1.4;overflow-wrap:anywhere}
+.mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
+.mission-stats{display:flex;gap:12px;margin-top:8px}
+.mission-stat{font-family:var(--num);font-size:15px;font-weight:700;color:var(--time);white-space:nowrap}
+.mission-stat:last-child{color:var(--amber)}
+.mission-stat small{font-family:var(--jp);font-size:8.5px;color:var(--soft);font-weight:700;margin-left:2px}
+.mission-delete{width:36px;height:36px;align-self:center;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--soft);cursor:pointer;display:grid;place-items:center}
+.mission-delete:hover{border-color:var(--ge);color:var(--ge)}
+.mission-add{width:100%;min-height:42px;margin-top:9px;border:1px dashed rgba(76,195,255,.42);border-radius:10px;background:rgba(76,195,255,.05);color:var(--time);font-size:11.5px;font-weight:900;cursor:pointer}
+
+/* TIME SCANの上部レール */
+.time-rail .rail-back{border-color:rgba(76,195,255,.28)}
+.time-rail .rail-step.on{border-color:var(--time);background:var(--time-glow)}
+.time-rail .rail-step.on small,.time-rail .rail-step.on span{color:var(--time)}
+
+/* TIME SCAN共通 */
+.time-scene .eyebrow{color:var(--time)}
+.time-scene .scene-scroll{padding-bottom:calc(118px + var(--sab))}
+.time-section{
+  padding:16px;margin-bottom:12px;border:1px solid var(--line);border-radius:17px;
+  background:linear-gradient(165deg,rgba(27,37,69,.94),rgba(22,31,56,.94));
+}
+.time-section-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:13px}
+.time-section-title{font-size:14px;font-weight:900;line-height:1.45}
+.time-section-code{font-family:var(--num);font-size:8.5px;font-weight:700;letter-spacing:.18em;color:var(--time);white-space:nowrap;margin-top:3px}
+.time-note{font-size:10.5px;color:var(--soft);line-height:1.65;margin-top:9px}
+.time-note strong{color:var(--mid)}
+.time-field{display:block;margin-bottom:12px}
+.time-field:last-child{margin-bottom:0}
+.time-field>span{display:block;font-size:10.5px;font-weight:700;color:var(--mid);margin-bottom:5px}
+.time-input,.time-select{
+  width:100%;min-width:0;height:46px;border:1px solid var(--line-lt);border-radius:11px;
+  background:var(--bg1);color:var(--ink);padding:0 12px;font-size:16px;font-weight:700;outline:none;
+  transition:border-color .18s,box-shadow .18s;
+}
+.time-input:focus,.time-select:focus{border-color:var(--time);box-shadow:0 0 0 3px var(--time-glow)}
+.time-input[type=date]{color-scheme:dark}
+.time-field-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
+.time-field-grid.single{grid-template-columns:1fr}
+#timeGradeField[hidden],#timeMemorialRow[hidden],#timeYearModeButton[hidden]{display:none}
+.date-status{
+  display:flex;gap:8px;align-items:flex-start;padding:9px 10px;border-radius:10px;
+  border:1px solid rgba(76,195,255,.22);background:rgba(76,195,255,.06);font-size:10.5px;color:var(--mid);line-height:1.55
+}
+.date-status::before{content:"i";font-family:var(--num);font-weight:700;color:var(--time);width:16px;height:16px;flex:0 0 16px;border:1px solid var(--time);border-radius:50%;display:grid;place-items:center;font-size:9px;margin-top:1px}
+.date-status.confirmed{border-color:rgba(61,220,132,.28);background:rgba(61,220,132,.06)}
+.date-status.confirmed::before{content:"✓";color:var(--ga);border-color:var(--ga)}
+.date-status.predicted{border-color:rgba(255,184,77,.3);background:rgba(255,184,77,.065)}
+.date-status.predicted::before{content:"?";color:var(--amber);border-color:var(--amber)}
+.restore-auto-date{display:none;width:100%;min-height:36px;margin-top:8px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--mid);font-size:10.5px;font-weight:700;cursor:pointer}
+.restore-auto-date.show{display:block}
+.save-hint{display:flex;align-items:center;justify-content:center;gap:7px;margin:2px 0 12px;font-size:10px;color:var(--soft)}
+.save-hint svg{color:var(--time)}
+.check-row{display:flex;align-items:flex-start;gap:9px;margin-top:10px;font-size:11px;color:var(--mid);cursor:pointer}
+.check-row input{width:18px;height:18px;accent-color:var(--time);flex:0 0 auto;margin-top:1px}
+
+.time-live{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:12px;border:1px solid rgba(76,195,255,.28);border-radius:16px;overflow:hidden;
+  background:rgba(76,195,255,.22);box-shadow:0 0 24px rgba(76,195,255,.08)
+}
+.time-live-cell{background:linear-gradient(160deg,#182643,#131c33);padding:13px 12px;text-align:center}
+.time-live-label{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.16em;color:var(--soft)}
+.time-live-value{font-family:var(--num);font-size:27px;font-weight:700;line-height:1.15;color:var(--time);font-variant-numeric:tabular-nums;text-shadow:0 0 16px var(--time-glow)}
+.time-live-value small{font-family:var(--jp);font-size:10px;color:var(--mid);margin-left:3px}
+
+.time-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.time-mode-tabs.three{grid-template-columns:repeat(3,1fr)}
+.time-mode-btn{
+  min-height:44px;padding:7px 5px;border:1px solid var(--line);border-radius:10px;background:var(--bg1);color:var(--soft);
+  font-size:11.5px;font-weight:700;cursor:pointer;transition:border-color .15s,color .15s,background .15s
+}
+.time-mode-btn.on{border-color:var(--time);background:var(--time-glow);color:var(--time)}
+.time-mode-panel{display:none}.time-mode-panel.open{display:block}
+.time-control{display:grid;grid-template-columns:minmax(76px,auto) minmax(72px,1fr) 76px;align-items:center;gap:9px;padding:8px 0}
+.time-control+.time-control{border-top:1px solid rgba(39,49,79,.72)}
+.tc-label{min-width:0}
+.tc-name{display:block;font-size:12px;font-weight:700;color:var(--mid);line-height:1.35}
+.tc-sub{display:block;font-family:var(--num);font-size:8px;color:var(--soft);letter-spacing:.08em;margin-top:2px}
+.time-range{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;cursor:pointer;display:block}
+.time-range::-webkit-slider-runnable-track{height:7px;border-radius:5px;background:linear-gradient(90deg,var(--time) 0%,var(--time) var(--p,0%),var(--line) var(--p,0%))}
+.time-range::-webkit-slider-thumb{-webkit-appearance:none;width:25px;height:25px;border-radius:50%;margin-top:-9px;background:#fff;border:3px solid var(--time);box-shadow:0 2px 9px rgba(0,0,0,.4),0 0 0 4px var(--time-glow)}
+.time-range::-moz-range-track{height:7px;border-radius:5px;background:var(--line)}
+.time-range::-moz-range-progress{height:7px;border-radius:5px;background:var(--time)}
+.time-range::-moz-range-thumb{width:21px;height:21px;border-radius:50%;background:#fff;border:3px solid var(--time)}
+.tc-number-wrap{position:relative}
+.tc-number{
+  width:100%;height:40px;border:1px solid var(--line-lt);border-radius:10px;background:var(--bg1);color:var(--time);
+  padding:0 24px 0 7px;text-align:right;font-family:var(--num);font-size:17px;font-weight:700;outline:none;-moz-appearance:textfield
+}
+.tc-number::-webkit-outer-spin-button,.tc-number::-webkit-inner-spin-button{-webkit-appearance:none}
+.tc-number:focus{border-color:var(--time);box-shadow:0 0 0 3px var(--time-glow)}
+.tc-unit{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--soft);pointer-events:none}
+.weekday-grid{display:grid;gap:1px}
+.year-period{padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(12,17,31,.42);margin-top:9px}
+.year-period-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.year-period-name{font-size:13px;font-weight:900;color:var(--ink)}
+.year-period-days{font-family:var(--num);font-size:9px;color:var(--soft);white-space:nowrap}
+.year-period .time-control{grid-template-columns:minmax(64px,auto) minmax(58px,1fr) 70px}
+.no-period{padding:14px;text-align:center;color:var(--soft);font-size:11px;border:1px dashed var(--line-lt);border-radius:11px}
+
+.subject-head-note{font-size:10px;color:var(--soft);line-height:1.5;margin-top:-6px;margin-bottom:7px}
+.subject-control{--subject:var(--time);display:grid;grid-template-columns:minmax(78px,1fr) minmax(68px,1.2fr) 62px 32px;align-items:center;gap:7px;padding:8px 0}
+.subject-control+.subject-control{border-top:1px solid rgba(39,49,79,.72)}
+.allocation-name-input{width:100%;min-width:0;height:38px;border:1px solid var(--line);border-radius:9px;background:var(--bg1);color:var(--subject);padding:0 8px;font-size:16px;font-weight:900;outline:none}
+.allocation-name-input:focus{border-color:var(--subject);box-shadow:0 0 0 3px color-mix(in srgb,var(--subject) 18%,transparent)}
+.subject-control .time-range::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--subject) 0%,var(--subject) var(--p,0%),var(--line) var(--p,0%))}
+.subject-control .time-range::-webkit-slider-thumb{border-color:var(--subject);box-shadow:0 2px 9px rgba(0,0,0,.4),0 0 0 4px color-mix(in srgb,var(--subject) 20%,transparent)}
+.subject-ratio{font-family:var(--num);font-size:15px;font-weight:700;color:var(--subject);text-align:right;white-space:nowrap}
+.subject-ratio small{font-family:var(--jp);font-size:8px;color:var(--soft);display:block;font-weight:700}
+.allocation-delete{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--soft);cursor:pointer;display:grid;place-items:center}
+.allocation-delete:hover{border-color:var(--ge);color:var(--ge)}
+.allocation-actions{display:grid;grid-template-columns:1.25fr .75fr;gap:7px;margin-top:8px}
+.allocation-add,.equal-btn{width:100%;min-height:39px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--mid);font-size:11px;font-weight:700;cursor:pointer}
+.allocation-add{border-style:dashed;border-color:rgba(76,195,255,.38);color:var(--time);background:rgba(76,195,255,.045)}
+
+.time-impact-preview{margin-top:12px;padding:11px 12px;border:1px solid rgba(76,195,255,.23);border-radius:11px;background:rgba(76,195,255,.055);font-size:11px;color:var(--mid);line-height:1.65}
+.time-impact-preview b{font-family:var(--num);font-size:14px;color:var(--time)}
+.impact-minute-control{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:rgba(12,17,31,.42)}
+.impact-minute-label{min-width:0;font-size:11px;font-weight:700;color:var(--mid);line-height:1.45}
+.impact-minute-label small{display:block;margin-top:2px;font-family:var(--num);font-size:8px;letter-spacing:.1em;color:var(--soft)}
+.impact-minute-input{position:relative;width:88px;flex:0 0 88px}
+.impact-minute-input input{width:100%;height:40px;border:1px solid var(--line-lt);border-radius:10px;background:var(--bg1);color:var(--time);padding:0 27px 0 7px;text-align:right;font-family:var(--num);font-size:17px;font-weight:700;outline:none;-moz-appearance:textfield}
+.impact-minute-input input::-webkit-outer-spin-button,.impact-minute-input input::-webkit-inner-spin-button{-webkit-appearance:none}
+.impact-minute-input input:focus{border-color:var(--time);box-shadow:0 0 0 3px var(--time-glow)}
+.impact-minute-input span{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--soft);pointer-events:none}
+.result-impact-control{margin:0 0 10px}
+.time-dock .btn-next.primary{background:linear-gradient(180deg,var(--time),var(--time-deep));color:#061826;box-shadow:0 8px 26px rgba(76,195,255,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+
+/* TIME SCAN演出・結果 */
+.time-scan-stage .radar{border-color:rgba(76,195,255,.45);background:radial-gradient(circle,transparent 0 32%,rgba(76,195,255,.16) 32.5% 33.5%,transparent 34% 64%,rgba(76,195,255,.16) 64.5% 65.5%,transparent 66%),radial-gradient(circle at 50% 50%,rgba(76,195,255,.1),transparent 72%)}
+.time-scan-stage .radar::before,.time-scan-stage .radar::after{background:rgba(76,195,255,.2)}
+.time-scan-stage .radar-sweep{background:conic-gradient(from 0deg,rgba(76,195,255,.68),rgba(76,195,255,.08) 80deg,transparent 110deg 360deg)}
+.time-scan-stage .radar-core{background:var(--time);box-shadow:0 0 14px 4px var(--time-glow)}
+.time-scan-stage .scan-count{color:var(--time);text-shadow:0 0 40px var(--time-glow)}
+#sceneTimeResult .scene-scroll{padding-bottom:calc(40px + var(--sab))}
+.time-verdict{
+  position:relative;overflow:hidden;text-align:center;margin-bottom:12px;padding:24px 18px 21px;border:1px solid rgba(76,195,255,.34);border-radius:22px;
+  background:linear-gradient(160deg,#1b2a4c,var(--panel) 65%);box-shadow:0 0 34px rgba(76,195,255,.08)
+}
+.time-verdict::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 48% at 50% 0%,rgba(76,195,255,.18),transparent 72%)}
+.time-verdict>*{position:relative;z-index:1}
+.time-goal-tag{font-size:12px;font-weight:900;color:var(--time);margin-bottom:11px;overflow-wrap:anywhere}
+.time-orbit{
+  --weekday-pct:70%;position:relative;width:210px;height:210px;margin:0 auto 14px;border-radius:50%;
+  background:conic-gradient(var(--time) 0 var(--weekday-pct),var(--amber) var(--weekday-pct) 100%);
+  box-shadow:0 0 30px rgba(76,195,255,.15);animation:timeOrbitIn .8s cubic-bezier(.2,.8,.2,1) both
+}
+.time-orbit::before{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--panel);box-shadow:inset 0 0 28px rgba(0,0,0,.45)}
+.time-orbit::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(255,255,255,.16)}
+@keyframes timeOrbitIn{from{opacity:0;transform:rotate(-100deg) scale(.75)}to{opacity:1;transform:rotate(0) scale(1)}}
+.time-orbit-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+.time-total-num{font-family:var(--num);font-size:48px;font-weight:700;line-height:1;color:var(--time);text-shadow:0 0 22px var(--time-glow);font-variant-numeric:tabular-nums}
+.time-total-unit{font-size:12px;font-weight:700;color:var(--mid);margin-top:5px}
+.time-days-left{font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--ink);margin-top:8px}
+.time-date-line{font-size:11px;color:var(--mid)}
+.time-legend{display:flex;justify-content:center;gap:18px;margin-top:8px;font-size:10px;color:var(--mid)}
+.time-legend span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--dot);margin-right:5px}
+.time-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.time-metric{padding:13px 9px;border:1px solid var(--line);border-radius:13px;background:var(--panel);text-align:center}
+.tm-code{font-family:var(--num);font-size:7.5px;letter-spacing:.16em;color:var(--soft)}
+.tm-value{font-family:var(--num);font-size:24px;font-weight:700;color:var(--ink);line-height:1.25;font-variant-numeric:tabular-nums}
+.tm-value.time-color{color:var(--time)}.tm-value.amber-color{color:var(--amber)}
+.tm-label{font-size:9.5px;color:var(--mid)}
+.impact-grid{display:grid;gap:8px}
+.impact-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid rgba(76,195,255,.21);border-radius:12px;background:rgba(76,195,255,.05)}
+.impact-copy{font-size:11px;color:var(--mid);line-height:1.55}.impact-copy b{color:var(--ink)}
+.impact-plus{font-family:var(--num);font-size:19px;font-weight:700;color:var(--time);white-space:nowrap}
+.time-subject-result{display:grid;gap:10px}
+.tsr-row{--subject:var(--time)}
+.tsr-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.tsr-name{font-size:12px;font-weight:900;color:var(--subject)}
+.tsr-value{font-family:var(--num);font-size:15px;font-weight:700;color:var(--subject)}
+.tsr-track{height:7px;border-radius:5px;background:var(--line);overflow:hidden}
+.tsr-fill{height:100%;width:0;border-radius:inherit;background:var(--subject);box-shadow:0 0 10px color-mix(in srgb,var(--subject) 40%,transparent);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.time-method-summary{font-size:11px;color:var(--mid);line-height:1.7}
+.time-method-summary b{color:var(--ink)}
+.time-result-foot{font-size:10px;color:var(--soft);line-height:1.6;text-align:center;margin:12px 3px 0}
+
+@media (max-width:390px){
+  .hub-scroll{padding-top:14px}.hub-head{margin-bottom:14px}.scan-choice{padding:15px}.choice-icon{width:43px;height:43px;flex-basis:43px}.choice-name{font-size:18px}
+  .time-field-grid{grid-template-columns:1fr}.time-control{grid-template-columns:70px minmax(58px,1fr) 70px;gap:7px}.time-section{padding:14px}.subject-control{grid-template-columns:minmax(72px,1fr) minmax(58px,1fr) 56px 30px;gap:6px}
+}
+@media (min-height:760px){#sceneTitle .hub-scroll:not(.has-saved){display:flex;flex-direction:column;justify-content:center}}
+
+.toast{max-width:calc(100vw - 28px);white-space:normal;text-align:center}
+
 /* キーボードフォーカスの可視化 */
-button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -819,27 +1058,71 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     </div>
   </div>
 
+  <!-- TIME SCAN 工程レール -->
+  <div class="rail time-rail" id="timeRail">
+    <button class="rail-back" aria-label="戻る" onclick="timeBack()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="rail-steps">
+      <button class="rail-step" data-time-s="5" onclick="go(5)"><small>SET</small><span>条件設定</span></button>
+      <button class="rail-step" data-time-s="6" onclick="timeResultJump()"><small>SCAN</small><span>計測結果</span></button>
+    </div>
+  </div>
+
   <div class="stage">
 
-    <!-- ============ SCENE 0：タイトル ============ -->
+    <!-- ============ SCENE 0：SCAN HUB ============ -->
     <section class="scene active" id="sceneTitle">
-      <div class="title-scope" aria-hidden="true">
-        <div class="title-sweep"></div>
-        <div class="title-blip" style="left:64%;top:30%"></div>
-        <div class="title-blip" style="left:32%;top:58%;animation-delay:1.4s"></div>
-      </div>
-      <h1 class="title-h1">志望校との距離を、<br><em>今すぐ数値で</em>確認する。</h1>
-      <p class="title-lead">内申点・偏差値・志望校を入力するだけ。<br>過去の合否データにもとづいて、合格可能性を判定します。</p>
-      <button class="btn-launch" onclick="startMission()">
-        無料で判定する
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <div class="title-footer">
-        <div class="title-foot">沖縄県立高校入試 合格判定シミュレーター</div>
-        <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
-          <span class="tb-en">MADE BY</span>
-          <b>JUKEN CAMP</b>
-        </a>
+      <div class="hub-scroll">
+        <div class="hub-head">
+          <div class="hub-kicker">OKINAWA EXAM CONTROL</div>
+          <h1 class="hub-title">合格までを、<em>2つのスキャン</em>で測る。</h1>
+          <p class="hub-lead">現在地と残り時間。確認したい方を選んでください。</p>
+        </div>
+
+        <div class="scan-choices">
+          <article class="scan-choice target">
+            <div class="choice-top">
+              <div class="choice-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+              </div>
+              <div><div class="choice-code">TARGET SCAN</div><h2 class="choice-name">合格判定</h2></div>
+            </div>
+            <p class="choice-desc">内申点・偏差値・志望校から、現在の合格可能性を確認する。</p>
+            <button class="choice-btn" onclick="startMission()">無料で判定する
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </article>
+
+          <article class="scan-choice time">
+            <div class="choice-top">
+              <div class="choice-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2M8 2h8"/></svg>
+              </div>
+              <div><div class="choice-code">TIME SCAN</div><h2 class="choice-name">残り時間</h2></div>
+            </div>
+            <p class="choice-desc">目標日までの日数と、自分が使える時間を計算する。</p>
+            <button class="choice-btn" onclick="startTimeMission()">残り時間を計測する
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </article>
+        </div>
+
+        <section class="saved-missions" id="savedMissions" hidden aria-label="保存した目標">
+          <div class="saved-head">
+            <h2 class="saved-head-title"><small>SAVED MISSIONS</small>保存した目標</h2>
+            <span class="saved-count" id="savedMissionCount">0 GOALS</span>
+          </div>
+          <div class="saved-list" id="savedMissionList"></div>
+          <button class="mission-add" onclick="startTimeMission()">＋ 新しい目標を追加する</button>
+        </section>
+
+        <div class="hub-footer">
+          <div class="title-foot">沖縄県立高校入試 シミュレーター</div>
+          <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
+            <span class="tb-en">MADE BY</span><b>JUKEN CAMP</b>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -1114,12 +1397,199 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       </div>
     </section>
 
+    <!-- ============ SCENE 5：残り時間の設定 ============ -->
+    <section class="scene time-scene" id="sceneTimeSetup">
+      <div class="scene-scroll" id="timeSetupScroll">
+        <div class="eyebrow">TIME SCAN / SET CONDITIONS</div>
+        <h2 class="scene-h">残り時間をセット</h2>
+        <p class="scene-sub">目標日と使える時間を自由に変えて、残り時間を確認します</p>
+
+        <div class="time-live" aria-live="polite">
+          <div class="time-live-cell">
+            <div class="time-live-label">DAYS LEFT</div>
+            <div class="time-live-value" id="liveDays">—<small>日</small></div>
+          </div>
+          <div class="time-live-cell">
+            <div class="time-live-label">TOTAL HOURS</div>
+            <div class="time-live-value" id="liveHours">—<small>時間</small></div>
+          </div>
+        </div>
+
+        <section class="time-section">
+          <div class="time-section-h"><h3 class="time-section-title">目標を設定</h3><span class="time-section-code">01 / GOAL</span></div>
+          <label class="time-field">
+            <span>目標の種類</span>
+            <select class="time-select" id="timeGoalType">
+              <option value="okinawa_exam" selected>沖縄県立高校入試</option>
+              <option value="other_exam">その他の高校入試</option>
+              <option value="custom">英検・資格・テスト・仕事など</option>
+            </select>
+          </label>
+          <label class="time-field">
+            <span>目標名</span>
+            <input class="time-input" id="timeGoalName" type="text" value="沖縄県立高校入試" maxlength="40" autocomplete="off">
+          </label>
+          <div class="time-field-grid" id="timeDateGradeGrid">
+            <label class="time-field">
+              <span>目標日</span>
+              <input class="time-input" id="timeTargetDate" type="date">
+            </label>
+            <label class="time-field" id="timeGradeField">
+              <span>現在の学年</span>
+              <select class="time-select" id="timeGrade">
+                <option value="0">小学1年</option><option value="1">小学2年</option><option value="2">小学3年</option>
+                <option value="3">小学4年</option><option value="4">小学5年</option><option value="5">小学6年</option>
+                <option value="6">中学1年</option><option value="7">中学2年</option><option value="8" selected>中学3年</option>
+              </select>
+            </label>
+          </div>
+          <div class="date-status" id="timeDateStatus">学年に合わせて入試日を自動設定します。</div>
+          <button class="restore-auto-date" id="restoreAutoDate" onclick="applyExamDate(true)">入試日を自動設定に戻す</button>
+          <label class="check-row" id="timeMemorialRow"><input type="checkbox" id="okinawaMemorial" checked><span>沖縄の「慰霊の日」（6月23日）も休日として数える</span></label>
+          <p class="time-note">残り日数は<strong>今日を含めず、目標日を含めて</strong>計算します。</p>
+        </section>
+
+        <section class="time-section">
+          <div class="time-section-h"><h3 class="time-section-title">使える時間を入力</h3><span class="time-section-code">02 / HOURS</span></div>
+          <div class="time-mode-tabs" role="tablist" aria-label="時間の入力方法">
+            <button class="time-mode-btn on" data-time-mode="average" onclick="switchTimeMode('average')">1日平均</button>
+            <button class="time-mode-btn" data-time-mode="split" onclick="switchTimeMode('split')">平日・土日祝</button>
+            <button class="time-mode-btn" data-time-mode="weekday" onclick="switchTimeMode('weekday')">曜日ごと</button>
+            <button class="time-mode-btn" id="timeYearModeButton" data-time-mode="year" onclick="switchTimeMode('year')">学年・年度ごと</button>
+          </div>
+
+          <div class="time-mode-panel open" data-time-panel="average">
+            <div class="time-control">
+              <div class="tc-label"><span class="tc-name">1日平均</span><span class="tc-sub">EVERY DAY</span></div>
+              <input class="time-range" type="range" min="0" max="24" step="0.25" value="2" data-time-key="average" aria-label="1日平均時間">
+              <div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="2" inputmode="decimal" data-time-key="average" aria-label="1日平均時間の数値入力"><span class="tc-unit">h</span></div>
+            </div>
+          </div>
+
+          <div class="time-mode-panel" data-time-panel="split">
+            <div class="time-control">
+              <div class="tc-label"><span class="tc-name">平日</span><span class="tc-sub">WEEKDAY</span></div>
+              <input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="weekday" aria-label="平日の時間">
+              <div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="weekday" aria-label="平日の時間の数値入力"><span class="tc-unit">h</span></div>
+            </div>
+            <div class="time-control">
+              <div class="tc-label"><span class="tc-name">土日祝</span><span class="tc-sub">WEEKEND</span></div>
+              <input class="time-range" type="range" min="0" max="24" step="0.25" value="3" data-time-key="offday" aria-label="土日祝の時間">
+              <div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="3" inputmode="decimal" data-time-key="offday" aria-label="土日祝の時間の数値入力"><span class="tc-unit">h</span></div>
+            </div>
+          </div>
+
+          <div class="time-mode-panel" data-time-panel="weekday">
+            <div class="weekday-grid">
+              <div class="time-control"><div class="tc-label"><span class="tc-name">月曜日</span><span class="tc-sub">MON</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="mon" aria-label="月曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="mon"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">火曜日</span><span class="tc-sub">TUE</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="tue" aria-label="火曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="tue"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">水曜日</span><span class="tc-sub">WED</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="wed" aria-label="水曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="wed"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">木曜日</span><span class="tc-sub">THU</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="thu" aria-label="木曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="thu"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">金曜日</span><span class="tc-sub">FRI</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="1.5" data-time-key="fri" aria-label="金曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="1.5" inputmode="decimal" data-time-key="fri"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">土曜日</span><span class="tc-sub">SAT</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="3" data-time-key="sat" aria-label="土曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="3" inputmode="decimal" data-time-key="sat"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">日曜日</span><span class="tc-sub">SUN</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="3" data-time-key="sun" aria-label="日曜日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="3" inputmode="decimal" data-time-key="sun"><span class="tc-unit">h</span></div></div>
+              <div class="time-control"><div class="tc-label"><span class="tc-name">祝日</span><span class="tc-sub">HOLIDAY</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="3" data-time-key="holiday" aria-label="祝日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="3" inputmode="decimal" data-time-key="holiday"><span class="tc-unit">h</span></div></div>
+            </div>
+            <p class="time-note">祝日は曜日の設定より「祝日」の時間を優先します。</p>
+          </div>
+
+          <div class="time-mode-panel" data-time-panel="year">
+            <p class="subject-head-note">現在の学年から目標日までを学年度ごとに分け、平日と土日祝の時間を変えられます。</p>
+            <div id="yearPeriods"></div>
+          </div>
+
+          <div class="impact-minute-control">
+            <span class="impact-minute-label">1日あたり増やす時間<small>WHAT-IF SIMULATION</small></span>
+            <span class="impact-minute-input"><input type="number" min="0" max="1440" step="1" value="30" inputmode="numeric" data-impact-minutes aria-label="1日あたり増やす時間（分）"><span>分</span></span>
+          </div>
+          <div class="time-impact-preview" id="impactPreview">目標日を入力すると、30分増やした効果が表示されます。</div>
+        </section>
+
+        <section class="time-section">
+          <div class="time-section-h"><h3 class="time-section-title">時間を配分</h3><span class="time-section-code">03 / ALLOCATION</span></div>
+          <p class="subject-head-note">項目名を自由に編集できます。比率の合計は自動で100%に換算します。</p>
+          <div id="subjectControls"></div>
+          <div class="allocation-actions">
+            <button class="allocation-add" onclick="addAllocationItem()">＋ 項目を追加する</button>
+            <button class="equal-btn" onclick="equalizeSubjects()">均等にする</button>
+          </div>
+        </section>
+        <div class="save-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          計測すると、この目標と設定が端末に保存されます
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 6：残り時間の結果 ============ -->
+    <section class="scene time-scene" id="sceneTimeResult">
+      <div class="scene-scroll" id="timeResultScroll">
+        <div class="eyebrow" style="margin-top:6px">TIME SCAN RESULT / 計測結果</div>
+
+        <div class="time-verdict">
+          <div class="time-goal-tag" id="trGoal">目標</div>
+          <div class="time-orbit" id="timeOrbit">
+            <div class="time-orbit-center">
+              <div class="time-total-num" id="trTotalHours">0</div>
+              <div class="time-total-unit">使える合計時間</div>
+              <div class="time-days-left" id="trDaysLeft">あと 0 DAYS</div>
+            </div>
+          </div>
+          <div class="time-date-line" id="trTargetDate">—</div>
+          <div class="time-legend"><span style="--dot:var(--time)">平日</span><span style="--dot:var(--amber)">土日祝</span></div>
+        </div>
+
+        <div class="time-metrics">
+          <div class="time-metric"><div class="tm-code">TOTAL DAYS</div><div class="tm-value" id="trTotalDays">0</div><div class="tm-label">残り日数</div></div>
+          <div class="time-metric"><div class="tm-code">WEEKDAYS</div><div class="tm-value time-color" id="trWeekdays">0</div><div class="tm-label">平日</div></div>
+          <div class="time-metric"><div class="tm-code">WEEKENDS</div><div class="tm-value amber-color" id="trOffdays">0</div><div class="tm-label">土日祝</div></div>
+          <div class="time-metric"><div class="tm-code">DAILY AVG</div><div class="tm-value" id="trDailyAvg">0</div><div class="tm-label">1日平均時間</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h" id="trImpactHeading">+30 MINUTES / 30分増やした効果</div>
+          <div class="impact-minute-control result-impact-control">
+            <span class="impact-minute-label">1日あたり増やす時間<small>CHANGE TO RECALCULATE</small></span>
+            <span class="impact-minute-input"><input type="number" min="0" max="1440" step="1" value="30" inputmode="numeric" data-impact-minutes aria-label="結果で試す追加時間（分）"><span>分</span></span>
+          </div>
+          <div class="impact-grid" id="trImpacts"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">TIME ALLOCATION / 時間の配分</div>
+          <div class="time-subject-result" id="trSubjects"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">CONDITIONS / 計算条件</div>
+          <div class="time-method-summary" id="trMethod">—</div>
+        </div>
+
+        <div class="note-card">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
+
+        <div class="result-actions">
+          <button class="btn-home" onclick="goHome()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>
+            ホーム
+          </button>
+          <button class="btn-again" onclick="go(5)">条件を変えてもう一度計測する</button>
+        </div>
+        <p class="time-result-foot">日付・時間・配分は端末内のブラウザだけで計算しています。外部APIやAIは使用していません。</p>
+      </div>
+    </section>
+
   </div><!-- /stage -->
 
   <!-- 下部ドック -->
   <div class="dock" id="dock">
     <div class="dock-lock" id="dockLock"></div>
     <button class="btn-next" id="dockBtn" onclick="dockAction()">次へ</button>
+  </div>
+
+  <!-- TIME SCAN 下部ドック -->
+  <div class="dock time-dock" id="timeDock">
+    <div class="dock-lock" id="timeDockLock">目標日を設定してください</div>
+    <button class="btn-next primary" id="timeDockBtn" onclick="runTimeScan()">タイムスキャン開始 ─ 計測する</button>
   </div>
 
 </div><!-- /app -->
@@ -1133,6 +1603,15 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     </div>
     <div class="scan-text" id="scanText">診断しています</div>
     <div class="scan-sub" id="scanSub">SCANNING…</div>
+  </div>
+</div>
+
+<!-- TIME SCAN 演出 -->
+<div class="scan-stage time-scan-stage" id="timeScanStage">
+  <div>
+    <div class="radar" id="timeRadarBox"><div class="radar-sweep"></div><div class="radar-core"></div></div>
+    <div class="scan-text" id="timeScanText">残り日数を計測しています</div>
+    <div class="scan-sub" id="timeScanSub">TIME SCANNING…</div>
   </div>
 </div>
 
@@ -1597,7 +2076,7 @@ function buildAdvice(ng,dg,naiGap,devGap){
 /* ================================================================
    STATE
    ================================================================ */
-let scene=0;               /* 0:title 1:school 2:naishin 3:dev 4:result */
+let scene=0;               /* 0:hub 1:school 2:naishin 3:dev 4:target result 5:time setup 6:time result */
 let currentArea="南部";
 let selectedId=null;
 let gradeYear=1;
@@ -1627,29 +2106,42 @@ function shakeElement(el){
 /* ================================================================
    シーン管理
    ================================================================ */
-const SCENE_IDS=["sceneTitle","sceneSchool","sceneNaishin","sceneDev","sceneResult"];
+const SCENE_IDS=["sceneTitle","sceneSchool","sceneNaishin","sceneDev","sceneResult","sceneTimeSetup","sceneTimeResult"];
 function go(n){
   const prev=scene;scene=n;
   SCENE_IDS.forEach((id,i)=>{
     const el=document.getElementById(id);
+    if(!el)return;
     el.classList.toggle("active",i===n);
     el.classList.toggle("exit-left",i<n&&i!==n);
   });
   /* レール表示：入力シーン(1-3)のみ */
   const rail=document.getElementById("rail");
   rail.classList.toggle("show",n>=1&&n<=3);
-  document.querySelectorAll(".rail-step").forEach(b=>{
+  document.querySelectorAll("#rail .rail-step").forEach(b=>{
     const s=Number(b.dataset.s);
     b.classList.toggle("on",s===n);
     b.classList.toggle("done",s<n);
   });
+  const timeRail=document.getElementById("timeRail");
+  timeRail.classList.toggle("show",n===5||n===6);
+  document.querySelectorAll("#timeRail .rail-step").forEach(b=>{
+    const s=Number(b.dataset.timeS);
+    b.classList.toggle("on",s===n);
+    b.classList.toggle("done",s<n);
+  });
   updateDock();
+  updateTimeDock();
+  if(n===5) updateTimeSimulation();
   if(prev!==n){ vibrate(8); FX.play(n<prev?"back":"whoosh"); }
 }
 function goBack(){ if(scene>1) go(scene-1); else go(0); }
-function goHome(){ go(0); }
+function goHome(){ renderSavedMissions();go(0); }
 function railJump(n){ go(n); }
 function startMission(){ vibrate(15); FX.play("launch"); go(1); }
+function startTimeMission(){ vibrate(15); FX.play("launch"); prepareNewTimeGoal();go(5); }
+function timeBack(){ if(scene===6)go(5);else go(0); }
+function timeResultJump(){ if(window.__lastTimeResult)go(6);else toast("先に目標日を設定して計測してください"); }
 
 /* 下部ドック：シーンごとに役割が変わる */
 function updateDock(){
@@ -2478,11 +2970,798 @@ function selectAndJudge(id){
 }
 
 /* ================================================================
+   TIME SCAN ─ ブラウザ内だけで残り日数・時間・教科配分を計算
+   ================================================================ */
+let timeMode="average";
+const TIME_DEFAULT_VALUES={
+  average:2,weekday:1.5,offday:3,
+  mon:1.5,tue:1.5,wed:1.5,thu:1.5,fri:1.5,sat:3,sun:3,holiday:3
+};
+const TIME_VALUES={...TIME_DEFAULT_VALUES};
+const TIME_DAY_KEYS=["sun","mon","tue","wed","thu","fri","sat"];
+const TIME_GRADE_LABELS=["小学1年","小学2年","小学3年","小学4年","小学5年","小学6年","中学1年","中学2年","中学3年"];
+const timeYearValues={};
+const holidayCache={};
+const TIME_MISSIONS_KEY="timeScanMissionsV1";
+let currentTimeMissionId=null;
+let timeInternalDateChange=false;
+let timeDateManuallyEdited=false;
+let timeImpactMinutes=30;
+let lastTimeFxAt=0;
+const ALLOCATION_COLORS=["#ff9b7a","#4cc3ff","#c4b5fd","#6ee7d0","#ffc94a","#ff7385","#60a5fa","#a3e635","#f472b6","#fb923c","#2dd4bf","#e879f9"];
+let allocationSerial=0;
+let timeAllocations=[];
+
+function newAllocation(name,weight,index){
+  return{id:"alloc_"+Date.now().toString(36)+"_"+(++allocationSerial),name,weight:Number(weight)||0,color:ALLOCATION_COLORS[index%ALLOCATION_COLORS.length]};
+}
+function defaultAllocationsForType(type){
+  const names=type==="custom"?["項目1","項目2","項目3"]:["国語","数学","英語","理科","社会"];
+  return names.map((name,index)=>newAllocation(name,20,index));
+}
+
+function timeToday(){
+  const d=new Date();
+  d.setHours(0,0,0,0);
+  return d;
+}
+function timeDateKey(d){
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function parseTimeDate(value){
+  if(!value)return null;
+  const p=value.split("-").map(Number);
+  if(p.length!==3||p.some(Number.isNaN))return null;
+  const d=new Date(p[0],p[1]-1,p[2]);
+  d.setHours(0,0,0,0);
+  return d;
+}
+function addTimeDays(date,n){
+  const d=new Date(date);
+  d.setDate(d.getDate()+n);
+  return d;
+}
+function formatTimeHours(n){
+  const v=Math.round((Number(n)||0)*100)/100;
+  return v.toLocaleString("ja-JP",{maximumFractionDigits:2});
+}
+function formatTimeDate(d){
+  if(!d)return"—";
+  return d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日";
+}
+function formatTimeShortDate(d){
+  return (d.getMonth()+1)+"/"+d.getDate();
+}
+function playTimeValueSound(value,max){
+  const now=performance.now();
+  if(now-lastTimeFxAt<38)return;
+  lastTimeFxAt=now;
+  FX.play("tick",Math.max(0,Math.min(1,(Number(value)||0)/(Number(max)||24))));
+}
+function academicYearFor(d){
+  return d.getMonth()>=3?d.getFullYear():d.getFullYear()-1;
+}
+function predictedOkinawaExamDate(year){
+  /* 3月2日以降で2日連続の平日を確保。金土日は翌月曜へ送る。 */
+  let d=new Date(year,2,2);
+  const day=d.getDay();
+  if(day===5)d=addTimeDays(d,3);
+  else if(day===6)d=addTimeDays(d,2);
+  else if(day===0)d=addTimeDays(d,1);
+  return d;
+}
+function examDateForGrade(gradeIndex){
+  const currentAY=academicYearFor(timeToday());
+  const examYear=currentAY+(8-Number(gradeIndex))+1;
+  if(examYear===2027){
+    return{year:examYear,date:new Date(2027,2,3),confirmed:true};
+  }
+  return{year:examYear,date:predictedOkinawaExamDate(examYear),confirmed:false};
+}
+function goalUsesGrade(type){
+  return type==="okinawa_exam"||type==="other_exam";
+}
+function updateGoalContext(){
+  const type=document.getElementById("timeGoalType").value;
+  const usesGrade=goalUsesGrade(type);
+  document.getElementById("timeGradeField").hidden=!usesGrade;
+  document.getElementById("timeDateGradeGrid").classList.toggle("single",!usesGrade);
+  document.getElementById("timeMemorialRow").hidden=type!=="okinawa_exam";
+  document.getElementById("timeYearModeButton").hidden=!usesGrade;
+  document.querySelector(".time-mode-tabs").classList.toggle("three",!usesGrade);
+  if(!usesGrade&&timeMode==="year")switchTimeMode("average");
+}
+function updateExamDateStatus(){
+  const status=document.getElementById("timeDateStatus");
+  const restore=document.getElementById("restoreAutoDate");
+  const type=document.getElementById("timeGoalType").value;
+  status.className="date-status";
+  if(type==="other_exam"){
+    status.textContent="入試日を入力してください。現在の学年は「学年・年度ごと」の時間設定に使います。";
+    restore.classList.remove("show");
+    return;
+  }
+  if(type!=="okinawa_exam"){
+    status.textContent="目標日を自由に設定してください。学年は使わず、資格・試験・仕事などに利用できます。";
+    restore.classList.remove("show");
+    return;
+  }
+  const info=examDateForGrade(document.getElementById("timeGrade").value);
+  const second=addTimeDays(info.date,1);
+  if(info.confirmed){
+    status.classList.add("confirmed");
+    status.textContent="令和9年度（2027年）は3月3日・4日。1日目の3月3日を自動設定しています。";
+  }else{
+    status.classList.add("predicted");
+    status.textContent=info.year+"年は"+formatTimeDate(info.date)+"・"+formatTimeDate(second)+"と予測しています。公式発表前の推測なので、発表後に修正してください。";
+  }
+  if(timeDateManuallyEdited){
+    status.textContent+=" 現在は日付を手動で変更しています。";
+    restore.classList.add("show");
+  }else{
+    restore.classList.remove("show");
+  }
+}
+function applyExamDate(force){
+  if(document.getElementById("timeGoalType").value!=="okinawa_exam")return;
+  if(!force&&timeDateManuallyEdited)return;
+  const info=examDateForGrade(document.getElementById("timeGrade").value);
+  timeInternalDateChange=true;
+  document.getElementById("timeTargetDate").value=timeDateKey(info.date);
+  timeInternalDateChange=false;
+  timeDateManuallyEdited=false;
+  updateExamDateStatus();
+  if(timeMode==="year")renderYearPeriods();
+  updateTimeSimulation();
+}
+function nthMonday(year,month,n){
+  const first=new Date(year,month-1,1);
+  return 1+((8-first.getDay())%7)+(n-1)*7;
+}
+function springEquinoxDay(year){
+  return Math.floor(20.8431+0.242194*(year-1980)-Math.floor((year-1980)/4));
+}
+function autumnEquinoxDay(year){
+  return Math.floor(23.2488+0.242194*(year-1980)-Math.floor((year-1980)/4));
+}
+function getJapaneseHolidays(year){
+  if(holidayCache[year])return holidayCache[year];
+  const map=new Map();
+  const add=(month,day,name)=>map.set(timeDateKey(new Date(year,month-1,day)),name);
+  add(1,1,"元日");
+  add(1,nthMonday(year,1,2),"成人の日");
+  add(2,11,"建国記念の日");
+  if(year>=2020)add(2,23,"天皇誕生日");
+  add(3,springEquinoxDay(year),"春分の日");
+  add(4,29,"昭和の日");
+  add(5,3,"憲法記念日");add(5,4,"みどりの日");add(5,5,"こどもの日");
+  if(year===2020)add(7,23,"海の日");
+  else if(year===2021)add(7,22,"海の日");
+  else add(7,nthMonday(year,7,3),"海の日");
+  if(year===2020)add(8,10,"山の日");
+  else if(year===2021)add(8,8,"山の日");
+  else if(year>=2016)add(8,11,"山の日");
+  add(9,nthMonday(year,9,3),"敬老の日");
+  add(9,autumnEquinoxDay(year),"秋分の日");
+  if(year===2020)add(7,24,"スポーツの日");
+  else if(year===2021)add(7,23,"スポーツの日");
+  else add(10,nthMonday(year,10,2),"スポーツの日");
+  add(11,3,"文化の日");add(11,23,"勤労感謝の日");
+
+  /* 祝日に挟まれた平日（国民の休日） */
+  for(let day=2;day<=365;day++){
+    const d=new Date(year,0,day);
+    if(d.getFullYear()!==year)break;
+    const key=timeDateKey(d);
+    if(map.has(key))continue;
+    const prev=timeDateKey(addTimeDays(d,-1));
+    const next=timeDateKey(addTimeDays(d,1));
+    if(map.has(prev)&&map.has(next))map.set(key,"国民の休日");
+  }
+  /* 日曜と重なった祝日の振替休日 */
+  Array.from(map.entries()).forEach(entry=>{
+    const d=parseTimeDate(entry[0]);
+    if(d&&d.getDay()===0){
+      let sub=addTimeDays(d,1);
+      while(map.has(timeDateKey(sub)))sub=addTimeDays(sub,1);
+      if(sub.getFullYear()===year)map.set(timeDateKey(sub),"振替休日");
+    }
+  });
+  holidayCache[year]=map;
+  return map;
+}
+function timeDayInfo(d,includeMemorial){
+  const holidays=getJapaneseHolidays(d.getFullYear());
+  const key=timeDateKey(d);
+  const useMemorial=includeMemorial===undefined?document.getElementById("okinawaMemorial").checked:includeMemorial;
+  const memorial=useMemorial&&d.getMonth()===5&&d.getDate()===23;
+  const holiday=holidays.has(key)||memorial;
+  const weekend=d.getDay()===0||d.getDay()===6;
+  return{date:new Date(d),key,holiday,weekend,offday:holiday||weekend,holidayName:memorial?"慰霊の日":(holidays.get(key)||"")};
+}
+function getTimeRecords(target,includeMemorial){
+  const today=timeToday();
+  if(!target||target<today)return[];
+  const rows=[];
+  for(let d=addTimeDays(today,1);d<=target;d=addTimeDays(d,1))rows.push(timeDayInfo(d,includeMemorial));
+  return rows;
+}
+function getTimePeriods(records){
+  const groups=[];
+  const currentAY=academicYearFor(timeToday());
+  const currentGrade=Number(document.getElementById("timeGrade").value)||0;
+  records.forEach(row=>{
+    const ay=academicYearFor(row.date);
+    let group=groups[groups.length-1];
+    if(!group||group.ay!==ay){
+      const gradeIndex=currentGrade+(ay-currentAY);
+      const name=gradeIndex>=0&&gradeIndex<TIME_GRADE_LABELS.length?TIME_GRADE_LABELS[gradeIndex]:"中学卒業後";
+      group={ay,name,start:row.date,end:row.date,days:0,weekdays:0,offdays:0};
+      groups.push(group);
+    }
+    group.end=row.date;group.days++;
+    if(row.offday)group.offdays++;else group.weekdays++;
+  });
+  groups.forEach(group=>{
+    if(!timeYearValues[group.ay])timeYearValues[group.ay]={weekday:TIME_VALUES.weekday,offday:TIME_VALUES.offday};
+  });
+  return groups;
+}
+function readTimeMissions(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(TIME_MISSIONS_KEY)||"[]");
+    return Array.isArray(parsed)?parsed.filter(item=>item&&item.id&&item.targetDate):[];
+  }catch(e){return[]}
+}
+function writeTimeMissions(missions){
+  try{
+    localStorage.setItem(TIME_MISSIONS_KEY,JSON.stringify(missions));
+    return true;
+  }catch(e){
+    toast("この端末では目標を保存できませんでした");
+    return false;
+  }
+}
+function calculateSavedMission(mission){
+  const target=parseTimeDate(mission.targetDate);
+  const today=timeToday();
+  if(!target)return{valid:false,days:0,total:0,expired:false};
+  const expired=target<today;
+  const records=expired?[]:getTimeRecords(target,mission.memorial!==false);
+  const weekdays=records.filter(row=>!row.offday).length;
+  const offdays=records.length-weekdays;
+  const values=Object.assign({},TIME_DEFAULT_VALUES,mission.timeValues||{});
+  let total=0;
+  if(mission.mode==="average"){
+    total=records.length*values.average;
+  }else if(mission.mode==="split"){
+    total=weekdays*values.weekday+offdays*values.offday;
+  }else if(mission.mode==="weekday"){
+    records.forEach(row=>{total+=row.holiday?values.holiday:values[TIME_DAY_KEYS[row.date.getDay()]]});
+  }else{
+    const years=mission.yearValues||{};
+    records.forEach(row=>{
+      const period=years[academicYearFor(row.date)]||{weekday:values.weekday,offday:values.offday};
+      total+=row.offday?(Number(period.offday)||0):(Number(period.weekday)||0);
+    });
+  }
+  return{valid:true,expired,days:records.length,total,target,weekdays,offdays};
+}
+function renderSavedMissions(){
+  const section=document.getElementById("savedMissions");
+  if(!section)return;
+  const list=document.getElementById("savedMissionList");
+  const missions=readTimeMissions().slice().sort((a,b)=>String(a.targetDate).localeCompare(String(b.targetDate)));
+  section.hidden=missions.length===0;
+  document.querySelector(".hub-scroll").classList.toggle("has-saved",missions.length>0);
+  document.getElementById("savedMissionCount").textContent=missions.length+" GOAL"+(missions.length===1?"":"S");
+  list.innerHTML="";
+  missions.forEach(mission=>{
+    const summary=calculateSavedMission(mission);
+    const card=document.createElement("div");card.className="mission-card";
+    const open=document.createElement("button");open.className="mission-open";open.type="button";
+    const code=document.createElement("div");code.className="mission-code";
+    if(mission.type==="okinawa_exam"){
+      code.textContent=mission.manualDate?"EXAM / DATE EDITED":(Number(mission.examYear)===2027?"EXAM / CONFIRMED":"EXAM / PREDICTED");
+    }else if(mission.type==="other_exam")code.textContent="HIGH SCHOOL EXAM";
+    else code.textContent="CUSTOM GOAL";
+    const name=document.createElement("div");name.className="mission-name";name.textContent=mission.goalName||"目標日";
+    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+(mission.type==="okinawa_exam"&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
+    const stats=document.createElement("div");stats.className="mission-stats";
+    const dayStat=document.createElement("span");dayStat.className="mission-stat";
+    dayStat.innerHTML=summary.expired?"終了":formatTimeHours(summary.days)+"<small>日</small>";
+    const hourStat=document.createElement("span");hourStat.className="mission-stat";
+    hourStat.innerHTML=formatTimeHours(summary.total)+"<small>時間</small>";
+    stats.append(dayStat,hourStat);open.append(code,name,date,stats);
+    open.onclick=()=>loadTimeMission(mission.id);
+    const del=document.createElement("button");del.className="mission-delete";del.type="button";del.setAttribute("aria-label",(mission.goalName||"目標")+"を削除");
+    del.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>';
+    del.onclick=()=>deleteTimeMission(mission.id,mission.goalName||"この目標");
+    card.append(open,del);list.appendChild(card);
+  });
+}
+function deleteTimeMission(id,name){
+  if(!window.confirm(name+"を削除しますか？"))return;
+  const missions=readTimeMissions().filter(item=>item.id!==id);
+  if(writeTimeMissions(missions)){
+    if(currentTimeMissionId===id)currentTimeMissionId=null;
+    renderSavedMissions();toast("目標を削除しました");
+  }
+}
+function resetTimeGoalControls(type){
+  Object.keys(TIME_VALUES).forEach(key=>{TIME_VALUES[key]=TIME_DEFAULT_VALUES[key]});
+  Object.keys(timeYearValues).forEach(key=>delete timeYearValues[key]);
+  Object.keys(TIME_VALUES).forEach(key=>syncTimeValue(key,TIME_VALUES[key]));
+  syncImpactMinutes(30);
+  timeAllocations=defaultAllocationsForType(type||"okinawa_exam");
+  renderAllocationControls();
+}
+function prepareNewTimeGoal(){
+  currentTimeMissionId=null;
+  timeDateManuallyEdited=false;
+  document.getElementById("timeGoalType").value="okinawa_exam";
+  resetTimeGoalControls("okinawa_exam");
+  document.getElementById("timeGoalName").value="沖縄県立高校入試";
+  document.getElementById("timeGrade").value="8";
+  document.getElementById("okinawaMemorial").checked=true;
+  timeMode="average";
+  switchTimeMode("average");
+  updateGoalContext();
+  applyExamDate(true);
+  document.getElementById("timeSetupScroll").scrollTop=0;
+}
+function captureTimeMission(){
+  const type=document.getElementById("timeGoalType").value;
+  const grade=Number(document.getElementById("timeGrade").value)||0;
+  const examInfo=type==="okinawa_exam"?examDateForGrade(grade):null;
+  const allocations=timeAllocations.map(item=>({id:item.id,name:item.name,weight:Number(item.weight)||0,color:item.color}));
+  const subjectWeights={};
+  allocations.forEach(item=>{subjectWeights[item.name]=item.weight});
+  const yearValues={};
+  Object.keys(timeYearValues).forEach(key=>{yearValues[key]={weekday:Number(timeYearValues[key].weekday)||0,offday:Number(timeYearValues[key].offday)||0}});
+  return{
+    id:currentTimeMissionId||("mission_"+Date.now()+"_"+Math.random().toString(36).slice(2,7)),
+    type,goalName:document.getElementById("timeGoalName").value.trim()||"目標日",
+    targetDate:document.getElementById("timeTargetDate").value,grade,
+    examYear:examInfo?examInfo.year:null,manualDate:type==="okinawa_exam"&&timeDateManuallyEdited,
+    memorial:document.getElementById("okinawaMemorial").checked,mode:timeMode,
+    timeValues:Object.assign({},TIME_VALUES),yearValues,allocations,subjectWeights,
+    impactMinutes:timeImpactMinutes,updatedAt:Date.now()
+  };
+}
+function saveCurrentTimeMission(){
+  const mission=captureTimeMission();
+  const missions=readTimeMissions();
+  const index=missions.findIndex(item=>item.id===mission.id);
+  if(index>=0)missions[index]=mission;else missions.push(mission);
+  if(!writeTimeMissions(missions))return null;
+  currentTimeMissionId=mission.id;
+  renderSavedMissions();
+  return mission;
+}
+function loadTimeMission(id){
+  const mission=readTimeMissions().find(item=>item.id===id);
+  if(!mission)return;
+  currentTimeMissionId=mission.id;
+  document.getElementById("timeGoalType").value=mission.type||"custom";
+  document.getElementById("timeGoalName").value=mission.goalName||"";
+  document.getElementById("timeGrade").value=String(Number(mission.grade)||0);
+  document.getElementById("okinawaMemorial").checked=(mission.type==="okinawa_exam"&&mission.memorial!==false);
+  timeInternalDateChange=true;
+  document.getElementById("timeTargetDate").value=mission.targetDate||"";
+  timeInternalDateChange=false;
+  Object.assign(TIME_VALUES,TIME_DEFAULT_VALUES,mission.timeValues||{});
+  Object.keys(TIME_VALUES).forEach(key=>syncTimeValue(key,TIME_VALUES[key]));
+  syncImpactMinutes(mission.impactMinutes==null?30:mission.impactMinutes);
+  Object.keys(timeYearValues).forEach(key=>delete timeYearValues[key]);
+  Object.keys(mission.yearValues||{}).forEach(key=>{timeYearValues[key]=Object.assign({},mission.yearValues[key])});
+  if(Array.isArray(mission.allocations)&&mission.allocations.length){
+    timeAllocations=mission.allocations.map((item,index)=>({
+      id:item.id||newAllocation("",0,index).id,
+      name:String(item.name||("項目"+(index+1))).slice(0,30),
+      weight:Number(item.weight)||0,
+      color:item.color||ALLOCATION_COLORS[index%ALLOCATION_COLORS.length]
+    }));
+  }else if(mission.subjectWeights&&typeof mission.subjectWeights==="object"){
+    timeAllocations=Object.entries(mission.subjectWeights).map((entry,index)=>newAllocation(entry[0],entry[1],index));
+  }else{
+    timeAllocations=defaultAllocationsForType(mission.type||"custom");
+  }
+  renderAllocationControls();
+  if((mission.type||"custom")==="okinawa_exam"){
+    const auto=timeDateKey(examDateForGrade(mission.grade).date);
+    timeDateManuallyEdited=mission.manualDate===true||mission.targetDate!==auto;
+  }else timeDateManuallyEdited=false;
+  timeMode=mission.mode||"average";
+  updateGoalContext();
+  switchTimeMode(timeMode);
+  updateExamDateStatus();
+  if(timeMode==="year")renderYearPeriods();
+  updateTimeSimulation();
+  go(5);
+  document.getElementById("timeSetupScroll").scrollTop=0;
+}
+function setTimeRangeFill(el){
+  if(!el)return;
+  const min=Number(el.min)||0,max=Number(el.max)||100,val=Math.max(min,Math.min(max,Number(el.value)||0));
+  const pct=max===min?0:((val-min)/(max-min))*100;
+  el.style.setProperty("--p",pct+"%");
+}
+function syncTimeValue(key,value){
+  const v=Math.max(0,Math.min(24,Number(value)||0));
+  TIME_VALUES[key]=v;
+  document.querySelectorAll("[data-time-key='"+key+"']").forEach(el=>{
+    if(el.type==="range")el.value=Math.min(Number(el.max)||24,v);
+    else el.value=v;
+    if(el.type==="range")setTimeRangeFill(el);
+  });
+}
+function syncImpactMinutes(value){
+  timeImpactMinutes=Math.max(0,Math.min(1440,Math.round(Number(value)||0)));
+  document.querySelectorAll("[data-impact-minutes]").forEach(el=>{el.value=String(timeImpactMinutes)});
+  const heading=document.getElementById("trImpactHeading");
+  if(heading)heading.textContent="+"+timeImpactMinutes+" MINUTES / "+timeImpactMinutes+"分増やした効果";
+}
+function initTimeImpactInputs(){
+  document.querySelectorAll("[data-impact-minutes]").forEach(el=>{
+    el.addEventListener("input",()=>{
+      syncImpactMinutes(el.value);
+      playTimeValueSound(timeImpactMinutes,1440);
+      const result=calculateTimeSimulation();
+      updateTimeSimulation();
+      if(scene===6&&result.valid){
+        window.__lastTimeResult=result;
+        renderTimeImpacts(result);
+        if(currentTimeMissionId)saveCurrentTimeMission();
+      }
+    });
+  });
+}
+function initTimeValueInputs(){
+  document.querySelectorAll("[data-time-key]").forEach(el=>{
+    if(el.type==="range")setTimeRangeFill(el);
+    el.addEventListener("input",()=>{
+      syncTimeValue(el.dataset.timeKey,el.value);
+      playTimeValueSound(el.value,24);
+      updateTimeSimulation();
+    });
+  });
+}
+function switchTimeMode(mode){
+  timeMode=mode;
+  document.querySelectorAll(".time-mode-btn").forEach(btn=>btn.classList.toggle("on",btn.dataset.timeMode===mode));
+  document.querySelectorAll(".time-mode-panel").forEach(panel=>panel.classList.toggle("open",panel.dataset.timePanel===mode));
+  if(mode==="year")renderYearPeriods();
+  updateTimeSimulation();
+}
+function renderYearPeriods(){
+  const wrap=document.getElementById("yearPeriods");
+  const target=parseTimeDate(document.getElementById("timeTargetDate").value);
+  const records=getTimeRecords(target);
+  const periods=getTimePeriods(records);
+  wrap.innerHTML="";
+  if(!target){
+    wrap.innerHTML='<div class="no-period">目標日を入力すると、学年・年度ごとの入力欄が表示されます。</div>';
+    return;
+  }
+  if(target<timeToday()){
+    wrap.innerHTML='<div class="no-period">今日以降の目標日を設定してください。</div>';
+    return;
+  }
+  if(!periods.length){
+    wrap.innerHTML='<div class="no-period">目標日が今日のため、残りの期間は0日です。</div>';
+    return;
+  }
+  periods.forEach(group=>{
+    const values=timeYearValues[group.ay];
+    values.weekday=Math.max(0,Math.min(24,Number(values.weekday)||0));
+    values.offday=Math.max(0,Math.min(24,Number(values.offday)||0));
+    const card=document.createElement("div");
+    card.className="year-period";
+    card.innerHTML=
+      '<div class="year-period-head"><span class="year-period-name">'+group.name+'</span><span class="year-period-days">'+formatTimeShortDate(group.start)+'〜'+formatTimeShortDate(group.end)+' / '+group.days+'日</span></div>'+
+      '<div class="time-control"><div class="tc-label"><span class="tc-name">平日</span><span class="tc-sub">'+group.weekdays+' DAYS</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="'+values.weekday+'" data-year-ay="'+group.ay+'" data-year-kind="weekday" aria-label="'+group.name+'の平日の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="'+values.weekday+'" inputmode="decimal" data-year-ay="'+group.ay+'" data-year-kind="weekday"><span class="tc-unit">h</span></div></div>'+
+      '<div class="time-control"><div class="tc-label"><span class="tc-name">土日祝</span><span class="tc-sub">'+group.offdays+' DAYS</span></div><input class="time-range" type="range" min="0" max="24" step="0.25" value="'+values.offday+'" data-year-ay="'+group.ay+'" data-year-kind="offday" aria-label="'+group.name+'の土日祝の時間"><div class="tc-number-wrap"><input class="tc-number" type="number" min="0" max="24" step="0.25" value="'+values.offday+'" inputmode="decimal" data-year-ay="'+group.ay+'" data-year-kind="offday"><span class="tc-unit">h</span></div></div>';
+    wrap.appendChild(card);
+  });
+  wrap.querySelectorAll("[data-year-ay]").forEach(el=>{
+    if(el.type==="range")setTimeRangeFill(el);
+    el.addEventListener("input",()=>{
+      const ay=el.dataset.yearAy,kind=el.dataset.yearKind;
+      const value=Math.max(0,Math.min(24,Number(el.value)||0));
+      timeYearValues[ay][kind]=value;
+      wrap.querySelectorAll("[data-year-ay='"+ay+"'][data-year-kind='"+kind+"']").forEach(peer=>{
+        if(peer.type==="range")peer.value=Math.min(Number(peer.max)||24,value);else peer.value=value;
+        if(peer.type==="range")setTimeRangeFill(peer);
+      });
+      playTimeValueSound(value,24);
+      updateTimeSimulation();
+    });
+    if(el.type==="number")el.addEventListener("wheel",event=>event.preventDefault(),{passive:false});
+  });
+}
+function readSubjectAllocation(totalHours){
+  let sum=timeAllocations.reduce((acc,item)=>acc+(Number(item.weight)||0),0);
+  const allZero=sum<=0;
+  if(allZero)sum=timeAllocations.length||1;
+  return timeAllocations.map(item=>{
+    const raw=Number(item.weight)||0;
+    const ratio=(allZero?1:raw)/sum;
+    const row=document.querySelector('[data-allocation-id="'+item.id+'"]');
+    return{name:(item.name.trim()||"名称未設定"),ratio,hours:totalHours*ratio,color:item.color||"#4cc3ff",row};
+  });
+}
+function updateSubjectPreview(totalHours){
+  readSubjectAllocation(totalHours).forEach(item=>{
+    if(!item.row)return;
+    item.row.querySelector(".subject-pct").textContent=formatTimeHours(item.ratio*100)+"%";
+    item.row.querySelector(".subject-hours").textContent=formatTimeHours(item.hours)+"時間";
+    const range=item.row.querySelector(".subject-range");
+    setTimeRangeFill(range);
+  });
+}
+function equalizeSubjects(silent){
+  timeAllocations.forEach(item=>{item.weight=20});
+  renderAllocationControls();
+  if(!silent){vibrate(8);FX.play("clear")}
+  updateTimeSimulation();
+}
+function renderAllocationControls(){
+  const wrap=document.getElementById("subjectControls");
+  if(!wrap)return;
+  wrap.innerHTML="";
+  timeAllocations.forEach((item,index)=>{
+    item.color=item.color||ALLOCATION_COLORS[index%ALLOCATION_COLORS.length];
+    const row=document.createElement("div");row.className="subject-control";row.dataset.allocationId=item.id;row.style.setProperty("--subject",item.color);
+    const name=document.createElement("input");name.className="allocation-name-input";name.type="text";name.maxLength=30;name.value=item.name;name.placeholder="項目名";name.setAttribute("aria-label","配分する項目名");
+    name.addEventListener("input",()=>{item.name=name.value;updateTimeSimulation()});
+    const range=document.createElement("input");range.className="time-range subject-range";range.type="range";range.min="0";range.max="100";range.step="1";range.value=String(item.weight);range.setAttribute("aria-label",(item.name||"項目")+"の配分比率");
+    range.addEventListener("input",()=>{
+      item.weight=Number(range.value)||0;
+      setTimeRangeFill(range);
+      playTimeValueSound(item.weight,100);
+      if(timeAllocations.every(entry=>(Number(entry.weight)||0)===0))equalizeSubjects(true);
+      else updateTimeSimulation();
+    });
+    const ratio=document.createElement("span");ratio.className="subject-ratio";
+    const pct=document.createElement("span");pct.className="subject-pct";pct.textContent="—%";
+    const hours=document.createElement("small");hours.className="subject-hours";hours.textContent="—時間";
+    ratio.append(pct,hours);
+    const del=document.createElement("button");del.className="allocation-delete";del.type="button";del.setAttribute("aria-label",(item.name||"項目")+"を削除");
+    del.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
+    del.addEventListener("click",()=>deleteAllocationItem(item.id));
+    row.append(name,range,ratio,del);wrap.appendChild(row);setTimeRangeFill(range);
+  });
+  const preview=calculateTimeSimulation();
+  updateSubjectPreview(preview.valid?preview.total:0);
+}
+function addAllocationItem(){
+  if(timeAllocations.length>=12){toast("項目は12個まで追加できます");return}
+  const index=timeAllocations.length;
+  timeAllocations.push(newAllocation("項目"+(index+1),20,index));
+  renderAllocationControls();updateTimeSimulation();vibrate(8);
+}
+function deleteAllocationItem(id){
+  if(timeAllocations.length<=1){toast("項目は1つ以上必要です");return}
+  timeAllocations=timeAllocations.filter(item=>item.id!==id);
+  renderAllocationControls();updateTimeSimulation();vibrate(8);
+}
+function initSubjectInputs(){
+  if(!timeAllocations.length)timeAllocations=defaultAllocationsForType("okinawa_exam");
+  renderAllocationControls();
+}
+function calculateTimeSimulation(){
+  const target=parseTimeDate(document.getElementById("timeTargetDate").value);
+  const today=timeToday();
+  if(!target)return{valid:false,reason:"目標日を設定してください"};
+  if(target<today)return{valid:false,reason:"今日以降の目標日を設定してください"};
+  const records=getTimeRecords(target);
+  const weekdays=records.filter(row=>!row.offday).length;
+  const offdays=records.length-weekdays;
+  let total=0;
+  if(timeMode==="average"){
+    total=records.length*TIME_VALUES.average;
+  }else if(timeMode==="split"){
+    total=weekdays*TIME_VALUES.weekday+offdays*TIME_VALUES.offday;
+  }else if(timeMode==="weekday"){
+    records.forEach(row=>{
+      total+=row.holiday?TIME_VALUES.holiday:TIME_VALUES[TIME_DAY_KEYS[row.date.getDay()]];
+    });
+  }else{
+    getTimePeriods(records);
+    records.forEach(row=>{
+      const values=timeYearValues[academicYearFor(row.date)]||{weekday:TIME_VALUES.weekday,offday:TIME_VALUES.offday};
+      total+=row.offday?values.offday:values.weekday;
+    });
+  }
+  const impacts=[];
+  const impactHours=timeImpactMinutes/60;
+  if(timeMode==="average"){
+    impacts.push({label:"1日平均を"+timeImpactMinutes+"分増やす",hours:records.length*impactHours});
+  }else{
+    impacts.push({label:"平日の時間を"+timeImpactMinutes+"分増やす",hours:weekdays*impactHours});
+    impacts.push({label:"土日祝の時間を"+timeImpactMinutes+"分増やす",hours:offdays*impactHours});
+  }
+  const subjects=readSubjectAllocation(total).map(item=>({name:item.name,ratio:item.ratio,hours:item.hours,color:item.color}));
+  let method="";
+  if(timeMode==="average")method="1日平均 "+formatTimeHours(TIME_VALUES.average)+"時間";
+  if(timeMode==="split")method="平日 "+formatTimeHours(TIME_VALUES.weekday)+"時間 / 土日祝 "+formatTimeHours(TIME_VALUES.offday)+"時間";
+  if(timeMode==="weekday")method="曜日ごとの時間（祝日は祝日設定を優先）";
+  if(timeMode==="year")method="学年・年度ごとの平日 / 土日祝設定";
+  return{
+    valid:true,target,goal:(document.getElementById("timeGoalName").value.trim()||"目標日"),records,
+    days:records.length,weekdays,offdays,total,average:records.length?total/records.length:0,
+    impacts,subjects,method,memorial:document.getElementById("okinawaMemorial").checked
+  };
+}
+function updateTimeSimulation(){
+  const result=calculateTimeSimulation();
+  const liveDays=document.getElementById("liveDays");
+  const liveHours=document.getElementById("liveHours");
+  if(result.valid){
+    liveDays.innerHTML=formatTimeHours(result.days)+"<small>日</small>";
+    liveHours.innerHTML=formatTimeHours(result.total)+"<small>時間</small>";
+    const impact=document.getElementById("impactPreview");
+    impact.innerHTML=result.impacts.map(item=>item.label+"と <b>+"+formatTimeHours(item.hours)+"時間</b>").join("<br>");
+    updateSubjectPreview(result.total);
+  }else{
+    liveDays.innerHTML="—<small>日</small>";
+    liveHours.innerHTML="—<small>時間</small>";
+    document.getElementById("impactPreview").textContent="目標日を入力すると、"+timeImpactMinutes+"分増やした効果が表示されます。";
+    updateSubjectPreview(0);
+  }
+  updateTimeDock(result);
+}
+function updateTimeDock(calculated){
+  const dock=document.getElementById("timeDock");
+  if(!dock)return;
+  if(scene!==5){dock.classList.remove("show");return}
+  dock.classList.add("show");
+  const result=calculated||calculateTimeSimulation();
+  const btn=document.getElementById("timeDockBtn");
+  const lock=document.getElementById("timeDockLock");
+  btn.disabled=!result.valid;
+  lock.innerHTML=result.valid?"計測可能：<b>あと"+result.days+"日 / "+formatTimeHours(result.total)+"時間</b>":result.reason;
+}
+function animateTimeTotal(el,target){
+  const start=performance.now(),duration=1050;
+  function frame(now){
+    const p=Math.min(1,(now-start)/duration);
+    const eased=1-Math.pow(1-p,4);
+    el.textContent=formatTimeHours(target*eased);
+    if(p<1)requestAnimationFrame(frame);else el.textContent=formatTimeHours(target);
+  }
+  requestAnimationFrame(frame);
+}
+function renderTimeImpacts(result){
+  syncImpactMinutes(timeImpactMinutes);
+  const impacts=document.getElementById("trImpacts");
+  impacts.innerHTML="";
+  result.impacts.forEach(item=>{
+    const row=document.createElement("div");
+    row.className="impact-card";
+    const copy=document.createElement("div");copy.className="impact-copy";copy.textContent=item.label;
+    const plus=document.createElement("div");plus.className="impact-plus";plus.textContent="+"+formatTimeHours(item.hours)+"h";
+    row.append(copy,plus);impacts.appendChild(row);
+  });
+}
+function renderTimeResult(result){
+  document.getElementById("trGoal").textContent=result.goal;
+  document.getElementById("trDaysLeft").textContent="あと "+result.days+" DAYS";
+  document.getElementById("trTargetDate").textContent=formatTimeDate(result.target)+" まで";
+  document.getElementById("trTotalDays").textContent=result.days;
+  document.getElementById("trWeekdays").textContent=result.weekdays;
+  document.getElementById("trOffdays").textContent=result.offdays;
+  document.getElementById("trDailyAvg").textContent=formatTimeHours(result.average)+"h";
+  const weekdayPct=result.days?(result.weekdays/result.days)*100:0;
+  document.getElementById("timeOrbit").style.setProperty("--weekday-pct",weekdayPct+"%");
+  animateTimeTotal(document.getElementById("trTotalHours"),result.total);
+
+  renderTimeImpacts(result);
+
+  const subjects=document.getElementById("trSubjects");
+  subjects.innerHTML="";
+  const maxHours=Math.max(0,...result.subjects.map(item=>item.hours));
+  result.subjects.forEach(item=>{
+    const row=document.createElement("div");row.className="tsr-row";row.style.setProperty("--subject",item.color);
+    const head=document.createElement("div");head.className="tsr-head";
+    const name=document.createElement("span");name.className="tsr-name";name.textContent=item.name+" "+formatTimeHours(item.ratio*100)+"%";
+    const value=document.createElement("span");value.className="tsr-value";value.textContent=formatTimeHours(item.hours)+"時間";
+    head.append(name,value);
+    const track=document.createElement("div");track.className="tsr-track";
+    const fill=document.createElement("div");fill.className="tsr-fill";track.appendChild(fill);
+    row.append(head,track);subjects.appendChild(row);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{fill.style.width=(maxHours?item.hours/maxHours*100:0)+"%"}));
+  });
+  document.getElementById("trMethod").textContent=result.method+"。日本の祝日"+(result.memorial?"と沖縄の慰霊の日":"")+"を土日祝側として計算。今日を含めず、目標日を含みます。";
+  document.getElementById("timeResultScroll").scrollTop=0;
+}
+function runTimeScan(){
+  const result=calculateTimeSimulation();
+  if(!result.valid){
+    FX.play("err");vibrate([30,30,30]);
+    shakeElement(document.getElementById("timeTargetDate"));
+    toast(result.reason);
+    return;
+  }
+  const savedMission=saveCurrentTimeMission();
+  window.__lastTimeResult=result;
+  const stage=document.getElementById("timeScanStage");
+  const text=document.getElementById("timeScanText");
+  const messages=["目標日までの日数を計測しています","平日と土日祝を仕分けています","入力した時間を合計しています","各項目への配分を計算しています"];
+  let index=0;
+  text.textContent=messages[0];
+  stage.classList.add("show");
+  FX.play("scanStart");vibrate(18);
+  let high=false;
+  const ping=setInterval(()=>FX.play("scanPing",(high=!high)),280);
+  const msg=setInterval(()=>{index=(index+1)%messages.length;text.textContent=messages[index]},300);
+  setTimeout(()=>{
+    clearInterval(ping);clearInterval(msg);
+    stage.classList.remove("show");
+    go(6);
+    renderTimeResult(result);
+    FX.play("stamp");vibrate([18,45,30]);
+    if(savedMission)toast("目標を保存しました");
+  },1350);
+}
+function initTimeScan(){
+  const target=document.getElementById("timeTargetDate");
+  target.min=timeDateKey(timeToday());
+  initTimeValueInputs();
+  initTimeImpactInputs();
+  initSubjectInputs();
+  target.addEventListener("input",()=>{
+    if(!timeInternalDateChange&&document.getElementById("timeGoalType").value==="okinawa_exam")timeDateManuallyEdited=true;
+    updateExamDateStatus();
+    if(timeMode==="year")renderYearPeriods();
+    FX.play("lock");
+    updateTimeSimulation();
+  });
+  document.getElementById("timeGoalType").addEventListener("change",event=>{
+    FX.play("tap");
+    const type=event.target.value;
+    resetTimeGoalControls(type);
+    document.getElementById("okinawaMemorial").checked=type==="okinawa_exam";
+    updateGoalContext();
+    if(type==="okinawa_exam"){
+      document.getElementById("timeGoalName").value="沖縄県立高校入試";
+      timeDateManuallyEdited=false;
+      applyExamDate(true);
+    }else if(type==="other_exam"){
+      document.getElementById("timeGoalName").value="高校入試";
+      timeDateManuallyEdited=false;
+      timeInternalDateChange=true;target.value="";timeInternalDateChange=false;
+      updateExamDateStatus();
+      if(timeMode==="year")renderYearPeriods();
+      updateTimeSimulation();
+    }else{
+      document.getElementById("timeGoalName").value="";
+      timeDateManuallyEdited=false;
+      timeInternalDateChange=true;target.value="";timeInternalDateChange=false;
+      updateExamDateStatus();
+      if(timeMode==="year")renderYearPeriods();
+      updateTimeSimulation();
+    }
+  });
+  document.getElementById("timeGrade").addEventListener("change",()=>{
+    FX.play("tap");
+    if(document.getElementById("timeGoalType").value==="okinawa_exam")applyExamDate(true);
+    else{if(timeMode==="year")renderYearPeriods();updateTimeSimulation()}
+  });
+  document.getElementById("okinawaMemorial").addEventListener("change",()=>{FX.play("tap");if(timeMode==="year")renderYearPeriods();updateTimeSimulation()});
+  document.getElementById("timeGoalName").addEventListener("input",()=>updateTimeDock());
+  prepareNewTimeGoal();
+  renderSavedMissions();
+}
+
+/* ================================================================
    GLOBAL INIT
    ================================================================ */
 renderSchools();
 initPad("naishin");initPad("dev");initPad("score");
 updateDock();
+initTimeScan();
 
 /* FXモード：前回の設定を復元（音声コンテキストは初回タップで解錠） */
 (function(){
