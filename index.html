@@ -19,7 +19,30 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="合格判定">
 <meta name="msapplication-TileColor" content="#0c111f">
-<link rel="manifest" href="/manifest.webmanifest">
+<link rel="manifest" id="appManifest" href="/manifest.webmanifest">
+<script>
+/* 外部ファイルを変更しなくても、ホーム画面名をこの1枚のHTMLから統一する。 */
+(()=>{
+  if(!/^https?:$/.test(location.protocol))return;
+  const root=location.origin+"/";
+  const manifest={
+    id:root,name:"合格判定",short_name:"合格判定",
+    description:"合格可能性と、保存した目標までの残り日数・使える時間を確認できるシミュレーター。",
+    start_url:root,scope:root,display:"standalone",background_color:"#0c111f",theme_color:"#0c111f",lang:"ja",dir:"ltr",
+    categories:["education","utilities"],prefer_related_applications:false,
+    icons:[
+      {src:root+"icon-192.png",sizes:"192x192",type:"image/png",purpose:"any"},
+      {src:root+"icon-512.png",sizes:"512x512",type:"image/png",purpose:"any"},
+      {src:root+"icon-maskable-512.png",sizes:"512x512",type:"image/png",purpose:"maskable"}
+    ]
+  };
+  try{
+    const manifestUrl=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/manifest+json;charset=utf-8"}));
+    document.getElementById("appManifest").href=manifestUrl;
+    window.addEventListener("pagehide",()=>URL.revokeObjectURL(manifestUrl),{once:true});
+  }catch(error){}
+})();
+</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -1161,8 +1184,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M9 20v-6h6v6"/></svg>
           </div>
           <div class="home-install-copy">
-            <strong class="home-install-title">ホーム画面に置いて、すぐ確認</strong>
-            <span class="home-install-text">保存した目標の残り日数と時間を、アプリのようにすぐ開けます。</span>
+            <strong class="home-install-title">ホーム画面に追加して、すぐ確認</strong>
+            <span class="home-install-text">保存した目標の残り日数と時間が、アプリからすぐ確認できます。</span>
           </div>
           <button class="home-install-btn" id="homeInstallBtn" type="button" onclick="requestHomeInstall()">追加する</button>
           <p class="home-install-help" id="homeInstallHelp" hidden></p>
@@ -3886,7 +3909,7 @@ async function requestHomeInstall(){
   }
   const ios=isIOSDevice();
   help.innerHTML=ios
-    ?"Safariの<strong>共有ボタン</strong>をタップし、<strong>「ホーム画面に追加」</strong> → <strong>「追加」</strong>を選んでください。"
+    ?"Safariの<strong>共有ボタン</strong>をタップし、<strong>「ホーム画面に追加」</strong>を選んでください。"
     :"ブラウザの<strong>メニュー</strong>を開き、<strong>「ホーム画面に追加」</strong>または<strong>「アプリをインストール」</strong>を選んでください。";
   help.hidden=!help.hidden;
 }
