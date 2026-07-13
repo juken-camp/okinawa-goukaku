@@ -902,6 +902,7 @@ input{font-family:inherit}
 .mission-card.holding{border-color:var(--ge);transform:scale(.985);box-shadow:0 0 0 3px rgba(255,115,133,.13),0 12px 34px rgba(0,0,0,.25)}
 @keyframes missionCardIn{0%{opacity:0;transform:translateY(-13px) scale(.975)}72%{opacity:1;transform:translateY(3px) scale(1)}100%{opacity:1;transform:none}}
 .mission-open{display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;gap:13px;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.mission-open.without-icon{grid-template-columns:minmax(0,1fr);gap:0}
 .mission-icon{width:46px;height:46px;border:1px solid color-mix(in srgb,var(--mission) 58%,var(--line));border-radius:50%;display:grid;place-items:center;color:var(--mission);background:color-mix(in srgb,var(--mission) 9%,transparent);box-shadow:0 0 16px var(--mission-glow)}
 .mission-icon svg{width:23px;height:23px}
 .mission-body{min-width:0}
@@ -972,13 +973,16 @@ input{font-family:inherit}
 .time-field{display:block;width:100%;min-width:0;margin-bottom:12px}
 .time-field:last-child{margin-bottom:0}
 .time-field>span{display:block;font-size:10.5px;font-weight:700;color:var(--mid);margin-bottom:5px}
+.time-field>span small{margin-left:5px;font-size:8.5px;font-weight:700;color:var(--time)}
 .time-input,.time-select{
   width:100%;min-width:0;height:46px;border:1px solid var(--line-lt);border-radius:11px;
   background:var(--bg1);color:var(--ink);padding:0 12px;font-size:16px;font-weight:700;outline:none;
   transition:border-color .18s,box-shadow .18s;
 }
 .time-input:focus,.time-select:focus{border-color:var(--time);box-shadow:0 0 0 3px var(--time-glow)}
-.time-input[type=date]{display:block;width:100%;max-width:100%;min-width:0;color-scheme:dark;-webkit-appearance:none;appearance:none}
+.time-input[type=date]{display:block;width:100%;max-width:100%;min-width:0;color-scheme:dark;-webkit-appearance:none;appearance:none;padding-top:0;padding-bottom:0;line-height:46px}
+.time-input[type=date]::-webkit-date-and-time-value{height:46px;min-height:46px;margin:0;padding:0;line-height:46px;text-align:center}
+.time-input[type=date]::-webkit-datetime-edit{display:inline-flex;align-items:center;height:46px;margin:0;padding:0;line-height:46px}
 .time-field-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
 .time-field-grid.single{grid-template-columns:1fr}
 .time-field-grid>*{min-width:0}
@@ -1544,8 +1548,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             </select>
           </label>
           <label class="time-field">
-            <span>目標名</span>
-            <input class="time-input" id="timeGoalName" type="text" value="沖縄県立高校入試" maxlength="40" autocomplete="off">
+            <span>ホームに表示する名前 <small>自由に変更できます</small></span>
+            <input class="time-input" id="timeGoalName" type="text" value="沖縄県立高校入試" placeholder="例：英検準2級・定期テスト・仕事の締切" maxlength="40" autocomplete="off">
           </label>
           <div class="time-field-grid" id="timeDateGradeGrid">
             <label class="time-field">
@@ -1657,6 +1661,16 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <div class="time-legend"><span style="--dot:var(--time)">平日</span><span style="--dot:var(--amber)">土日祝</span></div>
         </div>
 
+        <div class="result-save-choice">
+          <div class="result-save-code">SAVE GOAL / HOME MISSION</div>
+          <div class="result-save-title" id="timeSaveTitle">この目標をホームに保存しますか？</div>
+          <p class="result-save-text" id="timeSaveText">保存すると、残り日数と使える時間をホームからすぐ確認できます。</p>
+          <div class="result-save-actions">
+            <button class="result-save-primary" type="button" onclick="saveTimeResultAndHome()">保存してホームへ</button>
+            <button class="result-save-skip" type="button" onclick="discardTimeResultAndHome()">保存せずホームへ</button>
+          </div>
+        </div>
+
         <div class="time-metrics">
           <div class="time-metric"><div class="tm-code">TOTAL DAYS</div><div class="tm-value" id="trTotalDays">0</div><div class="tm-label">残り日数</div></div>
           <div class="time-metric"><div class="tm-code">WEEKDAYS</div><div class="tm-value time-color" id="trWeekdays">0</div><div class="tm-label">平日</div></div>
@@ -1684,16 +1698,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </div>
 
         <div class="note-card">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
-
-        <div class="result-save-choice">
-          <div class="result-save-code">SAVE GOAL / HOME MISSION</div>
-          <div class="result-save-title" id="timeSaveTitle">この目標をホームに保存しますか？</div>
-          <p class="result-save-text" id="timeSaveText">保存すると、残り日数と使える時間をホームからすぐ確認できます。</p>
-          <div class="result-save-actions">
-            <button class="result-save-primary" type="button" onclick="saveTimeResultAndHome()">保存してホームへ</button>
-            <button class="result-save-skip" type="button" onclick="discardTimeResultAndHome()">保存せずホームへ</button>
-          </div>
-        </div>
 
         <div class="result-actions single">
           <button class="btn-again" onclick="go(5)">条件を変えてもう一度計測する</button>
@@ -3545,11 +3549,12 @@ function renderSavedMissions(){
   missions.forEach(mission=>{
     const summary=calculateSavedMission(mission);
     const isExam=normalizeGoalType(mission.type)==="okinawa_exam";
+    const isCombinedExam=isExam&&!!savedTarget;
     const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
-    const card=document.createElement("div");card.className="mission-card";
+    const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":"");
     card.style.setProperty("--mission",accent);
     card.style.setProperty("--mission-glow","color-mix(in srgb,"+accent+" 20%,transparent)");
-    const open=document.createElement("button");open.className="mission-open";open.type="button";
+    const open=document.createElement("button");open.className="mission-open"+(isCombinedExam?" without-icon":"");open.type="button";
     const icon=document.createElement("div");icon.className="mission-icon";icon.setAttribute("aria-hidden","true");
     icon.innerHTML=isExam
       ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/></svg>'
@@ -3566,8 +3571,8 @@ function renderSavedMissions(){
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHours(summary.total)+"<small>時間</small>";
     stats.append(dayStat,hourStat);body.append(code,name,date,stats);
-    if(isExam&&savedTarget)appendTargetSnapshot(body,savedTarget);
-    open.append(icon,body);
+    if(isCombinedExam)appendTargetSnapshot(body,savedTarget);
+    if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標");
     card.append(open);list.appendChild(card);
