@@ -826,26 +826,48 @@ input{font-family:inherit}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
 
-/* 保存したTIME SCAN目標 */ 
-.saved-missions{margin-top:14px;padding:15px;border:1px solid rgba(76,195,255,.24);border-radius:17px;background:rgba(17,25,49,.76)}
-.saved-missions[hidden]{display:none}
-.saved-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.saved-head-title{font-size:14px;font-weight:900}
-.saved-head-title small{display:block;font-family:var(--num);font-size:8px;letter-spacing:.19em;color:var(--time);margin-bottom:2px}
-.saved-count{font-family:var(--num);font-size:10px;font-weight:700;color:var(--soft)}
-.saved-list{display:grid;gap:8px}
-.mission-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:7px;padding:11px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(155deg,var(--panel-2),var(--panel))}
-.mission-open{min-width:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:0}
-.mission-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.15em;color:var(--time);margin-bottom:2px}
-.mission-name{font-size:13px;font-weight:900;line-height:1.4;overflow-wrap:anywhere}
-.mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
-.mission-stats{display:flex;gap:12px;margin-top:8px}
-.mission-stat{font-family:var(--num);font-size:15px;font-weight:700;color:var(--time);white-space:nowrap}
+/* 保存したTIME SCAN目標：小さな一覧ではなく、ホームの第3・第4パネルとして表示 */
+.saved-list{display:grid;gap:12px;margin-top:12px}
+.saved-list[hidden]{display:none}
+.mission-card{
+  --choice:var(--time);--choice-glow:var(--time-glow);position:relative;overflow:hidden;min-height:188px;padding:18px;border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(155deg,var(--panel-2),var(--panel));box-shadow:0 10px 28px rgba(0,0,0,.18);transition:border-color .2s,transform .15s,box-shadow .2s;
+}
+.mission-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,var(--choice-glow),transparent 52%)}
+.mission-card>*{position:relative;z-index:1}
+.mission-open{display:block;width:100%;min-height:150px;padding:0 58px 0 0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
+.mission-code{font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--time);margin-bottom:6px}
+.mission-name{font-size:20px;font-weight:900;line-height:1.35;overflow-wrap:anywhere}
+.mission-date{font-size:11px;color:var(--soft);margin-top:5px}
+.mission-stats{display:flex;gap:16px;margin-top:17px}
+.mission-stat{font-family:var(--num);font-size:23px;font-weight:700;color:var(--time);white-space:nowrap}
 .mission-stat:last-child{color:var(--amber)}
-.mission-stat small{font-family:var(--jp);font-size:8.5px;color:var(--soft);font-weight:700;margin-left:2px}
-.mission-delete{width:36px;height:36px;align-self:center;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--soft);cursor:pointer;display:grid;place-items:center}
+.mission-stat small{font-family:var(--jp);font-size:10px;color:var(--soft);font-weight:700;margin-left:3px}
+.mission-delete{position:absolute;right:18px;top:18px;width:42px;height:42px;border:1px solid var(--line);border-radius:11px;background:rgba(12,17,31,.36);color:var(--soft);cursor:pointer;display:grid;place-items:center;overflow:hidden}
 .mission-delete:hover{border-color:var(--ge);color:var(--ge)}
-.mission-add{width:100%;min-height:42px;margin-top:9px;border:1px dashed rgba(76,195,255,.42);border-radius:10px;background:rgba(76,195,255,.05);color:var(--time);font-size:11.5px;font-weight:900;cursor:pointer}
+.mission-delete::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ge);opacity:0;transform:scaleY(0);transform-origin:bottom;pointer-events:none}
+.mission-delete svg{position:relative;z-index:1}
+.mission-delete.holding{border-color:var(--ge);color:#fff}
+.mission-delete.holding::after{opacity:.28;animation:missionHold .85s linear forwards}
+@keyframes missionHold{to{transform:scaleY(1)}}
+.mission-delete-hint{position:absolute;right:12px;bottom:10px;font-family:var(--num);font-size:7px;font-weight:700;letter-spacing:.12em;color:var(--soft);pointer-events:none}
+@media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}}
+
+/* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
+.hub-scroll.has-saved{display:flex;flex-direction:column;padding-top:14px}
+.hub-scroll.has-saved .hub-head{display:none}
+.hub-scroll.has-saved .saved-list{order:1;margin-top:0}
+.hub-scroll.has-saved .scan-choices{order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.hub-scroll.has-saved .hub-footer{order:3;margin-top:16px}
+.hub-scroll.has-saved .scan-choice{min-width:0;padding:12px;border-radius:14px;box-shadow:0 7px 20px rgba(0,0,0,.16)}
+.hub-scroll.has-saved .choice-top{gap:8px;margin-bottom:9px}
+.hub-scroll.has-saved .choice-icon{width:34px;height:34px;flex-basis:34px;box-shadow:0 0 12px var(--choice-glow)}
+.hub-scroll.has-saved .choice-icon svg{width:18px;height:18px}
+.hub-scroll.has-saved .choice-code{font-size:7px;letter-spacing:.14em;white-space:nowrap}
+.hub-scroll.has-saved .choice-name{font-size:15px;line-height:1.25;margin-top:2px;white-space:nowrap}
+.hub-scroll.has-saved .choice-desc{display:none}
+.hub-scroll.has-saved .choice-btn{min-height:36px;padding:0 5px;border-radius:9px;font-size:10px;gap:4px;white-space:nowrap}
+.hub-scroll.has-saved .choice-btn svg{width:12px;height:12px}
 
 /* TIME SCANの上部レール */
 .time-rail .rail-back{border-color:rgba(76,195,255,.28)}
@@ -1108,14 +1130,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           </article>
         </div>
 
-        <section class="saved-missions" id="savedMissions" hidden aria-label="保存した目標">
-          <div class="saved-head">
-            <h2 class="saved-head-title"><small>SAVED MISSIONS</small>保存した目標</h2>
-            <span class="saved-count" id="savedMissionCount">0 GOALS</span>
-          </div>
-          <div class="saved-list" id="savedMissionList"></div>
-          <button class="mission-add" onclick="startTimeMission()">＋ 新しい目標を追加する</button>
-        </section>
+        <div class="saved-list" id="savedMissionList" hidden aria-label="保存した目標"></div>
 
         <div class="hub-footer">
           <div class="title-foot">沖縄県立高校入試 合格判定シミュレーター</div>
@@ -3264,13 +3279,11 @@ function calculateSavedMission(mission){
   return{valid:true,expired,days:records.length,total,target,weekdays,offdays};
 }
 function renderSavedMissions(){
-  const section=document.getElementById("savedMissions");
-  if(!section)return;
   const list=document.getElementById("savedMissionList");
+  if(!list)return;
   const missions=readTimeMissions().slice().sort((a,b)=>String(a.targetDate).localeCompare(String(b.targetDate)));
-  section.hidden=missions.length===0;
+  list.hidden=missions.length===0;
   document.querySelector(".hub-scroll").classList.toggle("has-saved",missions.length>0);
-  document.getElementById("savedMissionCount").textContent=missions.length+" GOAL"+(missions.length===1?"":"S");
   list.innerHTML="";
   missions.forEach(mission=>{
     const summary=calculateSavedMission(mission);
@@ -3289,14 +3302,31 @@ function renderSavedMissions(){
     hourStat.innerHTML=formatTimeHours(summary.total)+"<small>時間</small>";
     stats.append(dayStat,hourStat);open.append(code,name,date,stats);
     open.onclick=()=>loadTimeMission(mission.id);
-    const del=document.createElement("button");del.className="mission-delete";del.type="button";del.setAttribute("aria-label",(mission.goalName||"目標")+"を削除");
+    const del=document.createElement("button");del.className="mission-delete";del.type="button";del.setAttribute("aria-label",(mission.goalName||"目標")+"を長押しして削除");
     del.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>';
-    del.onclick=()=>deleteTimeMission(mission.id,mission.goalName||"この目標");
-    card.append(open,del);list.appendChild(card);
+    bindMissionDelete(del,mission.id,mission.goalName||"この目標");
+    const hint=document.createElement("span");hint.className="mission-delete-hint";hint.textContent="長押しで削除";
+    card.append(open,del,hint);list.appendChild(card);
   });
 }
-function deleteTimeMission(id,name){
-  if(!window.confirm(name+"を削除しますか？"))return;
+function bindMissionDelete(button,id,name){
+  let timer=null,deleted=false;
+  const cancel=()=>{if(timer)clearTimeout(timer);timer=null;button.classList.remove("holding")};
+  button.addEventListener("pointerdown",event=>{
+    event.preventDefault();
+    deleted=false;cancel();button.classList.add("holding");
+    try{button.setPointerCapture(event.pointerId)}catch(e){}
+    timer=setTimeout(()=>{timer=null;deleted=true;button.classList.remove("holding");deleteTimeMission(id,name,true)},850);
+  });
+  ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(type=>button.addEventListener(type,cancel));
+  button.addEventListener("click",event=>{
+    event.preventDefault();event.stopPropagation();
+    if(!deleted)toast("ゴミ箱を長押しすると削除できます");
+    deleted=false;
+  });
+}
+function deleteTimeMission(id,name,confirmed){
+  if(!confirmed&&!window.confirm(name+"を削除しますか？"))return;
   const missions=readTimeMissions().filter(item=>item.id!==id);
   if(writeTimeMissions(missions)){
     if(currentTimeMissionId===id)currentTimeMissionId=null;
