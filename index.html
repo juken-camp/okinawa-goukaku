@@ -19,7 +19,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="合格判定">
 <meta name="msapplication-TileColor" content="#0c111f">
-<link rel="manifest" id="appManifest" href="/manifest.webmanifest">
+<link rel="manifest" id="appManifest" href="/manifest.webmanifest?build=20260713-21">
 <script>
 /* 外部ファイルを変更しなくても、ホーム画面名をこの1枚のHTMLから統一する。 */
 (()=>{
@@ -4158,7 +4158,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/service-worker.js?build=20260713-20", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260713-21", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
