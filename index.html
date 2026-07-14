@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-46 / PIN-EXAM-PANEL-FIRST -->
+<!-- BUILD: 20260714-47 / FIRST-VISIT-GOAL-WELCOME -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -887,6 +887,49 @@ input{font-family:inherit}
   color:var(--soft);font-size:8px;letter-spacing:.04em;text-decoration:underline;text-decoration-color:rgba(144,155,190,.35);text-underline-offset:3px;cursor:pointer
 }
 .photo-credits-link:hover{color:var(--mid)}
+
+/* 初回だけ、受験以外にも自由に使えることを伝える。 */
+.goal-welcome-overlay{
+  position:fixed;z-index:1300;inset:0;display:grid;place-items:center;padding:18px;
+  background:rgba(3,7,18,.78);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)
+}
+.goal-welcome-overlay[hidden]{display:none}
+.goal-welcome-panel{
+  position:relative;width:min(370px,100%);overflow:hidden;padding:23px 20px 18px;
+  border:1px solid rgba(76,195,255,.3);border-radius:20px;
+  background:linear-gradient(155deg,rgba(30,44,76,.98),rgba(13,22,42,.99));
+  box-shadow:0 24px 78px rgba(0,0,0,.55),0 0 34px rgba(76,195,255,.1);
+  animation:goalWelcomeIn .42s cubic-bezier(.2,.82,.28,1.12) both
+}
+.goal-welcome-panel::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 15% 0,rgba(76,195,255,.18),transparent 43%),radial-gradient(circle at 100% 100%,rgba(190,142,255,.1),transparent 45%)
+}
+.goal-welcome-panel>*{position:relative;z-index:1}
+@keyframes goalWelcomeIn{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:none}}
+.goal-welcome-close{
+  position:absolute;z-index:2;top:11px;right:11px;width:31px;height:31px;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:9px;background:rgba(7,13,28,.45);color:var(--mid);font-size:19px;line-height:1;cursor:pointer
+}
+.goal-welcome-mark{
+  width:45px;height:45px;display:grid;place-items:center;margin-bottom:11px;border:1px solid rgba(76,195,255,.5);border-radius:14px;
+  color:var(--time);background:rgba(76,195,255,.09);box-shadow:0 0 22px rgba(76,195,255,.13)
+}
+.goal-welcome-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.22em;color:var(--time)}
+.goal-welcome-title{margin:5px 32px 0 0;font-size:21px;font-weight:900;line-height:1.4;letter-spacing:.01em;color:var(--ink)}
+.goal-welcome-title span{color:#b9e9ff}
+.goal-welcome-lead{margin:11px 0 0;font-size:11px;line-height:1.75;color:var(--mid)}
+.goal-welcome-lead strong{color:var(--ink)}
+.goal-welcome-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.goal-welcome-examples span{padding:5px 8px;border:1px solid rgba(76,195,255,.2);border-radius:999px;background:rgba(76,195,255,.055);font-size:8.5px;font-weight:800;color:#a9badf;white-space:nowrap}
+.goal-welcome-family{margin:12px 0 0;padding:9px 10px;border-left:2px solid rgba(76,195,255,.55);background:rgba(7,13,28,.25);font-size:9.5px;line-height:1.65;color:var(--mid)}
+.goal-welcome-actions{display:grid;gap:8px;margin-top:15px}
+.goal-welcome-primary,.goal-welcome-secondary{min-height:46px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer}
+.goal-welcome-primary{border:1px solid rgba(76,195,255,.75);background:linear-gradient(180deg,rgba(42,151,211,.36),rgba(28,91,139,.3));color:#8edcff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 20px rgba(76,195,255,.09)}
+.goal-welcome-secondary{min-height:36px;border:0;background:transparent;color:var(--soft);font-size:10px}
+.goal-welcome-primary:active,.goal-welcome-secondary:active{transform:scale(.98)}
+body.goal-welcome-open{overflow:hidden}
+@media(max-width:370px){.goal-welcome-panel{padding:20px 17px 15px}.goal-welcome-title{font-size:19px}.goal-welcome-lead{font-size:10.5px}}
 
 /* スマートフォンで通常のブラウザから開いた時だけ表示するホーム画面追加案内 */
 .home-install{
@@ -1897,6 +1940,25 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
 <!-- トースト -->
 <div class="toast" id="toast"></div>
+
+<!-- 初回アクセス：受験以外の目標にも使えることを伝える -->
+<div class="goal-welcome-overlay" id="goalWelcome" hidden role="dialog" aria-modal="true" aria-labelledby="goalWelcomeTitle" onclick="goalWelcomeBackdropClose(event)">
+  <section class="goal-welcome-panel">
+    <button class="goal-welcome-close" id="goalWelcomeClose" type="button" onclick="closeGoalWelcome()" aria-label="閉じる">×</button>
+    <div class="goal-welcome-mark" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2M12 2v2M20 12h2M2 12h2"/></svg>
+    </div>
+    <div class="goal-welcome-code">WELCOME / MY GOAL</div>
+    <h2 class="goal-welcome-title" id="goalWelcomeTitle">受験だけじゃない。<br><span>あなたや家族の目標にも。</span></h2>
+    <p class="goal-welcome-lead">試験、誕生日、ライブ、旅行、記念日。<strong>好きな予定を入れて大丈夫です。</strong>目標日までの日数と、目標に使える時間を毎日確認できます。</p>
+    <div class="goal-welcome-examples" aria-label="目標の例"><span>資格・検定</span><span>誕生日</span><span>ライブ・旅行</span><span>家族の記念日</span></div>
+    <p class="goal-welcome-family">親子でそれぞれの目標を設定して、これからの時間を一緒に話すきっかけにも。</p>
+    <div class="goal-welcome-actions">
+      <button class="goal-welcome-primary" type="button" onclick="startCustomGoalFromWelcome()">自分の目標をつくる&nbsp; →</button>
+      <button class="goal-welcome-secondary" type="button" onclick="closeGoalWelcome()">まずはホームを見る</button>
+    </div>
+  </section>
+</div>
 
 <!-- FX：スタンプ着弾フラッシュ -->
 <div class="fx-flash" id="fxFlash" aria-hidden="true"></div>
@@ -4509,6 +4571,37 @@ let deferredHomeInstallPrompt=null;
 function isHomeScreenMode(){
   return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
 }
+const GOAL_WELCOME_SEEN_KEY="goal_welcome_seen_v1";
+let goalWelcomeReturnFocus=null;
+function hasSeenGoalWelcome(){
+  try{return localStorage.getItem(GOAL_WELCOME_SEEN_KEY)==="1"}catch(e){return false}
+}
+function markGoalWelcomeSeen(){try{localStorage.setItem(GOAL_WELCOME_SEEN_KEY,"1")}catch(e){}}
+function shouldShowGoalWelcome(){
+  if(scene!==0||isHomeScreenMode()||hasSeenGoalWelcome())return false;
+  if(readTimeMissions().length||readSavedTargetResult())return false;
+  return true;
+}
+function openGoalWelcome(){
+  const overlay=document.getElementById("goalWelcome");
+  if(!overlay||!shouldShowGoalWelcome())return;
+  goalWelcomeReturnFocus=document.activeElement;
+  overlay.hidden=false;document.body.classList.add("goal-welcome-open");
+  setTimeout(()=>document.getElementById("goalWelcomeClose")?.focus(),80);
+}
+function closeGoalWelcome(){
+  const overlay=document.getElementById("goalWelcome");
+  if(!overlay||overlay.hidden)return;
+  markGoalWelcomeSeen();overlay.hidden=true;document.body.classList.remove("goal-welcome-open");
+  if(goalWelcomeReturnFocus&&goalWelcomeReturnFocus.focus)goalWelcomeReturnFocus.focus();
+}
+function goalWelcomeBackdropClose(event){if(event.target===event.currentTarget)closeGoalWelcome()}
+function startCustomGoalFromWelcome(){
+  closeGoalWelcome();startTimeMission();
+  const select=document.getElementById("timeGoalType");
+  select.value="custom";select.dispatchEvent(new Event("change",{bubbles:true}));
+  setTimeout(()=>document.getElementById("timeGoalName")?.focus(),120);
+}
 function isMobileBrowser(){
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(window.matchMedia("(max-width: 820px) and (pointer: coarse)").matches);
 }
@@ -4550,6 +4643,8 @@ window.addEventListener("appinstalled",()=>{
 });
 window.matchMedia("(display-mode: standalone)").addEventListener?.("change",updateHomeInstallGuide);
 updateHomeInstallGuide();
+setTimeout(openGoalWelcome,650);
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeGoalWelcome()});
 
 /* FXモード：前回の設定を復元。画面復帰後も次の操作で音声を再開する。 */
 (function(){
@@ -4572,7 +4667,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-46", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-47", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
