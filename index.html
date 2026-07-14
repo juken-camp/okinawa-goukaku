@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-34 / COMPACT-JUDGMENT-LAYOUT -->
+<!-- BUILD: 20260714-35 / GOAL-TIME-MODES -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -1007,6 +1007,7 @@ input{font-family:inherit}
 .hub-scroll.has-saved .choice-icon svg{width:18px;height:18px}
 .hub-scroll.has-saved .choice-code{font-size:7px;letter-spacing:.14em;white-space:nowrap}
 .hub-scroll.has-saved .choice-name{font-size:15px;line-height:1.25;margin-top:2px;white-space:nowrap}
+.hub-scroll.has-saved .scan-choice.time .choice-name{font-size:14px;letter-spacing:-.025em}
 .hub-scroll.has-saved .choice-desc{display:none}
 .hub-scroll.has-saved .choice-btn{min-height:36px;padding:0 5px;border-radius:9px;font-size:10px;gap:4px;white-space:nowrap}
 .hub-scroll.has-saved .choice-btn svg{width:12px;height:12px}
@@ -1064,6 +1065,14 @@ input{font-family:inherit}
 .save-hint svg{color:var(--time)}
 .check-row{display:flex;align-items:flex-start;gap:9px;margin-top:10px;font-size:11px;color:var(--mid);cursor:pointer}
 .check-row input{width:18px;height:18px;accent-color:var(--time);flex:0 0 auto;margin-top:1px}
+.goal-examples{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:-3px 0 12px}
+.goal-examples[hidden]{display:none}
+.goal-examples-label{font-size:9px;font-weight:700;color:var(--soft);margin-right:1px}
+.goal-example{
+  min-height:28px;padding:0 9px;border:1px solid rgba(76,195,255,.24);border-radius:999px;background:rgba(76,195,255,.055);
+  color:var(--mid);font-size:9.5px;font-weight:700;cursor:pointer
+}
+.goal-example:active{transform:scale(.97)}
 
 .time-live{
   display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:12px;border:1px solid rgba(76,195,255,.28);border-radius:16px;overflow:hidden;
@@ -1073,6 +1082,19 @@ input{font-family:inherit}
 .time-live-label{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.16em;color:var(--soft)}
 .time-live-value{font-family:var(--num);font-size:27px;font-weight:700;line-height:1.15;color:var(--time);font-variant-numeric:tabular-nums;text-shadow:0 0 16px var(--time-glow)}
 .time-live-value small{font-family:var(--jp);font-size:10px;color:var(--mid);margin-left:3px}
+
+.time-scope-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.time-scope-btn{
+  min-height:54px;padding:8px 9px;border:1px solid var(--line);border-radius:11px;background:var(--bg1);color:var(--soft);
+  text-align:left;cursor:pointer;transition:border-color .15s,color .15s,background .15s
+}
+.time-scope-btn b{display:block;font-size:12px;line-height:1.3}
+.time-scope-btn small{display:block;margin-top:3px;font-size:8.5px;font-weight:700;line-height:1.25;color:var(--soft)}
+.time-scope-btn.on{border-color:var(--time);background:var(--time-glow);color:var(--time)}
+.time-scope-btn.on small{color:var(--mid)}
+.time-all-note{padding:11px 12px;border:1px solid rgba(76,195,255,.22);border-radius:10px;background:rgba(76,195,255,.055);font-size:10.5px;line-height:1.6;color:var(--mid)}
+.time-all-note[hidden],#timeUsableControls[hidden],#timeAllocationSection[hidden],#timeImpactResultCard[hidden],#timeAllocationResultCard[hidden]{display:none}
+.time-input-method-label{margin:1px 0 7px;font-size:9.5px;font-weight:700;color:var(--soft)}
 
 .time-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
 .time-mode-tabs.three{grid-template-columns:repeat(3,1fr)}
@@ -1250,7 +1272,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <div class="hub-head">
           <div class="hub-kicker">OKINAWA EXAM CONTROL</div>
           <h1 class="hub-title">合格までを、<br><em>2つのスキャン</em>で測る。</h1>
-          <p class="hub-lead">現在地と残り時間。確認したい方を選んでください。</p>
+          <p class="hub-lead">合格可能性と、目標までの時間。確認したい方を選んでください。</p>
         </div>
 
         <div class="scan-choices">
@@ -1272,10 +1294,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               <div class="choice-icon" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2M8 2h8"/></svg>
               </div>
-              <div><div class="choice-code">TIME SCAN</div><h2 class="choice-name">残り時間</h2></div>
+              <div><div class="choice-code">TIME SCAN</div><h2 class="choice-name">目標までの時間</h2></div>
             </div>
-            <p class="choice-desc">目標日までの日数と、自分が使える時間を計算する。</p>
-            <button class="choice-btn" onclick="startTimeMission()">残り時間を計測する
+            <p class="choice-desc">入試・試験・誕生日など、目標日までの日数と使える時間を計測する。</p>
+            <button class="choice-btn" onclick="startTimeMission()">目標を設定する
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </article>
@@ -1583,12 +1605,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
       </div>
     </section>
 
-    <!-- ============ SCENE 5：残り時間の設定 ============ -->
+    <!-- ============ SCENE 5：目標までの時間を設定 ============ -->
     <section class="scene time-scene" id="sceneTimeSetup">
       <div class="scene-scroll" id="timeSetupScroll">
         <div class="eyebrow">TIME SCAN / SET CONDITIONS</div>
-        <h2 class="scene-h">残り時間をセット</h2>
-        <p class="scene-sub">目標日と使える時間を自由に変えて、残り時間を確認します</p>
+        <h2 class="scene-h">目標までの時間を設定</h2>
+        <p class="scene-sub">目標日と時間の数え方を選び、残り日数と時間を確認します</p>
 
         <div class="time-live" aria-live="polite">
           <div class="time-live-cell">
@@ -1607,13 +1629,20 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <span>目標の種類</span>
             <select class="time-select" id="timeGoalType">
               <option value="okinawa_exam" selected>沖縄県立高校入試</option>
-              <option value="custom">その他</option>
+              <option value="custom">自分の目標</option>
             </select>
           </label>
           <label class="time-field">
             <span>ホームに表示する名前 <small>自由に変更できます</small></span>
             <input class="time-input" id="timeGoalName" type="text" value="沖縄県立高校入試" placeholder="例：英検準2級・定期テスト・仕事の締切" maxlength="40" autocomplete="off">
           </label>
+          <div class="goal-examples" id="timeGoalExamples" hidden aria-label="自分の目標の例">
+            <span class="goal-examples-label">たとえば</span>
+            <button class="goal-example" type="button" onclick="applyGoalExample('100歳の誕生日')">100歳の誕生日</button>
+            <button class="goal-example" type="button" onclick="applyGoalExample('資格試験')">資格試験</button>
+            <button class="goal-example" type="button" onclick="applyGoalExample('旅行・イベント')">旅行・イベント</button>
+            <button class="goal-example" type="button" onclick="applyGoalExample('記念日')">記念日</button>
+          </div>
           <div class="time-field-grid" id="timeDateGradeGrid">
             <label class="time-field">
               <span>目標日</span>
@@ -1635,7 +1664,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </section>
 
         <section class="time-section">
-          <div class="time-section-h"><h3 class="time-section-title">使える時間を入力</h3><span class="time-section-code">02 / HOURS</span></div>
+          <div class="time-section-h"><h3 class="time-section-title">時間の数え方</h3><span class="time-section-code">02 / HOURS</span></div>
+          <div class="time-scope-tabs" role="tablist" aria-label="時間の数え方">
+            <button class="time-scope-btn" type="button" data-time-scope="all" onclick="switchTimeScope('all')"><b>すべての時間</b><small>1日24時間で数える</small></button>
+            <button class="time-scope-btn on" type="button" data-time-scope="usable" onclick="switchTimeScope('usable')"><b>使える時間</b><small>生活に合わせて数える</small></button>
+          </div>
+          <div class="time-all-note" id="timeAllHoursNote" hidden>目標日までの時間を、1日24時間としてそのまま合計します。</div>
+          <div id="timeUsableControls">
+          <div class="time-input-method-label">使える時間の入力方法</div>
           <div class="time-mode-tabs" role="tablist" aria-label="時間の入力方法">
             <button class="time-mode-btn on" data-time-mode="average" onclick="switchTimeMode('average')">1日平均</button>
             <button class="time-mode-btn" data-time-mode="split" onclick="switchTimeMode('split')">平日・土日祝</button>
@@ -1688,9 +1724,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <span class="impact-minute-input"><input type="number" min="0" max="1440" step="1" value="30" inputmode="numeric" data-impact-minutes aria-label="1日あたり増やす時間（分）"><span>分</span></span>
           </div>
           <div class="time-impact-preview" id="impactPreview">目標日を入力すると、30分増やした効果が表示されます。</div>
+          </div>
         </section>
 
-        <section class="time-section">
+        <section class="time-section" id="timeAllocationSection">
           <div class="time-section-h"><h3 class="time-section-title">時間を配分</h3><span class="time-section-code">03 / ALLOCATION</span></div>
           <p class="subject-head-note">項目名を自由に編集できます。比率の合計は自動で100%に換算します。</p>
           <div id="subjectControls"></div>
@@ -1726,7 +1763,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <div class="time-orbit" id="timeOrbit">
             <div class="time-orbit-center">
               <div class="time-total-num" id="trTotalHours">0</div>
-              <div class="time-total-unit">使える合計時間</div>
+              <div class="time-total-unit" id="timeTotalUnit">使える合計時間</div>
               <div class="time-days-left" id="trDaysLeft">あと 0 DAYS</div>
             </div>
           </div>
@@ -1741,7 +1778,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <div class="time-metric"><div class="tm-code">DAILY AVG</div><div class="tm-value" id="trDailyAvg">0</div><div class="tm-label">1日平均時間</div></div>
         </div>
 
-        <div class="card">
+        <div class="card" id="timeImpactResultCard">
           <div class="card-h" id="trImpactHeading">+30 MINUTES / 30分増やした効果</div>
           <div class="impact-minute-control result-impact-control">
             <span class="impact-minute-label">1日あたり増やす時間<small>CHANGE TO RECALCULATE</small></span>
@@ -1750,7 +1787,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <div class="impact-grid" id="trImpacts"></div>
         </div>
 
-        <div class="card">
+        <div class="card" id="timeAllocationResultCard">
           <div class="card-h">TIME ALLOCATION / 時間の配分</div>
           <div class="time-subject-result" id="trSubjects"></div>
         </div>
@@ -1760,7 +1797,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <div class="time-method-summary" id="trMethod">—</div>
         </div>
 
-        <div class="note-card">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
+        <div class="note-card" id="timeResultNote">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
 
         <div class="result-actions single">
           <button class="btn-again" onclick="go(5)">条件を変えてもう一度計測する</button>
@@ -3268,6 +3305,7 @@ function selectAndJudge(id){
    TIME SCAN ─ ブラウザ内だけで残り日数・時間・教科配分を計算
    ================================================================ */
 let timeMode="average";
+let timeHoursScope="usable";
 const TIME_DEFAULT_VALUES={
   average:2,weekday:1.5,offday:3,
   mon:1.5,tue:1.5,wed:1.5,thu:1.5,fri:1.5,sat:3,sun:3,holiday:3
@@ -3372,8 +3410,16 @@ function updateGoalContext(){
   document.getElementById("timeDateGradeGrid").classList.toggle("single",!usesGrade);
   document.getElementById("timeMemorialRow").hidden=type!=="okinawa_exam";
   document.getElementById("timeYearModeButton").hidden=!usesGrade;
+  document.getElementById("timeGoalExamples").hidden=usesGrade;
   document.querySelector(".time-mode-tabs").classList.toggle("three",!usesGrade);
   if(!usesGrade&&timeMode==="year")switchTimeMode("average");
+}
+function applyGoalExample(name){
+  const input=document.getElementById("timeGoalName");
+  input.value=name;
+  input.focus();
+  updateTimeDock();
+  vibrate(8);
 }
 function updateExamDateStatus(){
   const status=document.getElementById("timeDateStatus");
@@ -3531,7 +3577,9 @@ function calculateSavedMission(mission){
   const offdays=records.length-weekdays;
   const values=Object.assign({},TIME_DEFAULT_VALUES,mission.timeValues||{});
   let total=0;
-  if(mission.mode==="average"){
+  if(mission.hoursScope==="all"){
+    total=records.length*24;
+  }else if(mission.mode==="average"){
     total=records.length*values.average;
   }else if(mission.mode==="split"){
     total=weekdays*values.weekday+offdays*values.offday;
@@ -3649,7 +3697,7 @@ function renderSavedMissions(){
     const code=document.createElement("div");code.className="mission-code";
     if(isCombinedExam)code.textContent="EXAM DATE";
     else if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE");
-    else code.textContent="OTHER GOAL";
+    else code.textContent="MY GOAL";
     const codeRow=document.createElement("div");codeRow.className="mission-code-row";codeRow.appendChild(code);
     if(isCombinedExam){
       const status=document.createElement("span");
@@ -3751,6 +3799,7 @@ function prepareNewTimeGoal(){
   document.getElementById("okinawaMemorial").checked=true;
   timeMode="average";
   switchTimeMode("average");
+  switchTimeScope("usable");
   updateGoalContext();
   applyExamDate(true);
   document.getElementById("timeSetupScroll").scrollTop=0;
@@ -3769,7 +3818,7 @@ function captureTimeMission(){
     type,goalName:document.getElementById("timeGoalName").value.trim()||"目標日",
     targetDate:document.getElementById("timeTargetDate").value,grade,
     examYear:examInfo?examInfo.year:null,manualDate:type==="okinawa_exam"&&timeDateManuallyEdited,
-    memorial:document.getElementById("okinawaMemorial").checked,mode:timeMode,
+    memorial:document.getElementById("okinawaMemorial").checked,mode:timeMode,hoursScope:timeHoursScope,
     timeValues:Object.assign({},TIME_VALUES),yearValues,allocations,subjectWeights,
     impactMinutes:timeImpactMinutes,updatedAt:Date.now()
   };
@@ -3821,6 +3870,7 @@ function loadTimeMission(id){
   timeMode=mission.mode||"average";
   updateGoalContext();
   switchTimeMode(timeMode);
+  switchTimeScope(mission.hoursScope==="all"?"all":"usable");
   updateExamDateStatus();
   if(timeMode==="year")renderYearPeriods();
   updateTimeSimulation();
@@ -3877,6 +3927,14 @@ function switchTimeMode(mode){
   document.querySelectorAll(".time-mode-btn").forEach(btn=>btn.classList.toggle("on",btn.dataset.timeMode===mode));
   document.querySelectorAll(".time-mode-panel").forEach(panel=>panel.classList.toggle("open",panel.dataset.timePanel===mode));
   if(mode==="year")renderYearPeriods();
+  updateTimeSimulation();
+}
+function switchTimeScope(scope){
+  timeHoursScope=scope==="all"?"all":"usable";
+  document.querySelectorAll(".time-scope-btn").forEach(btn=>btn.classList.toggle("on",btn.dataset.timeScope===timeHoursScope));
+  document.getElementById("timeAllHoursNote").hidden=timeHoursScope!=="all";
+  document.getElementById("timeUsableControls").hidden=timeHoursScope!=="usable";
+  document.getElementById("timeAllocationSection").hidden=timeHoursScope!=="usable";
   updateTimeSimulation();
 }
 function renderYearPeriods(){
@@ -4004,7 +4062,9 @@ function calculateTimeSimulation(){
   const weekdays=records.filter(row=>!row.offday).length;
   const offdays=records.length-weekdays;
   let total=0;
-  if(timeMode==="average"){
+  if(timeHoursScope==="all"){
+    total=records.length*24;
+  }else if(timeMode==="average"){
     total=records.length*TIME_VALUES.average;
   }else if(timeMode==="split"){
     total=weekdays*TIME_VALUES.weekday+offdays*TIME_VALUES.offday;
@@ -4021,7 +4081,9 @@ function calculateTimeSimulation(){
   }
   const impacts=[];
   const impactHours=timeImpactMinutes/60;
-  if(timeMode==="average"){
+  if(timeHoursScope==="all"){
+    /* 24時間すべてを数える場合、追加時間のシミュレーションは行わない。 */
+  }else if(timeMode==="average"){
     impacts.push({label:"1日平均を"+timeImpactMinutes+"分増やす",hours:records.length*impactHours});
   }else{
     impacts.push({label:"平日の時間を"+timeImpactMinutes+"分増やす",hours:weekdays*impactHours});
@@ -4029,14 +4091,15 @@ function calculateTimeSimulation(){
   }
   const subjects=readSubjectAllocation(total).map(item=>({name:item.name,ratio:item.ratio,hours:item.hours,color:item.color}));
   let method="";
-  if(timeMode==="average")method="1日平均 "+formatTimeHours(TIME_VALUES.average)+"時間";
-  if(timeMode==="split")method="平日 "+formatTimeHours(TIME_VALUES.weekday)+"時間 / 土日祝 "+formatTimeHours(TIME_VALUES.offday)+"時間";
-  if(timeMode==="weekday")method="曜日ごとの時間（祝日は祝日設定を優先）";
-  if(timeMode==="year")method="学年・年度ごとの平日 / 土日祝設定";
+  if(timeHoursScope==="all")method="すべての時間（1日24時間）";
+  else if(timeMode==="average")method="1日平均 "+formatTimeHours(TIME_VALUES.average)+"時間";
+  else if(timeMode==="split")method="平日 "+formatTimeHours(TIME_VALUES.weekday)+"時間 / 土日祝 "+formatTimeHours(TIME_VALUES.offday)+"時間";
+  else if(timeMode==="weekday")method="曜日ごとの時間（祝日は祝日設定を優先）";
+  else if(timeMode==="year")method="学年・年度ごとの平日 / 土日祝設定";
   return{
     valid:true,target,goal:(document.getElementById("timeGoalName").value.trim()||"目標日"),records,
     days:records.length,weekdays,offdays,total,average:records.length?total/records.length:0,
-    impacts,subjects,method,memorial:document.getElementById("okinawaMemorial").checked
+    impacts,subjects,method,hoursScope:timeHoursScope,memorial:document.getElementById("okinawaMemorial").checked
   };
 }
 function updateTimeSimulation(){
@@ -4104,11 +4167,18 @@ function renderTimeResult(result){
   document.getElementById("trWeekdays").textContent=result.weekdays;
   document.getElementById("trOffdays").textContent=result.offdays;
   document.getElementById("trDailyAvg").textContent=formatTimeHours(result.average)+"h";
+  const allHours=result.hoursScope==="all";
+  document.getElementById("timeTotalUnit").textContent=allHours?"残り合計時間":"使える合計時間";
+  document.getElementById("timeImpactResultCard").hidden=allHours;
+  document.getElementById("timeAllocationResultCard").hidden=allHours;
+  document.getElementById("timeResultNote").textContent=allHours
+    ?"目標日までを1日24時間として合計した目安です。今日を含めず、目標日を含めて計算しています。"
+    :"これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な配分を判定するものではありません。";
   const weekdayPct=result.days?(result.weekdays/result.days)*100:0;
   document.getElementById("timeOrbit").style.setProperty("--weekday-pct",weekdayPct+"%");
   animateTimeTotal(document.getElementById("trTotalHours"),result.total);
 
-  renderTimeImpacts(result);
+  if(!allHours)renderTimeImpacts(result);
 
   const subjects=document.getElementById("trSubjects");
   subjects.innerHTML="";
@@ -4124,9 +4194,13 @@ function renderTimeResult(result){
     row.append(head,track);subjects.appendChild(row);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{fill.style.width=(maxHours?item.hours/maxHours*100:0)+"%"}));
   });
-  document.getElementById("trMethod").textContent=result.method+"。日本の祝日"+(result.memorial?"と沖縄の慰霊の日":"")+"を土日祝側として計算。今日を含めず、目標日を含みます。";
+  document.getElementById("trMethod").textContent=allHours
+    ?result.method+"で計算。今日を含めず、目標日を含みます。"
+    :result.method+"。日本の祝日"+(result.memorial?"と沖縄の慰霊の日":"")+"を土日祝側として計算。今日を含めず、目標日を含みます。";
   document.getElementById("timeSaveTitle").textContent=currentTimeMissionId?"この目標の保存内容を更新しますか？":"この目標をホームに保存しますか？";
-  document.getElementById("timeSaveText").textContent=currentTimeMissionId?"更新すると、変更した日付・時間・配分がホームの目標に反映されます。":"保存すると、残り日数と使える時間をホームからすぐ確認できます。";
+  document.getElementById("timeSaveText").textContent=currentTimeMissionId
+    ?"更新すると、変更した日付と時間の数え方がホームの目標に反映されます。"
+    :(allHours?"保存すると、残り日数と時間をホームからすぐ確認できます。":"保存すると、残り日数と使える時間をホームからすぐ確認できます。");
   document.getElementById("timeResultScroll").scrollTop=0;
 }
 function runTimeScan(){
@@ -4185,10 +4259,12 @@ function initTimeScan(){
     updateGoalContext();
     if(type==="okinawa_exam"){
       document.getElementById("timeGoalName").value="沖縄県立高校入試";
+      switchTimeScope("usable");
       timeDateManuallyEdited=false;
       applyExamDate(true);
     }else{
       document.getElementById("timeGoalName").value="";
+      switchTimeScope("all");
       timeDateManuallyEdited=false;
       timeInternalDateChange=true;target.value="";timeInternalDateChange=false;
       updateExamDateStatus();
@@ -4284,7 +4360,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-34", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-35", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
