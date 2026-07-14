@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<!-- BUILD: 20260714-30 / COMPACT-JUDGMENT-LAYOUT -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -939,7 +940,15 @@ input{font-family:inherit}
 
 /* 毎日見る「入試パネル」：上から目標・期限・残り時間・3判定の順に読む */
 .mission-card.exam-combined{padding:16px 18px}
-.mission-card.exam-combined .mission-code{margin-bottom:5px}
+.mission-card.exam-combined .mission-code{margin-bottom:0}
+.mission-card.exam-combined .mission-code-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px}
+.mission-card.exam-combined .mission-status-chip{
+  flex:0 0 auto;padding:2px 7px;border:1px solid color-mix(in srgb,var(--mission) 38%,var(--line));border-radius:999px;
+  background:color-mix(in srgb,var(--mission) 7%,transparent);font-family:var(--num);font-size:7px;font-weight:700;
+  line-height:1.4;letter-spacing:.11em;color:var(--mission)
+}
+.mission-card.exam-combined .mission-status-chip.confirmed{--mission:#3ddc84}
+.mission-card.exam-combined .mission-status-chip.edited{--mission:#4cc3ff}
 .mission-card.exam-combined .mission-role{margin:0 0 2px;font-size:9px;letter-spacing:.06em}
 .mission-card.exam-combined .mission-name{font-size:21px;line-height:1.28}
 .mission-card.exam-combined .mission-date{margin-top:9px;font-size:10px}
@@ -951,7 +960,7 @@ input{font-family:inherit}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
 .mission-card.exam-combined .unified-judgments .mission-target-metric{
-  display:flex;flex-direction:column;min-width:0;min-height:68px;padding:8px 8px 7px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;min-width:0;min-height:50px;padding:7px 8px;
   border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 24%,var(--line));border-radius:9px;
   background:rgba(7,13,28,.28)
 }
@@ -964,16 +973,21 @@ input{font-family:inherit}
   display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;
   font-size:8px;line-height:1.2;color:var(--soft);white-space:normal
 }
-.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:14px;line-height:1.08;letter-spacing:.01em}
-.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:17px}
-.mission-card.exam-combined .unified-judgments .mission-target-gap{width:auto;margin:auto 0 0;padding-top:5px;text-align:left;font-size:7px;line-height:1.2;white-space:nowrap}
-.mission-card.exam-combined .unified-judgments .mission-target-gap strong{font-size:8.5px}
+.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:13.5px;line-height:1.08;letter-spacing:.01em}
+.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:16px}
+.mission-card.exam-combined .unified-judgments .mission-target-gap{
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;width:auto;margin:0;padding:0;
+  text-align:right;font-size:6.5px;line-height:1.15;white-space:nowrap
+}
+.mission-card.exam-combined .unified-judgments .mission-target-gap strong{font-size:10px;line-height:1.15}
 @media(max-width:370px){
   .mission-card.exam-combined{padding:15px 16px}
   .mission-card.exam-combined .mission-name{font-size:19px}
   .mission-card.exam-combined .mission-stat{font-size:28px}
   .mission-card.exam-combined .unified-judgments .mission-target-breakdown{gap:5px}
-  .mission-card.exam-combined .unified-judgments .mission-target-metric{padding:7px 6px 6px}
+  .mission-card.exam-combined .unified-judgments .mission-target-metric{gap:4px;padding:7px 6px}
+  .mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:12.5px}
+  .mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:15px}
 }
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
@@ -3631,8 +3645,17 @@ function renderSavedMissions(){
       :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/><path d="M12 5.5v1M12 13.5v1M7.5 10h1M15.5 10h1"/></svg>';
     const body=document.createElement("div");body.className="mission-body";
     const code=document.createElement("div");code.className="mission-code";
-    if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE / PREDICTED");
+    if(isCombinedExam)code.textContent="EXAM DATE";
+    else if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE / PREDICTED");
     else code.textContent="OTHER GOAL";
+    const codeRow=document.createElement("div");codeRow.className="mission-code-row";codeRow.appendChild(code);
+    if(isCombinedExam){
+      const status=document.createElement("span");
+      const statusType=mission.manualDate?"edited":(Number(mission.examYear)===2027?"confirmed":"predicted");
+      status.className="mission-status-chip "+statusType;
+      status.textContent=statusType.toUpperCase();
+      codeRow.appendChild(status);
+    }
     const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
     const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
     const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで"+(isExam&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
@@ -3641,7 +3664,7 @@ function renderSavedMissions(){
     dayStat.innerHTML=summary.expired?"終了":formatTimeHeadlineHours(summary.days)+"<small>日</small>";
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHeadlineHours(summary.total)+"<small>時間</small>";
-    stats.append(dayStat,hourStat);body.appendChild(code);if(isCombinedExam)body.appendChild(role);body.append(name,date,stats);
+    stats.append(dayStat,hourStat);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,date,stats);
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
@@ -4259,7 +4282,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260713-29", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-30", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
