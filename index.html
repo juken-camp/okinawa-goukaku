@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-32 / COMPACT-JUDGMENT-LAYOUT -->
+<!-- BUILD: 20260714-33 / COMPACT-JUDGMENT-LAYOUT -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -943,9 +943,9 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-code{margin-bottom:0}
 .mission-card.exam-combined .mission-code-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px}
 .mission-card.exam-combined .mission-status-chip{
-  flex:0 0 auto;padding:2px 7px;border:1px solid color-mix(in srgb,var(--mission) 38%,var(--line));border-radius:999px;
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:18px;padding:1px 7px 0;border:1px solid color-mix(in srgb,var(--mission) 38%,var(--line));border-radius:999px;
   background:color-mix(in srgb,var(--mission) 7%,transparent);font-family:var(--num);font-size:7px;font-weight:700;
-  line-height:1.4;letter-spacing:.11em;color:var(--mission)
+  line-height:1;letter-spacing:.11em;color:var(--mission)
 }
 .mission-card.exam-combined .mission-status-chip.confirmed{--mission:#3ddc84}
 .mission-card.exam-combined .mission-status-chip.edited{--mission:#4cc3ff}
@@ -955,12 +955,12 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-stats{align-items:flex-end;gap:21px;margin:4px 0 1px}
 .mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
 .mission-card.exam-combined .mission-stat small{font-size:10px;margin-left:4px}
-.mission-card.exam-combined .mission-target-snapshot.unified-judgments{display:block;margin-top:12px;padding-top:11px}
+.mission-card.exam-combined .mission-target-snapshot.unified-judgments{display:block;margin-top:12px;padding-top:7px}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.22fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
 .mission-card.exam-combined .unified-judgments .mission-target-metric{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;min-width:0;min-height:50px;padding:7px 8px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;min-width:0;min-height:46px;padding:7px 8px;
   border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 24%,var(--line));border-radius:9px;
   background:rgba(7,13,28,.28)
 }
@@ -4282,7 +4282,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-32", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-33", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
