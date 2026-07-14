@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-36 / GOAL-TIME-MODES -->
+<!-- BUILD: 20260714-37 / RAW-GRADE-AND-WEIGHTED-SCORE -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -444,7 +444,7 @@ input{font-family:inherit}
 
 /* 個別調整：教科ピル（5教科／実技で分ける） */
 .gy-grp-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--soft);margin:16px 2px 8px}
-.gy-grp-lbl .gy-x{font-family:var(--num);font-size:8.5px;color:var(--amber);margin-left:4px;letter-spacing:.02em}
+.gy-grp-lbl .gy-x{font-family:var(--jp);font-size:8.5px;color:var(--amber);margin-left:6px;letter-spacing:.02em}
 .gy-pills{display:grid;gap:7px}
 #gyPills5{grid-template-columns:repeat(5,1fr)}
 #gyPillsA{grid-template-columns:repeat(4,1fr)}
@@ -453,11 +453,15 @@ input{font-family:inherit}
   padding:9px 4px;border-radius:11px;cursor:pointer;white-space:nowrap;min-width:0;
   border:1px solid var(--line);background:var(--panel);transition:transform .1s,border-color .14s,background .14s;
 }
+.gy-pill.art{gap:4px;padding-left:3px;padding-right:3px}
 .gy-pill:active{transform:scale(.95)}
 .gy-pill .gp-name{font-size:12px;font-weight:700;color:var(--mid)}
+.gy-pill .gp-values{display:inline-flex;align-items:baseline;gap:2px;white-space:nowrap}
 .gy-pill .gp-val{font-family:var(--num);font-size:15px;font-weight:700;color:var(--ink);min-width:12px;text-align:center;font-variant-numeric:tabular-nums}
+.gy-pill .gp-conv{font-family:var(--num);font-size:8px;font-weight:700;color:var(--amber);letter-spacing:-.02em}
 .gy-pill.art .gp-val{color:var(--amber)}
 .gy-pill.empty .gp-val{color:var(--soft)}
+.gy-pill.empty .gp-conv{display:none}
 .gy-pill.sel{border-color:var(--amber);background:var(--amber-glow)}
 .gy-pill.sel .gp-name{color:var(--amber)}
 .gy-pill.grade-4{border-color:rgba(76,195,255,.52);background:rgba(76,195,255,.075)}
@@ -474,7 +478,10 @@ input{font-family:inherit}
 .gy-pick-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
 .gy-pick-name{font-size:14.5px;font-weight:700;color:var(--ink)}
 .gy-pick-name .gc-x{font-style:normal;font-family:var(--num);font-size:9px;color:var(--amber);margin-left:6px;letter-spacing:.03em}
-.gy-pick-val{font-family:var(--num);font-size:23px;font-weight:700;color:var(--power-color,var(--amber));font-variant-numeric:tabular-nums;text-shadow:0 0 14px var(--power-glow,transparent)}
+.gy-pick-val{display:inline-flex;align-items:baseline;justify-content:flex-end;gap:6px;font-family:var(--num);font-size:23px;font-weight:700;color:var(--power-color,var(--amber));font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 0 14px var(--power-glow,transparent)}
+.gy-pick-val .gp-raw{font-family:var(--num);font-size:23px;font-weight:700;color:var(--power-color,var(--amber));text-shadow:0 0 14px var(--power-glow,transparent)}
+.gy-pick-val .gp-raw small{font-family:var(--jp);font-size:9px;color:var(--mid);margin-right:3px;text-shadow:none}
+.gy-pick-val .gp-weighted{font-family:var(--jp);font-size:9.5px;font-weight:700;color:var(--amber);text-shadow:none}
 .gy-slider{width:100%;height:40px}
 .gy-pick-hint{font-size:10.5px;color:var(--soft);text-align:center;margin-top:1px}
 .naishin-meter{
@@ -1421,7 +1428,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
           <div class="gy-grp-lbl">5教科</div>
           <div class="gy-pills" id="gyPills5"></div>
-          <div class="gy-grp-lbl">実技4教科<span class="gy-x">×1.5</span></div>
+          <div class="gy-grp-lbl">実技4教科<span class="gy-x">評定 → 内申点 ×1.5</span></div>
           <div class="gy-pills" id="gyPillsA"></div>
 
           <div class="naishin-meter" id="naishinMeter">
@@ -2644,9 +2651,10 @@ function switchYear(y){
   document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("on",Number(b.dataset.y)===y));
   renderGrades();
 }
-/* 実技は×1.5後の内申点で表示。小数は.5のみなので末尾.0は落とす */
+/* 実技は入力した評定を主表示し、×1.5後の内申点を隣に補足する。 */
 function fmtPts(n){return Number.isInteger(n)?String(n):n.toFixed(1);}
-function gradeDisp(v,art){return v===0?"—":(art?fmtPts(v*1.5):String(v));}
+function gradeDisp(v){return v===0?"—":String(v);}
+function weightedGradeDisp(v,art){return v===0||!art?"":fmtPts(v*1.5);}
 
 const SHORT={"国語":"国語","社会":"社会","数学":"数学","理科":"理科","英語":"英語","音楽":"音楽","美術":"美術","保健体育":"保体","技術家庭":"技家"};
 const YEAR_MAX=55;               /* 1学年の満点（5教科×5 + 実技4×5×1.5） */
@@ -2706,8 +2714,10 @@ function updateYearTabs(){
 
 /* 選択中スライダーの値表示 */
 function updatePickVal(v,art){
-  document.getElementById("gyPickVal").textContent=v===0?"—":gradeDisp(v,art)+"点";
-  document.getElementById("gyPickHint").textContent=v===0?"未入力（左端）":"評定 "+v+" を選択中";
+  const val=document.getElementById("gyPickVal");
+  if(v===0)val.textContent="—";
+  else val.innerHTML='<span class="gp-raw"><small>評定</small>'+v+'</span>'+(art?'<span class="gp-weighted">→ 内申 '+weightedGradeDisp(v,true)+'点</span>':"");
+  document.getElementById("gyPickHint").textContent=v===0?"未入力（左端）":(art?"評定 "+v+"を、内申点では"+weightedGradeDisp(v,true)+"点として計算します":"評定 "+v+" を選択中");
 }
 
 function styleGradePicker(v,art,announce){
@@ -2742,10 +2752,13 @@ function pillFor(sj){
   const pill=document.createElement("button");pill.type="button";
   pill.className="gy-pill"+(art?" art":"")+(sj===gradeSel?" sel":"")+(v===0?" empty":"")+(v===4?" grade-4":"")+(v===5?" grade-5":"");
   const nm=document.createElement("span");nm.className="gp-name";nm.textContent=SHORT[sj];
-  const val=document.createElement("span");val.className="gp-val";val.textContent=gradeDisp(v,art);
-  pill.appendChild(nm);pill.appendChild(val);
+  const values=document.createElement("span");values.className="gp-values";
+  const val=document.createElement("span");val.className="gp-val";val.textContent=gradeDisp(v);
+  const conv=document.createElement("small");conv.className="gp-conv";conv.textContent=art&&v>0?"→"+weightedGradeDisp(v,true):"";
+  values.appendChild(val);if(art)values.appendChild(conv);
+  pill.appendChild(nm);pill.appendChild(values);
   pill.onclick=()=>{gradeSel=sj;vibrate(6);renderPills();syncPicker();};
-  gyChipMap[sj]={chip:pill,val};
+  gyChipMap[sj]={chip:pill,val,conv};
   return pill;
 }
 function renderPills(){
@@ -2788,7 +2801,7 @@ function setupGradePanel(){
     updatePickVal(v,art);
     const cm=gyChipMap[sj];
     if(cm){
-      cm.val.textContent=gradeDisp(v,art);cm.chip.classList.toggle("empty",v===0);
+      cm.val.textContent=gradeDisp(v);if(cm.conv)cm.conv.textContent=art&&v>0?"→"+weightedGradeDisp(v,true):"";cm.chip.classList.toggle("empty",v===0);
       cm.chip.classList.toggle("grade-4",v===4);cm.chip.classList.toggle("grade-5",v===5);
     }
     styleGradePicker(v,art,true);
@@ -4358,7 +4371,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-36", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-37", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
