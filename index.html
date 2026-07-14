@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-43 / DATE-ABOVE-DAYS -->
+<!-- BUILD: 20260714-44 / METRIC-VERTICAL-RHYTHM -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -938,9 +938,11 @@ input{font-family:inherit}
 .mission-stats{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.28fr);align-items:end;gap:10px;width:100%;margin-top:9px}
 .mission-card.other-goal .mission-stats{margin-top:3px}
 .mission-stat-group{display:flex;min-width:0;flex-direction:column;align-items:flex-start;justify-content:flex-end}
-.mission-stat-group .mission-date{min-height:11px;margin:0 0 2px;line-height:1.2;white-space:nowrap}
-.mission-stat-label{min-height:11px;margin-bottom:2px;font-size:7.5px;font-weight:800;line-height:1.2;letter-spacing:.07em;color:var(--soft);white-space:nowrap}
-.mission-stat{font-family:var(--num);font-size:20px;font-weight:700;color:var(--time);white-space:nowrap}
+.mission-stat-group .mission-date,.mission-stat-label{
+  min-height:11px;margin:0;font-size:9.5px;font-weight:700;line-height:1.15;letter-spacing:.015em;
+  color:color-mix(in srgb,var(--soft) 74%,var(--mid));white-space:nowrap
+}
+.mission-stat{font-family:var(--num);font-size:20px;font-weight:700;line-height:1.05;color:var(--time);white-space:nowrap}
 .mission-stat-group:last-child .mission-stat{color:var(--amber)}
 .mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
 .mission-target-snapshot{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--mission) 22%,var(--line))}
@@ -974,13 +976,12 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-status-chip.edited{--mission:#4cc3ff}
 .mission-card.exam-combined .mission-role{margin:0 0 2px;font-size:9px;letter-spacing:.06em}
 .mission-card.exam-combined .mission-name{font-size:21px;line-height:1.28}
-.mission-card.exam-combined .mission-stat-group .mission-date{min-height:12px;margin:0 0 2px;font-size:10px}
-.mission-card.exam-combined .mission-stats{grid-template-columns:minmax(0,.82fr) minmax(0,1.28fr);align-items:end;gap:16px;margin:4px 0 1px}
-.mission-card.exam-combined .mission-stat-label{min-height:12px;margin-bottom:2px;font-size:8px}
-.mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
+.mission-card.exam-combined .mission-stat-group .mission-date,.mission-card.exam-combined .mission-stat-label{min-height:12px;margin:0;font-size:10px;line-height:1.15}
+.mission-card.exam-combined .mission-stats{grid-template-columns:minmax(0,.82fr) minmax(0,1.28fr);align-items:end;gap:16px;margin:6px 0 0}
+.mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.02;text-shadow:0 0 16px var(--mission-glow)}
 .mission-card.exam-combined .mission-stat small{font-size:10px;margin-left:4px}
 .mission-card .mission-target-snapshot.fixed-judgments{display:block;padding-top:7px}
-.mission-card.exam-combined .mission-target-snapshot.fixed-judgments{margin-top:12px}
+.mission-card.exam-combined .mission-target-snapshot.fixed-judgments{margin-top:6px}
 .mission-card.target-only .mission-target-snapshot.fixed-judgments{margin-top:10px}
 .mission-card .fixed-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.22fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
 .mission-card .fixed-judgments .mission-target-metric{
@@ -4559,7 +4560,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-43", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-44", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
