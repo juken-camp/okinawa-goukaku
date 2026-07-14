@@ -937,31 +937,43 @@ input{font-family:inherit}
 .mission-card.target-only .mission-target-snapshot{margin-top:8px}
 .mission-card.target-only .mission-name,.mission-card.exam-combined .mission-name{font-size:19px;letter-spacing:.01em}
 
-/* 毎日見る「入試パネル」は、余白よりも期限と判定を優先する */
+/* 毎日見る「入試パネル」：上から目標・期限・残り時間・3判定の順に読む */
 .mission-card.exam-combined{padding:16px 18px}
-.mission-card.exam-combined .mission-code{margin-bottom:3px}
-.mission-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.mission-card.exam-combined .mission-role{margin:0;font-size:9px;letter-spacing:.06em}
-.mission-card.exam-combined .mission-title-row .mission-target-verdict{min-width:0;white-space:nowrap;font-size:16px;text-align:right}
-.mission-card.exam-combined .mission-title-row .mission-target-verdict small{display:none}
+.mission-card.exam-combined .mission-code{margin-bottom:5px}
+.mission-card.exam-combined .mission-role{margin:0 0 2px;font-size:9px;letter-spacing:.06em}
 .mission-card.exam-combined .mission-name{font-size:21px;line-height:1.28}
-.mission-card.exam-combined .mission-date{margin-top:10px;font-size:10px}
+.mission-card.exam-combined .mission-date{margin-top:9px;font-size:10px}
 .mission-card.exam-combined .mission-stats{align-items:flex-end;gap:21px;margin:4px 0 1px}
 .mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
 .mission-card.exam-combined .mission-stat small{font-size:10px;margin-left:4px}
-.mission-card.exam-combined .mission-target-snapshot{display:grid;margin-top:12px;padding-top:10px;gap:8px}
-.mission-card.exam-combined .mission-target-verdict small{font-size:9px}
-.mission-card.exam-combined .mission-target-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:2px}
-.mission-card.exam-combined .mission-target-metric{display:block;min-width:0;padding:6px 7px;border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 20%,var(--line));border-radius:8px;background:rgba(7,13,28,.26)}
-.mission-card.exam-combined .mission-target-metric-top{display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:8.5px;color:var(--soft);white-space:nowrap}
-.mission-card.exam-combined .mission-target-metric-top b{font-size:10.5px}
-.mission-card.exam-combined .mission-target-gap{width:auto;margin-top:2px;text-align:left;font-size:7.5px}
-.mission-card.exam-combined .mission-target-gap strong{font-size:9px}
+.mission-card.exam-combined .mission-target-snapshot.unified-judgments{display:block;margin-top:12px;padding-top:11px}
+.mission-card.exam-combined .unified-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.12fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
+.mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
+.mission-card.exam-combined .unified-judgments .mission-target-metric{
+  display:flex;flex-direction:column;min-width:0;min-height:68px;padding:8px 8px 7px;
+  border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 24%,var(--line));border-radius:9px;
+  background:rgba(7,13,28,.28)
+}
+.mission-card.exam-combined .unified-judgments .mission-target-metric.overall{
+  border-color:color-mix(in srgb,var(--grade-color,var(--mission)) 48%,var(--line));
+  background:linear-gradient(145deg,color-mix(in srgb,var(--grade-color,var(--mission)) 11%,rgba(7,13,28,.35)),rgba(7,13,28,.3));
+  box-shadow:inset 0 0 18px color-mix(in srgb,var(--grade-color,var(--mission)) 7%,transparent)
+}
+.mission-card.exam-combined .unified-judgments .mission-target-metric-top{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;
+  font-size:8px;line-height:1.2;color:var(--soft);white-space:normal
+}
+.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:14px;line-height:1.08;letter-spacing:.01em}
+.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:17px}
+.mission-card.exam-combined .unified-judgments .mission-target-gap{width:auto;margin:auto 0 0;padding-top:5px;text-align:left;font-size:7px;line-height:1.2;white-space:nowrap}
+.mission-card.exam-combined .unified-judgments .mission-target-gap strong{font-size:8.5px}
 @media(max-width:370px){
   .mission-card.exam-combined{padding:15px 16px}
   .mission-card.exam-combined .mission-name{font-size:19px}
   .mission-card.exam-combined .mission-stat{font-size:28px}
-  .mission-card.exam-combined .mission-title-row .mission-target-verdict{font-size:14px}
+  .mission-card.exam-combined .unified-judgments .mission-target-breakdown{gap:5px}
+  .mission-card.exam-combined .unified-judgments .mission-target-metric{padding:7px 6px 6px}
 }
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
@@ -3526,11 +3538,14 @@ function savedTargetSchoolLabel(target){
 function appendTargetSnapshot(body,target,options){
   options=options||{};
   const snapshot=document.createElement("div");snapshot.className="mission-target-snapshot";
+  if(options.unifiedJudgments)snapshot.classList.add("unified-judgments");
   snapshot.style.setProperty("--target-color",target.color||"#ffb84d");
   const verdict=document.createElement("div");verdict.className="mission-target-verdict";
   verdict.textContent="総合 "+(target.label||target.overall||"判定");
   const pct=document.createElement("small");pct.textContent="可能性 "+(Number(target.pct)||0)+"%";verdict.appendChild(pct);
-  if(options.verdictMount){
+  if(options.unifiedJudgments){
+    /* 総合・内申・学力を同じ判定レールに載せ、右上に浮くバッジを作らない。 */
+  }else if(options.verdictMount){
     options.verdictMount.appendChild(verdict);
   }else{
     const copy=document.createElement("div");copy.className="mission-target-copy";
@@ -3543,6 +3558,9 @@ function appendTargetSnapshot(body,target,options){
   const savedSchool=SCHOOLS.find(item=>item.id===target.schoolId)||SCHOOLS.find(item=>item.name===target.schoolName&&item.dept===target.dept);
   const line=savedSchool?cur(savedSchool):null;
   const details=[];
+  if(options.unifiedJudgments){
+    details.push({name:"総合",grade:String(target.overall||target.label||"—").replace(/判定$/,"")||"—",overall:true,pct:Number(target.pct)||0});
+  }
   if(target.nai!=null){
     details.push({name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),lineLabel:"80%基準内申",unit:"点"});
   }
@@ -3550,16 +3568,19 @@ function appendTargetSnapshot(body,target,options){
     details.push({name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),lineLabel:"80%基準偏差値",unit:""});
   }
   if(details.length){
-    const breakdown=document.createElement("div");breakdown.className="mission-target-breakdown"+(details.length===1?" single":"");
+    const breakdown=document.createElement("div");breakdown.className="mission-target-breakdown count-"+details.length+(details.length===1?" single":"");
     details.forEach(item=>{
-      const metric=document.createElement("div");metric.className="mission-target-metric";
-      if(item.grade)metric.style.setProperty("--grade-color",gInfo(item.grade).ring);
+      const metric=document.createElement("div");metric.className="mission-target-metric"+(item.overall?" overall":"");
+      if(item.grade&&item.grade!=="—")metric.style.setProperty("--grade-color",item.overall?(target.color||gInfo(item.grade).ring):gInfo(item.grade).ring);
       const top=document.createElement("div");top.className="mission-target-metric-top";
       const label=document.createElement("span");label.textContent=item.name+"判定";
       const grade=document.createElement("b");grade.textContent=item.grade?item.grade+"判定":"—";
       top.append(label,grade);
       const gap=document.createElement("div");gap.className="mission-target-gap";
-      if(item.gap==null)gap.textContent=item.lineLabel+" —";
+      if(item.overall){
+        gap.append("可能性 ");
+        const strong=document.createElement("strong");strong.textContent=item.pct+"%";gap.appendChild(strong);
+      }else if(item.gap==null)gap.textContent=item.lineLabel+" —";
       else{
         const value=item.gap===0?"±0":(item.gap>0?"+":"")+item.gap;
         gap.append("目安 ");
@@ -3613,7 +3634,6 @@ function renderSavedMissions(){
     if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE / PREDICTED");
     else code.textContent="OTHER GOAL";
     const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
-    const titleRow=document.createElement("div");titleRow.className="mission-title-row";titleRow.appendChild(role);
     const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
     const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで"+(isExam&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
     const stats=document.createElement("div");stats.className="mission-stats";
@@ -3621,8 +3641,8 @@ function renderSavedMissions(){
     dayStat.innerHTML=summary.expired?"終了":formatTimeHeadlineHours(summary.days)+"<small>日</small>";
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHeadlineHours(summary.total)+"<small>時間</small>";
-    stats.append(dayStat,hourStat);body.appendChild(code);if(isCombinedExam)body.appendChild(titleRow);body.append(name,date,stats);
-    if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,verdictMount:titleRow});
+    stats.append(dayStat,hourStat);body.appendChild(code);if(isCombinedExam)body.appendChild(role);body.append(name,date,stats);
+    if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標");
