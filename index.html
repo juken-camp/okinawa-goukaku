@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-45 / MY-GOAL-FINAL-RHYTHM -->
+<!-- BUILD: 20260714-46 / PIN-EXAM-PANEL-FIRST -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -3862,7 +3862,14 @@ function renderSavedMissions(){
   /* 入試の残り時間は1つだけ表示。重複時は最後に更新した設定を採用する。 */
   const examMissions=missions.filter(mission=>normalizeGoalType(mission.type,mission)==="okinawa_exam");
   const primaryExam=examMissions.slice().sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))[0]||null;
-  const displayMissions=missions.filter(mission=>normalizeGoalType(mission.type,mission)!=="okinawa_exam"||(primaryExam&&mission.id===primaryExam.id));
+  const displayMissions=missions
+    .filter(mission=>normalizeGoalType(mission.type,mission)!=="okinawa_exam"||(primaryExam&&mission.id===primaryExam.id))
+    .sort((a,b)=>{
+      const aExam=normalizeGoalType(a.type,a)==="okinawa_exam";
+      const bExam=normalizeGoalType(b.type,b)==="okinawa_exam";
+      if(aExam!==bExam)return aExam?-1:1;
+      return String(a.targetDate).localeCompare(String(b.targetDate));
+    });
   const hasExamMission=!!primaryExam;
   const hasSaved=missions.length>0||!!savedTarget;
   list.hidden=!hasSaved;
@@ -4565,7 +4572,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-45", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-46", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
