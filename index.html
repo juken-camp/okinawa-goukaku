@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-38 / SCHOOL-PHOTO-TARGET-PANEL -->
+<!-- BUILD: 20260714-39 / NATURAL-SCHOOL-PHOTO-BLEND -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -919,11 +919,11 @@ input{font-family:inherit}
 .mission-card>*{position:relative;z-index:1}
 .mission-card .mission-school-photo{
   position:absolute;z-index:0;top:0;right:0;width:59%;height:69%;object-fit:cover;object-position:center;
-  opacity:.17;filter:grayscale(.72) saturate(.58) contrast(1.13) brightness(.72);mix-blend-mode:screen;pointer-events:none;
-  -webkit-mask-image:radial-gradient(ellipse 100% 94% at 100% 0,#000 0%,rgba(0,0,0,.94) 42%,rgba(0,0,0,.3) 68%,transparent 86%);
-  mask-image:radial-gradient(ellipse 100% 94% at 100% 0,#000 0%,rgba(0,0,0,.94) 42%,rgba(0,0,0,.3) 68%,transparent 86%)
+  opacity:.23;filter:grayscale(.18) saturate(.78) contrast(1.07) brightness(.82);mix-blend-mode:normal;pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 104% 96% at 100% 0,#000 0%,rgba(0,0,0,.96) 47%,rgba(0,0,0,.38) 70%,transparent 90%);
+  mask-image:radial-gradient(ellipse 104% 96% at 100% 0,#000 0%,rgba(0,0,0,.96) 47%,rgba(0,0,0,.38) 70%,transparent 90%)
 }
-.mission-card.target-only .mission-school-photo{width:54%;height:100%;opacity:.14}
+.mission-card.target-only .mission-school-photo{width:54%;height:100%;opacity:.18}
 .mission-card.holding{border-color:var(--ge);transform:scale(.985);box-shadow:0 0 0 3px rgba(255,115,133,.13),0 12px 34px rgba(0,0,0,.25)}
 @keyframes missionCardIn{0%{opacity:0;transform:translateY(-13px) scale(.975)}72%{opacity:1;transform:translateY(3px) scale(1)}100%{opacity:1;transform:none}}
 .mission-open{display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;gap:13px;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -4520,7 +4520,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-38", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-39", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
