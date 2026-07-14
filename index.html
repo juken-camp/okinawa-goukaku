@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-40 / SAFE-DELETE-AND-EXAM-PANEL-MERGE -->
+<!-- BUILD: 20260714-41 / FIXED-THREE-JUDGMENT-RAIL -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -976,39 +976,43 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-stats{align-items:flex-end;gap:21px;margin:4px 0 1px}
 .mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
 .mission-card.exam-combined .mission-stat small{font-size:10px;margin-left:4px}
-.mission-card.exam-combined .mission-target-snapshot.unified-judgments{display:block;margin-top:12px;padding-top:7px}
-.mission-card.exam-combined .unified-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.22fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
-.mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
-.mission-card.exam-combined .unified-judgments .mission-target-metric{
+.mission-card .mission-target-snapshot.fixed-judgments{display:block;padding-top:7px}
+.mission-card.exam-combined .mission-target-snapshot.fixed-judgments{margin-top:12px}
+.mission-card.target-only .mission-target-snapshot.fixed-judgments{margin-top:10px}
+.mission-card .fixed-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.22fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
+.mission-card .fixed-judgments .mission-target-metric{
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;min-width:0;min-height:46px;padding:7px 8px;
   border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 24%,var(--line));border-radius:9px;
   background:rgba(7,13,28,.28)
 }
-.mission-card.exam-combined .unified-judgments .mission-target-metric.overall{
+.mission-card .fixed-judgments .mission-target-metric.overall{
   border-color:color-mix(in srgb,var(--grade-color,var(--mission)) 48%,var(--line));
   background:linear-gradient(145deg,color-mix(in srgb,var(--grade-color,var(--mission)) 11%,rgba(7,13,28,.35)),rgba(7,13,28,.3));
   box-shadow:inset 0 0 18px color-mix(in srgb,var(--grade-color,var(--mission)) 7%,transparent)
 }
-.mission-card.exam-combined .unified-judgments .mission-target-metric-top{
+.mission-card .fixed-judgments .mission-target-metric.empty{--grade-color:var(--soft);border-color:rgba(72,84,119,.34);background:rgba(7,13,28,.13);box-shadow:none}
+.mission-card .fixed-judgments .mission-target-metric.empty .mission-target-metric-top,
+.mission-card .fixed-judgments .mission-target-metric.empty .mission-target-metric-top b,
+.mission-card .fixed-judgments .mission-target-metric.empty .mission-target-gap{color:rgba(144,155,190,.48)}
+.mission-card .fixed-judgments .mission-target-metric-top{
   display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;
   font-size:8px;line-height:1.2;color:var(--soft);white-space:normal
 }
-.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:13.5px;line-height:1.08;letter-spacing:.01em;white-space:nowrap}
-.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:15px;letter-spacing:-.015em}
-.mission-card.exam-combined .unified-judgments .mission-target-gap{
+.mission-card .fixed-judgments .mission-target-metric-top b{font-size:13.5px;line-height:1.08;letter-spacing:.01em;white-space:nowrap}
+.mission-card .fixed-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:15px;letter-spacing:-.015em}
+.mission-card .fixed-judgments .mission-target-gap{
   display:flex;flex-direction:column;align-items:flex-end;justify-content:center;width:auto;margin:0;padding:0;
   text-align:right;font-size:6.5px;line-height:1.15;white-space:nowrap
 }
-.mission-card.exam-combined .unified-judgments .mission-target-gap strong{font-size:10px;line-height:1.15}
+.mission-card .fixed-judgments .mission-target-gap strong{font-size:10px;line-height:1.15}
 @media(max-width:370px){
   .mission-card.exam-combined{padding:15px 16px}
   .mission-card.exam-combined .mission-name{font-size:19px}
   .mission-card.exam-combined .mission-stat{font-size:28px}
-  .mission-card.exam-combined .unified-judgments .mission-target-breakdown{gap:5px}
-  .mission-card.exam-combined .unified-judgments .mission-target-metric{gap:4px;padding:7px 6px}
-  .mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:12.5px}
-  .mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:13.5px}
+  .mission-card .fixed-judgments .mission-target-breakdown{gap:5px}
+  .mission-card .fixed-judgments .mission-target-metric{gap:4px;padding:7px 6px}
+  .mission-card .fixed-judgments .mission-target-metric-top b{font-size:12.5px}
+  .mission-card .fixed-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:13.5px}
 }
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
@@ -3764,12 +3768,13 @@ document.addEventListener("keydown",event=>{if(event.key==="Escape")closePhotoCr
 function appendTargetSnapshot(body,target,options){
   options=options||{};
   const snapshot=document.createElement("div");snapshot.className="mission-target-snapshot";
-  if(options.unifiedJudgments)snapshot.classList.add("unified-judgments");
+  const fixedJudgments=!!(options.unifiedJudgments||options.fixedJudgments);
+  if(fixedJudgments)snapshot.classList.add("unified-judgments","fixed-judgments");
   snapshot.style.setProperty("--target-color",target.color||"#ffb84d");
   const verdict=document.createElement("div");verdict.className="mission-target-verdict";
   verdict.textContent="総合 "+(target.label||target.overall||"判定");
   const pct=document.createElement("small");pct.textContent="可能性 "+(Number(target.pct)||0)+"%";verdict.appendChild(pct);
-  if(options.unifiedJudgments){
+  if(fixedJudgments){
     /* 総合・内申・学力を同じ判定レールに載せ、右上に浮くバッジを作らない。 */
   }else if(options.verdictMount){
     options.verdictMount.appendChild(verdict);
@@ -3784,19 +3789,22 @@ function appendTargetSnapshot(body,target,options){
   const savedSchool=SCHOOLS.find(item=>item.id===target.schoolId)||SCHOOLS.find(item=>item.name===target.schoolName&&item.dept===target.dept);
   const line=savedSchool?cur(savedSchool):null;
   const details=[];
-  if(options.unifiedJudgments){
+  if(fixedJudgments){
     details.push({name:"総合",grade:String(target.overall||target.label||"—").replace(/判定$/,"")||"—",overall:true,pct:Number(target.pct)||0});
-  }
-  if(target.nai!=null){
-    details.push({name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),lineLabel:"80%基準内申",unit:"点"});
-  }
-  if(target.dev!=null){
-    details.push({name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),lineLabel:"80%基準偏差値",unit:""});
+    details.push(target.nai!=null
+      ?{name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),lineLabel:"80%基準内申",unit:"点"}
+      :{name:"内申",grade:null,empty:true});
+    details.push(target.dev!=null
+      ?{name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),lineLabel:"80%基準偏差値",unit:""}
+      :{name:"学力",grade:null,empty:true});
+  }else{
+    if(target.nai!=null)details.push({name:"内申",grade:target.naiGrade||(line&&line.nai!=null?nGrade(Number(target.nai),line.nai):null),gap:target.naiGap!=null?Number(target.naiGap):(line&&line.nai!=null?Math.round(Number(target.nai)-line.nai):null),lineLabel:"80%基準内申",unit:"点"});
+    if(target.dev!=null)details.push({name:"学力",grade:target.devGrade||(line&&line.dev!=null?dGrade(Number(target.dev),line.dev):null),gap:target.devGap!=null?Number(target.devGap):(line&&line.dev!=null?Math.round(Number(target.dev)-line.dev):null),lineLabel:"80%基準偏差値",unit:""});
   }
   if(details.length){
     const breakdown=document.createElement("div");breakdown.className="mission-target-breakdown count-"+details.length+(details.length===1?" single":"");
     details.forEach(item=>{
-      const metric=document.createElement("div");metric.className="mission-target-metric"+(item.overall?" overall":"");
+      const metric=document.createElement("div");metric.className="mission-target-metric"+(item.overall?" overall":"")+(item.empty?" empty":"");
       if(item.grade&&item.grade!=="—")metric.style.setProperty("--grade-color",item.overall?(target.color||gInfo(item.grade).ring):gInfo(item.grade).ring);
       const top=document.createElement("div");top.className="mission-target-metric-top";
       const label=document.createElement("span");label.textContent=item.name+"判定";
@@ -3806,7 +3814,8 @@ function appendTargetSnapshot(body,target,options){
       if(item.overall){
         gap.append("可能性 ");
         const strong=document.createElement("strong");strong.textContent=item.pct+"%";gap.appendChild(strong);
-      }else if(item.gap==null)gap.textContent=item.lineLabel+" —";
+      }else if(item.empty)gap.textContent="未入力";
+      else if(item.gap==null)gap.textContent=item.lineLabel+" —";
       else{
         const value=item.gap===0?"±0":(item.gap>0?"+":"")+item.gap;
         gap.append("目安 ");
@@ -3826,7 +3835,7 @@ function renderSavedTargetOnly(list,target){
   const body=document.createElement("div");body.className="mission-body";
   const code=document.createElement("div");code.className="mission-code";code.textContent="FIRST CHOICE / 合格目標";
   const name=document.createElement("div");name.className="mission-name";name.textContent=savedTargetSchoolLabel(target);
-  body.append(code,name);appendTargetSnapshot(body,target,{hideSchool:true});open.append(body);
+  body.append(code,name);appendTargetSnapshot(body,target,{hideSchool:true,fixedJudgments:true});open.append(body);
   open.setAttribute("aria-label","保存した合格判定を開く。長押しで削除");
   bindMissionCardLongPress(card,open,"saved_target","保存した判定",{open:openSavedTargetResult,remove:deleteSavedTargetResult});
   card.append(open);list.appendChild(card);
@@ -4538,7 +4547,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-40", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-41", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
