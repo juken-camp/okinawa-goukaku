@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-33 / COMPACT-JUDGMENT-LAYOUT -->
+<!-- BUILD: 20260714-34 / COMPACT-JUDGMENT-LAYOUT -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -917,6 +917,8 @@ input{font-family:inherit}
 .mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
 .mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
 .mission-stats{display:flex;gap:14px;margin-top:9px}
+.mission-card.other-goal .mission-date{margin-top:8px}
+.mission-card.other-goal .mission-stats{margin-top:3px}
 .mission-stat{font-family:var(--num);font-size:20px;font-weight:700;color:var(--time);white-space:nowrap}
 .mission-stat:last-child{color:var(--amber)}
 .mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
@@ -3635,7 +3637,7 @@ function renderSavedMissions(){
     const isExam=normalizeGoalType(mission.type)==="okinawa_exam";
     const isCombinedExam=isExam&&!!savedTarget;
     const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
-    const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":"");
+    const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
     card.style.setProperty("--mission",accent);
     card.style.setProperty("--mission-glow","color-mix(in srgb,"+accent+" 20%,transparent)");
     const open=document.createElement("button");open.className="mission-open"+(isCombinedExam?" without-icon":"");open.type="button";
@@ -4282,7 +4284,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-33", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-34", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
