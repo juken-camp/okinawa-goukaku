@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-30 / COMPACT-JUDGMENT-LAYOUT -->
+<!-- BUILD: 20260714-31 / COMPACT-JUDGMENT-LAYOUT -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -960,7 +960,7 @@ input{font-family:inherit}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
 .mission-card.exam-combined .unified-judgments .mission-target-metric{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;min-width:0;min-height:50px;padding:7px 8px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:6px;min-width:0;min-height:50px;padding:7px 8px;
   border:1px solid color-mix(in srgb,var(--grade-color,var(--mission)) 24%,var(--line));border-radius:9px;
   background:rgba(7,13,28,.28)
 }
@@ -3646,19 +3646,19 @@ function renderSavedMissions(){
     const body=document.createElement("div");body.className="mission-body";
     const code=document.createElement("div");code.className="mission-code";
     if(isCombinedExam)code.textContent="EXAM DATE";
-    else if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE / PREDICTED");
+    else if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE");
     else code.textContent="OTHER GOAL";
     const codeRow=document.createElement("div");codeRow.className="mission-code-row";codeRow.appendChild(code);
     if(isCombinedExam){
       const status=document.createElement("span");
-      const statusType=mission.manualDate?"edited":(Number(mission.examYear)===2027?"confirmed":"predicted");
+      const statusType=mission.manualDate?"edited":(Number(mission.examYear)===2027?"confirmed":"set");
       status.className="mission-status-chip "+statusType;
-      status.textContent=statusType.toUpperCase();
+      status.textContent=statusType==="set"?"TARGET SET":statusType.toUpperCase();
       codeRow.appendChild(status);
     }
     const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
     const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
-    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで"+(isExam&&Number(mission.examYear)!==2027&&!mission.manualDate?"（予測）":"");
+    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで";
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
     dayStat.innerHTML=summary.expired?"終了":formatTimeHeadlineHours(summary.days)+"<small>日</small>";
@@ -4282,7 +4282,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-30", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-31", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
