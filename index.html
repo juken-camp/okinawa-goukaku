@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-31 / COMPACT-JUDGMENT-LAYOUT -->
+<!-- BUILD: 20260714-32 / COMPACT-JUDGMENT-LAYOUT -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -956,7 +956,7 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
 .mission-card.exam-combined .mission-stat small{font-size:10px;margin-left:4px}
 .mission-card.exam-combined .mission-target-snapshot.unified-judgments{display:block;margin-top:12px;padding-top:11px}
-.mission-card.exam-combined .unified-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.12fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
+.mission-card.exam-combined .unified-judgments .mission-target-breakdown{display:grid;grid-template-columns:1.22fr repeat(2,minmax(0,1fr));gap:7px;margin:0}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mission-card.exam-combined .unified-judgments .mission-target-breakdown.count-1{grid-template-columns:1fr}
 .mission-card.exam-combined .unified-judgments .mission-target-metric{
@@ -973,8 +973,8 @@ input{font-family:inherit}
   display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;
   font-size:8px;line-height:1.2;color:var(--soft);white-space:normal
 }
-.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:13.5px;line-height:1.08;letter-spacing:.01em}
-.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:16px}
+.mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:13.5px;line-height:1.08;letter-spacing:.01em;white-space:nowrap}
+.mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:15px;letter-spacing:-.015em}
 .mission-card.exam-combined .unified-judgments .mission-target-gap{
   display:flex;flex-direction:column;align-items:flex-end;justify-content:center;width:auto;margin:0;padding:0;
   text-align:right;font-size:6.5px;line-height:1.15;white-space:nowrap
@@ -987,7 +987,7 @@ input{font-family:inherit}
   .mission-card.exam-combined .unified-judgments .mission-target-breakdown{gap:5px}
   .mission-card.exam-combined .unified-judgments .mission-target-metric{gap:4px;padding:7px 6px}
   .mission-card.exam-combined .unified-judgments .mission-target-metric-top b{font-size:12.5px}
-  .mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:15px}
+  .mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:13.5px}
 }
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
 
@@ -4282,7 +4282,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-31", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-32", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
