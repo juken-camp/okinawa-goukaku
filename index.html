@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-47 / FIRST-VISIT-GOAL-WELCOME -->
+<!-- BUILD: 20260714-49 / REAL-GOAL-PANEL-PREVIEW -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -882,11 +882,12 @@ input{font-family:inherit}
 .choice-btn:active{transform:scale(.975)}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
-.photo-credits-link{
-  display:block;margin:8px auto 0;padding:2px 4px;border:0;background:transparent;
+.hub-help-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 13px;margin-top:8px}
+.photo-credits-link,.goal-welcome-link{
+  display:inline-block;margin:0;padding:2px 4px;border:0;background:transparent;
   color:var(--soft);font-size:8px;letter-spacing:.04em;text-decoration:underline;text-decoration-color:rgba(144,155,190,.35);text-underline-offset:3px;cursor:pointer
 }
-.photo-credits-link:hover{color:var(--mid)}
+.photo-credits-link:hover,.goal-welcome-link:hover{color:var(--mid)}
 
 /* 初回だけ、受験以外にも自由に使えることを伝える。 */
 .goal-welcome-overlay{
@@ -895,7 +896,7 @@ input{font-family:inherit}
 }
 .goal-welcome-overlay[hidden]{display:none}
 .goal-welcome-panel{
-  position:relative;width:min(370px,100%);overflow:hidden;padding:23px 20px 18px;
+  position:relative;width:min(370px,100%);max-height:min(88dvh,720px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:23px 20px 18px;
   border:1px solid rgba(76,195,255,.3);border-radius:20px;
   background:linear-gradient(155deg,rgba(30,44,76,.98),rgba(13,22,42,.99));
   box-shadow:0 24px 78px rgba(0,0,0,.55),0 0 34px rgba(76,195,255,.1);
@@ -920,8 +921,13 @@ input{font-family:inherit}
 .goal-welcome-title span{color:#b9e9ff}
 .goal-welcome-lead{margin:11px 0 0;font-size:11px;line-height:1.75;color:var(--mid)}
 .goal-welcome-lead strong{color:var(--ink)}
-.goal-welcome-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.goal-welcome-examples span{padding:5px 8px;border:1px solid rgba(76,195,255,.2);border-radius:999px;background:rgba(76,195,255,.055);font-size:8.5px;font-weight:800;color:#a9badf;white-space:nowrap}
+.goal-welcome-real{max-width:286px;margin:12px auto 0}
+.goal-welcome-real-label{margin-bottom:6px;font-size:8px;font-weight:800;letter-spacing:.08em;color:var(--soft);text-align:center}
+.goal-welcome-real-shots{display:grid;gap:6px}
+.goal-welcome-real-shot{
+  display:block;width:100%;height:auto;aspect-ratio:821/255;border:1px solid rgba(76,195,255,.22);border-radius:11px;
+  background:#0d162a;box-shadow:0 7px 18px rgba(0,0,0,.18)
+}
 .goal-welcome-family{margin:12px 0 0;padding:9px 10px;border-left:2px solid rgba(76,195,255,.55);background:rgba(7,13,28,.25);font-size:9.5px;line-height:1.65;color:var(--mid)}
 .goal-welcome-actions{display:grid;gap:8px;margin-top:15px}
 .goal-welcome-primary,.goal-welcome-secondary{min-height:46px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer}
@@ -1417,7 +1423,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
             <span class="tb-en">MADE BY</span><b>JUKEN CAMP</b>
           </a>
-          <button class="photo-credits-link" type="button" onclick="openPhotoCredits()">学校画像の出典・ライセンス</button>
+          <div class="hub-help-links">
+            <button class="goal-welcome-link" type="button" onclick="openGoalWelcome(true)">使い方・活用例</button>
+            <button class="photo-credits-link" type="button" onclick="openPhotoCredits()">学校画像の出典・ライセンス</button>
+          </div>
         </div>
        </div>
       </div>
@@ -1951,7 +1960,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <div class="goal-welcome-code">WELCOME / MY GOAL</div>
     <h2 class="goal-welcome-title" id="goalWelcomeTitle">受験だけじゃない。<br><span>あなたや家族の目標にも。</span></h2>
     <p class="goal-welcome-lead">試験、誕生日、ライブ、旅行、記念日。<strong>好きな予定を入れて大丈夫です。</strong>目標日までの日数と、目標に使える時間を毎日確認できます。</p>
-    <div class="goal-welcome-examples" aria-label="目標の例"><span>資格・検定</span><span>誕生日</span><span>ライブ・旅行</span><span>家族の記念日</span></div>
+    <div class="goal-welcome-real" aria-label="実際に作成したMY GOALパネルの表示例">
+      <div class="goal-welcome-real-label">実際に作成した表示例</div>
+      <div class="goal-welcome-real-shots">
+        <svg class="goal-welcome-real-shot" viewBox="44 602 821 255" role="img" aria-label="英検3級に合格する目標パネル"><title>英検3級に合格する目標パネル</title><image href="goal-examples-real.jpg" width="909" height="1799"/></svg>
+        <svg class="goal-welcome-real-shot" viewBox="44 883 821 255" role="img" aria-label="ライブまでの目標パネル"><title>ライブまでの目標パネル</title><image href="goal-examples-real.jpg" width="909" height="1799"/></svg>
+        <svg class="goal-welcome-real-shot" viewBox="44 1164 821 255" role="img" aria-label="20歳の誕生日までの目標パネル"><title>20歳の誕生日までの目標パネル</title><image href="goal-examples-real.jpg" width="909" height="1799"/></svg>
+      </div>
+    </div>
     <p class="goal-welcome-family">親子でそれぞれの目標を設定して、これからの時間を一緒に話すきっかけにも。</p>
     <div class="goal-welcome-actions">
       <button class="goal-welcome-primary" type="button" onclick="startCustomGoalFromWelcome()">自分の目標をつくる&nbsp; →</button>
@@ -4571,7 +4587,7 @@ let deferredHomeInstallPrompt=null;
 function isHomeScreenMode(){
   return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
 }
-const GOAL_WELCOME_SEEN_KEY="goal_welcome_seen_v1";
+const GOAL_WELCOME_SEEN_KEY="goal_welcome_seen_v3";
 let goalWelcomeReturnFocus=null;
 function hasSeenGoalWelcome(){
   try{return localStorage.getItem(GOAL_WELCOME_SEEN_KEY)==="1"}catch(e){return false}
@@ -4579,12 +4595,11 @@ function hasSeenGoalWelcome(){
 function markGoalWelcomeSeen(){try{localStorage.setItem(GOAL_WELCOME_SEEN_KEY,"1")}catch(e){}}
 function shouldShowGoalWelcome(){
   if(scene!==0||isHomeScreenMode()||hasSeenGoalWelcome())return false;
-  if(readTimeMissions().length||readSavedTargetResult())return false;
   return true;
 }
-function openGoalWelcome(){
+function openGoalWelcome(force){
   const overlay=document.getElementById("goalWelcome");
-  if(!overlay||!shouldShowGoalWelcome())return;
+  if(!overlay||(!force&&!shouldShowGoalWelcome()))return;
   goalWelcomeReturnFocus=document.activeElement;
   overlay.hidden=false;document.body.classList.add("goal-welcome-open");
   setTimeout(()=>document.getElementById("goalWelcomeClose")?.focus(),80);
@@ -4667,7 +4682,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-47", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-49", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
