@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-42 / LABELED-TIME-METRIC-COLUMNS -->
+<!-- BUILD: 20260714-43 / DATE-ABOVE-DAYS -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -936,11 +936,10 @@ input{font-family:inherit}
 .mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
 .mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
 .mission-stats{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.28fr);align-items:end;gap:10px;width:100%;margin-top:9px}
-.mission-card.other-goal .mission-date{margin-top:8px}
 .mission-card.other-goal .mission-stats{margin-top:3px}
 .mission-stat-group{display:flex;min-width:0;flex-direction:column;align-items:flex-start;justify-content:flex-end}
+.mission-stat-group .mission-date{min-height:11px;margin:0 0 2px;line-height:1.2;white-space:nowrap}
 .mission-stat-label{min-height:11px;margin-bottom:2px;font-size:7.5px;font-weight:800;line-height:1.2;letter-spacing:.07em;color:var(--soft);white-space:nowrap}
-.mission-stat-label.spacer{visibility:hidden}
 .mission-stat{font-family:var(--num);font-size:20px;font-weight:700;color:var(--time);white-space:nowrap}
 .mission-stat-group:last-child .mission-stat{color:var(--amber)}
 .mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
@@ -975,7 +974,7 @@ input{font-family:inherit}
 .mission-card.exam-combined .mission-status-chip.edited{--mission:#4cc3ff}
 .mission-card.exam-combined .mission-role{margin:0 0 2px;font-size:9px;letter-spacing:.06em}
 .mission-card.exam-combined .mission-name{font-size:21px;line-height:1.28}
-.mission-card.exam-combined .mission-date{margin-top:9px;font-size:10px}
+.mission-card.exam-combined .mission-stat-group .mission-date{min-height:12px;margin:0 0 2px;font-size:10px}
 .mission-card.exam-combined .mission-stats{grid-template-columns:minmax(0,.82fr) minmax(0,1.28fr);align-items:end;gap:16px;margin:4px 0 1px}
 .mission-card.exam-combined .mission-stat-label{min-height:12px;margin-bottom:2px;font-size:8px}
 .mission-card.exam-combined .mission-stat{font-size:31px;line-height:1.1;text-shadow:0 0 16px var(--mission-glow)}
@@ -3897,15 +3896,14 @@ function renderSavedMissions(){
     const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで";
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayGroup=document.createElement("div");dayGroup.className="mission-stat-group days";
-    const dayLabel=document.createElement("span");dayLabel.className="mission-stat-label spacer";dayLabel.textContent="残り日数";dayLabel.setAttribute("aria-hidden","true");
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
     dayStat.innerHTML=summary.expired?"終了":formatTimeHeadlineHours(summary.days)+"<small>日</small>";
-    dayGroup.append(dayLabel,dayStat);
+    dayGroup.append(date,dayStat);
     const hourGroup=document.createElement("div");hourGroup.className="mission-stat-group hours";
     const hourLabel=document.createElement("span");hourLabel.className="mission-stat-label";hourLabel.textContent=savedMissionHoursLabel(mission,isExam);
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHeadlineHours(summary.total)+"<small>時間</small>";
-    hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,date,stats);
+    hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
@@ -4561,7 +4559,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-42", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-43", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
