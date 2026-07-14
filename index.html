@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-37 / RAW-GRADE-AND-WEIGHTED-SCORE -->
+<!-- BUILD: 20260714-38 / SCHOOL-PHOTO-TARGET-PANEL -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -882,6 +882,11 @@ input{font-family:inherit}
 .choice-btn:active{transform:scale(.975)}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
+.photo-credits-link{
+  display:block;margin:8px auto 0;padding:2px 4px;border:0;background:transparent;
+  color:var(--soft);font-size:8px;letter-spacing:.04em;text-decoration:underline;text-decoration-color:rgba(144,155,190,.35);text-underline-offset:3px;cursor:pointer
+}
+.photo-credits-link:hover{color:var(--mid)}
 
 /* スマートフォンで通常のブラウザから開いた時だけ表示するホーム画面追加案内 */
 .home-install{
@@ -912,6 +917,13 @@ input{font-family:inherit}
 }
 .mission-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 0 50%,var(--mission-glow),transparent 48%)}
 .mission-card>*{position:relative;z-index:1}
+.mission-card .mission-school-photo{
+  position:absolute;z-index:0;top:0;right:0;width:59%;height:69%;object-fit:cover;object-position:center;
+  opacity:.17;filter:grayscale(.72) saturate(.58) contrast(1.13) brightness(.72);mix-blend-mode:screen;pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 100% 94% at 100% 0,#000 0%,rgba(0,0,0,.94) 42%,rgba(0,0,0,.3) 68%,transparent 86%);
+  mask-image:radial-gradient(ellipse 100% 94% at 100% 0,#000 0%,rgba(0,0,0,.94) 42%,rgba(0,0,0,.3) 68%,transparent 86%)
+}
+.mission-card.target-only .mission-school-photo{width:54%;height:100%;opacity:.14}
 .mission-card.holding{border-color:var(--ge);transform:scale(.985);box-shadow:0 0 0 3px rgba(255,115,133,.13),0 12px 34px rgba(0,0,0,.25)}
 @keyframes missionCardIn{0%{opacity:0;transform:translateY(-13px) scale(.975)}72%{opacity:1;transform:translateY(3px) scale(1)}100%{opacity:1;transform:none}}
 .mission-open{display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;gap:13px;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -999,6 +1011,26 @@ input{font-family:inherit}
   .mission-card.exam-combined .unified-judgments .mission-target-metric.overall .mission-target-metric-top b{font-size:13.5px}
 }
 @media (hover:hover){.mission-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--mission) 65%,var(--line));box-shadow:0 13px 32px rgba(0,0,0,.25),0 0 20px var(--mission-glow)}}
+
+/* 学校画像の出典はパネルを圧迫せず、フッターから一括確認する。 */
+.photo-credits-overlay{
+  position:fixed;z-index:1200;inset:0;display:grid;place-items:center;padding:18px;background:rgba(3,7,18,.78);backdrop-filter:blur(8px)
+}
+.photo-credits-overlay[hidden]{display:none}
+.photo-credits-panel{
+  width:min(430px,100%);max-height:min(78dvh,700px);display:flex;flex-direction:column;overflow:hidden;
+  border:1px solid var(--line-lt);border-radius:18px;background:linear-gradient(155deg,var(--panel-2),var(--panel));box-shadow:0 22px 70px rgba(0,0,0,.5)
+}
+.photo-credits-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 13px;border-bottom:1px solid var(--line)}
+.photo-credits-title{font-size:14px;font-weight:900;color:var(--ink)}
+.photo-credits-close{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025);color:var(--mid);font-size:20px;line-height:1;cursor:pointer}
+.photo-credits-intro{padding:12px 17px 10px;font-size:9.5px;line-height:1.7;color:var(--soft)}
+.photo-credits-intro strong{color:var(--mid)}
+.photo-credits-list{overflow:auto;padding:0 12px 14px;overscroll-behavior:contain}
+.photo-credit-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 5px;border-top:1px solid rgba(39,49,79,.68)}
+.photo-credit-name{font-size:10px;font-weight:800;color:var(--mid)}
+.photo-credit-source{flex:0 0 auto;color:var(--time);font-size:8.5px;font-weight:700;text-decoration:none}
+.photo-credit-source::after{content:" ↗"}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
 .hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:auto}
@@ -1328,6 +1360,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           <a class="title-by" href="https://www.juken-camp.online/" target="_blank" rel="noopener" aria-label="沖縄の高校受験塾 JUKEN CAMP のサイトを見る">
             <span class="tb-en">MADE BY</span><b>JUKEN CAMP</b>
           </a>
+          <button class="photo-credits-link" type="button" onclick="openPhotoCredits()">学校画像の出典・ライセンス</button>
         </div>
        </div>
       </div>
@@ -1854,6 +1887,18 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 <!-- FX：スタンプ着弾フラッシュ -->
 <div class="fx-flash" id="fxFlash" aria-hidden="true"></div>
 
+<!-- 学校画像の出典・ライセンス（パネル内には表示せず一括掲載） -->
+<div class="photo-credits-overlay" id="photoCreditsOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="photoCreditsTitle" onclick="creditsBackdropClose(event)">
+  <div class="photo-credits-panel">
+    <div class="photo-credits-head">
+      <h2 class="photo-credits-title" id="photoCreditsTitle">学校画像の出典・ライセンス</h2>
+      <button class="photo-credits-close" id="photoCreditsClose" type="button" onclick="closePhotoCredits()" aria-label="閉じる">×</button>
+    </div>
+    <p class="photo-credits-intro"><strong>画像出典：Wikimedia Commons</strong><br>表示用にトリミング・縮小・色調調整・WebP変換を行っています。撮影者名とライセンスの詳細は、各学校の「出典を見る」から確認できます。</p>
+    <div class="photo-credits-list" id="photoCreditsList"></div>
+  </div>
+</div>
+
 <script>
 /* ================================================================
    振動フィードバック（対応端末のみ・控えめに使用）
@@ -2336,6 +2381,69 @@ function buildAdvice(ng,dg,naiGap,devGap){
 /* ================================================================
    STATE
    ================================================================ */
+/* 公開利用条件を確認できたWikimedia Commons画像のみ使用する。
+   久米島・宮古総合実業は許諾未確認のため、写真を設定しない。 */
+const SCHOOL_PHOTOS=[
+  {name:"辺土名",file:"01.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_prefecture_Hedona_high_school_2023.jpg"},
+  {name:"北山",file:"02.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Hokuzan_High_School.jpg"},
+  {name:"本部",file:"03.webp",source:"https://commons.wikimedia.org/wiki/File:Motobuhs.jpg"},
+  {name:"名護",file:"04.webp",source:"https://commons.wikimedia.org/wiki/File:Nagohs.jpg"},
+  {name:"宜野座",file:"05.webp",source:"https://commons.wikimedia.org/wiki/File:Ginozahs.jpg"},
+  {name:"石川",file:"06.webp",source:"https://commons.wikimedia.org/wiki/File:Ishikawa_High_School_Uruma.jpg"},
+  {name:"前原",file:"07.webp",source:"https://commons.wikimedia.org/wiki/File:Maehara_High_School.JPG"},
+  {name:"与勝",file:"08.webp",source:"https://commons.wikimedia.org/wiki/File:Yokatsu_High_School.jpg"},
+  {name:"読谷",file:"09.webp",source:"https://commons.wikimedia.org/wiki/File:Yomitan_High_School.jpg"},
+  {name:"嘉手納",file:"10.webp",source:"https://commons.wikimedia.org/wiki/File:Kadena_High_School.JPG"},
+  {name:"具志川",file:"11.webp",source:"https://commons.wikimedia.org/wiki/File:Gushikawa_High_School.JPG"},
+  {name:"美里",file:"12.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Misato_High_School.JPG"},
+  {name:"コザ",file:"13.webp",source:"https://commons.wikimedia.org/wiki/File:Koza_High_School.JPG"},
+  {name:"球陽",file:"14.webp",source:"https://commons.wikimedia.org/wiki/File:Kyuyo_High_School.JPG"},
+  {name:"北谷",file:"15.webp",source:"https://commons.wikimedia.org/wiki/File:Chatan_High_School.jpg"},
+  {name:"北中城",file:"16.webp",source:"https://commons.wikimedia.org/wiki/File:Kitanakagusuku_High_School.JPG"},
+  {name:"普天間",file:"17.webp",source:"https://commons.wikimedia.org/wiki/File:Futenma_High_School.JPG"},
+  {name:"宜野湾",file:"18.webp",source:"https://commons.wikimedia.org/wiki/File:Ginowan_High_School.JPG"},
+  {name:"西原",file:"19.webp",source:"https://commons.wikimedia.org/wiki/File:Nishiharahs.jpg"},
+  {name:"浦添",file:"20.webp",source:"https://commons.wikimedia.org/wiki/File:Urasoe_High_School.JPG"},
+  {name:"那覇国際",file:"21.webp",source:"https://commons.wikimedia.org/wiki/File:Naha_Kokusai_High_School.JPG"},
+  {name:"陽明",file:"22.webp",source:"https://commons.wikimedia.org/wiki/File:Youmei_High_School.JPG"},
+  {name:"首里",file:"23.webp",source:"https://commons.wikimedia.org/wiki/File:Shuri_High_School.jpg"},
+  {name:"首里東",file:"24.webp",source:"https://commons.wikimedia.org/wiki/File:Shuri-Higashi_High_School.JPG"},
+  {name:"開邦",file:"25.webp",source:"https://commons.wikimedia.org/wiki/File:%E6%A0%A1%E8%88%8E_(91798).jpg"},
+  {name:"那覇",file:"26.webp",source:"https://commons.wikimedia.org/wiki/File:%E9%82%A3%E8%A6%87%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1_%E6%A0%A1%E8%88%8E.jpg"},
+  {name:"真和志",file:"27.webp",source:"https://commons.wikimedia.org/wiki/File:Mawashi_High_School.JPG"},
+  {name:"小禄",file:"28.webp",source:"https://commons.wikimedia.org/wiki/File:OrokuHighSchool.jpg"},
+  {name:"那覇西",file:"29.webp",source:"https://commons.wikimedia.org/wiki/File:Naha-Nishi_High_School.JPG"},
+  {name:"豊見城",file:"30.webp",source:"https://commons.wikimedia.org/wiki/File:Tomishiro_High_School.JPG"},
+  {name:"豊見城南",file:"31.webp",source:"https://commons.wikimedia.org/wiki/File:Tomishiro-Minami_High_School.JPG"},
+  {name:"南風原",file:"32.webp",source:"https://commons.wikimedia.org/wiki/File:Haebaru_High_School.JPG"},
+  {name:"向陽",file:"33.webp",source:"https://commons.wikimedia.org/wiki/File:Kouyouhs.jpg"},
+  {name:"知念",file:"34.webp",source:"https://commons.wikimedia.org/wiki/File:Chinenhs.jpg"},
+  {name:"糸満",file:"35.webp",source:"https://commons.wikimedia.org/wiki/File:Itoman_High_School.JPG"},
+  {name:"宮古",file:"37.webp",source:"https://commons.wikimedia.org/wiki/File:%E6%B2%96%E7%B8%84%E7%9C%8C%E7%AB%8B%E5%AE%AE%E5%8F%A4%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1_Mar_24_2020_12-36PM.jpeg"},
+  {name:"八重山",file:"38.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Yaeyama_High_School.jpg"},
+  {name:"北部農林",file:"39.webp",source:"https://commons.wikimedia.org/wiki/File:Hokubunourinhs.jpg"},
+  {name:"中部農林",file:"40.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Chubu_Agriculutural_High_School.JPG"},
+  {name:"南部農林",file:"41.webp",source:"https://commons.wikimedia.org/wiki/File:Nanbunourinhs.jpg"},
+  {name:"八重山農林",file:"42.webp",source:"https://commons.wikimedia.org/wiki/File:Yaeyama_Agricultural_High_School.JPG"},
+  {name:"名護商工",file:"43.webp",source:"https://commons.wikimedia.org/wiki/File:Nagoshokohs.jpg"},
+  {name:"美来工科",file:"44.webp",source:"https://commons.wikimedia.org/wiki/File:Mirai_Technical_High_School.JPG"},
+  {name:"美里工業",file:"45.webp",source:"https://commons.wikimedia.org/wiki/File:Misato_Technical_High_School.JPG"},
+  {name:"浦添工業",file:"46.webp",source:"https://commons.wikimedia.org/wiki/File:Urasoetec_hs.jpg"},
+  {name:"那覇工業",file:"47.webp",source:"https://commons.wikimedia.org/wiki/File:Naha_Technical_High_School.JPG"},
+  {name:"沖縄工業",file:"48.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Technical_High_School.JPG"},
+  {name:"南部工業",file:"49.webp",source:"https://commons.wikimedia.org/wiki/File:Nanbukoghohs.jpg"},
+  {name:"宮古工業",file:"50.webp",source:"https://commons.wikimedia.org/wiki/File:%E6%B2%96%E7%B8%84%E7%9C%8C%E7%AB%8B%E5%AE%AE%E5%8F%A4%E5%B7%A5%E6%A5%AD%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1_Mar_23_2020_05_PM.jpeg"},
+  {name:"八重山商工",file:"51.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Yaeyama_Commercial_and_Technical_High_School.jpg"},
+  {name:"具志川商業",file:"52.webp",source:"https://commons.wikimedia.org/wiki/File:Gushikawa_Commercial_High_School.JPG"},
+  {name:"中部商業",file:"53.webp",source:"https://commons.wikimedia.org/wiki/File:Chubushoghohs.jpg"},
+  {name:"浦添商業",file:"54.webp",source:"https://commons.wikimedia.org/wiki/File:Urasoe_Commercial_High_School.JPG"},
+  {name:"那覇商業",file:"55.webp",source:"https://commons.wikimedia.org/wiki/File:NahaCommercialHighSchool.jpg"},
+  {name:"南部商業",file:"56.webp",source:"https://commons.wikimedia.org/wiki/File:Nanbucom_hs.jpg"},
+  {name:"沖縄水産",file:"58.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Fisheries_High_School.JPG"},
+  {name:"泊",file:"59.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Tomari_High_School.JPG"}
+];
+const SCHOOL_PHOTO_MAP=new Map(SCHOOL_PHOTOS.map(item=>[item.name,item]));
+
 let scene=0;               /* 0:hub 1:school 2:naishin 3:dev 4:target result 5:time setup 6:time result */
 let currentArea="南部";
 let selectedId=null;
@@ -3610,6 +3718,45 @@ function savedTargetSchoolLabel(target){
   const school=/高校$/.test(raw)?raw:raw+"高校";
   return school+(target.dept?" "+target.dept:"");
 }
+function normalizedPhotoSchoolName(name){
+  return String(name||"").replace(/高校$/g,"").replace(/（[^）]*）/g,"").trim();
+}
+function schoolPhotoEntry(name){return SCHOOL_PHOTO_MAP.get(normalizedPhotoSchoolName(name))||null}
+function appendSchoolPhoto(card,target){
+  const entry=schoolPhotoEntry(target&&target.schoolName);
+  if(!card||!entry)return;
+  const img=document.createElement("img");
+  img.className="mission-school-photo";img.src="school-images/"+entry.file;img.alt="";
+  img.loading="lazy";img.decoding="async";img.setAttribute("aria-hidden","true");
+  img.addEventListener("error",()=>{img.remove();card.classList.remove("has-school-photo")},{once:true});
+  card.classList.add("has-school-photo");card.prepend(img);
+}
+
+let photoCreditsReturnFocus=null;
+function renderPhotoCredits(){
+  const list=document.getElementById("photoCreditsList");
+  if(!list||list.childElementCount)return;
+  SCHOOL_PHOTOS.forEach(item=>{
+    const row=document.createElement("div");row.className="photo-credit-row";
+    const name=document.createElement("span");name.className="photo-credit-name";name.textContent=item.name+"高校";
+    const source=document.createElement("a");source.className="photo-credit-source";source.href=item.source;source.target="_blank";source.rel="noopener";source.textContent="出典を見る";
+    row.append(name,source);list.appendChild(row);
+  });
+}
+function openPhotoCredits(){
+  const overlay=document.getElementById("photoCreditsOverlay");
+  if(!overlay)return;
+  photoCreditsReturnFocus=document.activeElement;renderPhotoCredits();overlay.hidden=false;
+  document.getElementById("photoCreditsClose").focus();
+}
+function closePhotoCredits(){
+  const overlay=document.getElementById("photoCreditsOverlay");
+  if(!overlay||overlay.hidden)return;
+  overlay.hidden=true;if(photoCreditsReturnFocus&&photoCreditsReturnFocus.focus)photoCreditsReturnFocus.focus();
+}
+function creditsBackdropClose(event){if(event.target===event.currentTarget)closePhotoCredits()}
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closePhotoCredits()});
+
 function appendTargetSnapshot(body,target,options){
   options=options||{};
   const snapshot=document.createElement("div");snapshot.className="mission-target-snapshot";
@@ -3670,6 +3817,7 @@ function appendTargetSnapshot(body,target,options){
 function renderSavedTargetOnly(list,target){
   const card=document.createElement("div");card.className="mission-card target-only";
   card.style.setProperty("--mission","#ffb84d");card.style.setProperty("--mission-glow","rgba(255,184,77,.2)");
+  appendSchoolPhoto(card,target);
   const open=document.createElement("button");open.className="mission-open without-icon";open.type="button";
   const body=document.createElement("div");body.className="mission-body";
   const code=document.createElement("div");code.className="mission-code";code.textContent="FIRST CHOICE / 合格目標";
@@ -3699,6 +3847,7 @@ function renderSavedMissions(){
     const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
     card.style.setProperty("--mission",accent);
     card.style.setProperty("--mission-glow","color-mix(in srgb,"+accent+" 20%,transparent)");
+    if(isCombinedExam)appendSchoolPhoto(card,savedTarget);
     const open=document.createElement("button");open.className="mission-open"+(isCombinedExam?" without-icon":"");open.type="button";
     const icon=document.createElement("div");icon.className="mission-icon";icon.setAttribute("aria-hidden","true");
     icon.innerHTML=isExam
@@ -4371,7 +4520,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-37", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-38", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
