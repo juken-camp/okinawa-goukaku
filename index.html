@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-35 / GOAL-TIME-MODES -->
+<!-- BUILD: 20260714-36 / GOAL-TIME-MODES -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -1067,7 +1067,6 @@ input{font-family:inherit}
 .check-row input{width:18px;height:18px;accent-color:var(--time);flex:0 0 auto;margin-top:1px}
 .goal-examples{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:-3px 0 12px}
 .goal-examples[hidden]{display:none}
-.goal-examples-label{font-size:9px;font-weight:700;color:var(--soft);margin-right:1px}
 .goal-example{
   min-height:28px;padding:0 9px;border:1px solid rgba(76,195,255,.24);border-radius:999px;background:rgba(76,195,255,.055);
   color:var(--mid);font-size:9.5px;font-weight:700;cursor:pointer
@@ -1637,7 +1636,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <input class="time-input" id="timeGoalName" type="text" value="沖縄県立高校入試" placeholder="例：英検準2級・定期テスト・仕事の締切" maxlength="40" autocomplete="off">
           </label>
           <div class="goal-examples" id="timeGoalExamples" hidden aria-label="自分の目標の例">
-            <span class="goal-examples-label">たとえば</span>
             <button class="goal-example" type="button" onclick="applyGoalExample('100歳の誕生日')">100歳の誕生日</button>
             <button class="goal-example" type="button" onclick="applyGoalExample('資格試験')">資格試験</button>
             <button class="goal-example" type="button" onclick="applyGoalExample('旅行・イベント')">旅行・イベント</button>
@@ -4360,7 +4358,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-35", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-36", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
