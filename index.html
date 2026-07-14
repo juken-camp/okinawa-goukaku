@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-39 / NATURAL-SCHOOL-PHOTO-BLEND -->
+<!-- BUILD: 20260714-40 / SAFE-DELETE-AND-EXAM-PANEL-MERGE -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -3519,8 +3519,12 @@ function examDateForGrade(gradeIndex){
 function goalUsesGrade(type){
   return type==="okinawa_exam";
 }
-function normalizeGoalType(type){
-  return type==="okinawa_exam"?"okinawa_exam":"custom";
+function normalizeGoalType(type,mission){
+  if(type==="okinawa_exam"||type==="exam"||type==="okinawa")return"okinawa_exam";
+  if(type==="custom")return"custom";
+  /* 目標種類の追加前に保存された入試目標も、判定パネルと統合する。 */
+  if(mission&&(mission.examYear!=null||/沖縄県立高校入試|高校入試/.test(String(mission.goalName||""))))return"okinawa_exam";
+  return"custom";
 }
 function updateGoalContext(){
   const type=document.getElementById("timeGoalType").value;
@@ -3832,16 +3836,20 @@ function renderSavedMissions(){
   if(!list)return;
   const missions=readTimeMissions().slice().sort((a,b)=>String(a.targetDate).localeCompare(String(b.targetDate)));
   const savedTarget=readSavedTargetResult();
-  const hasExamMission=missions.some(mission=>normalizeGoalType(mission.type)==="okinawa_exam");
+  /* 入試の残り時間は1つだけ表示。重複時は最後に更新した設定を採用する。 */
+  const examMissions=missions.filter(mission=>normalizeGoalType(mission.type,mission)==="okinawa_exam");
+  const primaryExam=examMissions.slice().sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))[0]||null;
+  const displayMissions=missions.filter(mission=>normalizeGoalType(mission.type,mission)!=="okinawa_exam"||(primaryExam&&mission.id===primaryExam.id));
+  const hasExamMission=!!primaryExam;
   const hasSaved=missions.length>0||!!savedTarget;
   list.hidden=!hasSaved;
   document.querySelector(".hub-scroll").classList.toggle("has-saved",hasSaved);
   list.innerHTML="";
   if(savedTarget&&!hasExamMission)renderSavedTargetOnly(list,savedTarget);
   let otherMissionIndex=0;
-  missions.forEach(mission=>{
+  displayMissions.forEach(mission=>{
     const summary=calculateSavedMission(mission);
-    const isExam=normalizeGoalType(mission.type)==="okinawa_exam";
+    const isExam=normalizeGoalType(mission.type,mission)==="okinawa_exam";
     const isCombinedExam=isExam&&!!savedTarget;
     const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
     const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
@@ -3919,7 +3927,9 @@ function bindMissionCardLongPress(card,button,id,name,actions){
     feedbackTimer=setTimeout(()=>card.classList.add("holding"),180);
     deleteTimer=setTimeout(()=>{
       deleteTimer=null;longPressed=true;card.classList.remove("holding");
-      vibrate([24,35,55]);FX.play("clear");
+      vibrate([24,35,55]);
+      if(!window.confirm(name+"を削除しますか？"))return;
+      FX.play("clear");
       if(actions&&actions.remove)actions.remove();else deleteTimeMission(id,name,true);
     },900);
   });
@@ -3985,8 +3995,16 @@ function captureTimeMission(){
 }
 function saveCurrentTimeMission(){
   const mission=captureTimeMission();
-  const missions=readTimeMissions();
-  const index=missions.findIndex(item=>item.id===mission.id);
+  let missions=readTimeMissions();
+  let index=missions.findIndex(item=>item.id===mission.id);
+  if(normalizeGoalType(mission.type,mission)==="okinawa_exam"){
+    const existing=missions.filter(item=>normalizeGoalType(item.type,item)==="okinawa_exam"&&item.id!==mission.id)
+      .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))[0];
+    if(index<0&&existing){mission.id=existing.id;index=missions.findIndex(item=>item.id===existing.id)}
+    /* 入試の時間設定は常に1つ。古い重複データも保存時に整理する。 */
+    missions=missions.filter(item=>normalizeGoalType(item.type,item)!=="okinawa_exam"||item.id===mission.id);
+    index=missions.findIndex(item=>item.id===mission.id);
+  }
   if(index>=0)missions[index]=mission;else missions.push(mission);
   if(!writeTimeMissions(missions))return null;
   currentTimeMissionId=mission.id;
@@ -3996,7 +4014,7 @@ function saveCurrentTimeMission(){
 function loadTimeMission(id){
   const mission=readTimeMissions().find(item=>item.id===id);
   if(!mission)return;
-  const missionType=normalizeGoalType(mission.type);
+  const missionType=normalizeGoalType(mission.type,mission);
   currentTimeMissionId=mission.id;
   document.getElementById("timeGoalType").value=missionType;
   document.getElementById("timeGoalName").value=mission.goalName||"";
@@ -4520,7 +4538,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-39", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260714-40", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
