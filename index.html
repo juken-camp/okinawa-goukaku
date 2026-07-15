@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-59 / TARGET-PANEL-SHARE-LONGPRESS-ACTIONS -->
+<!-- BUILD: 20260715-61 / PIXEL-MATCH-GOAL-PANEL -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -3674,7 +3674,8 @@ function canvasGoalIcon(ctx,cx,cy,size,color,line){
   ctx.globalAlpha=.9;ctx.strokeStyle=color;ctx.lineWidth=3;
   ctx.beginPath();ctx.arc(cx,cy,size/2,0,Math.PI*2);ctx.stroke();
   ctx.shadowBlur=0;ctx.globalAlpha=.1;ctx.fillStyle=color;ctx.fill();ctx.globalAlpha=1;
-  const s=size/100;
+  /* トップ画面は外円に対して中央の目標ピンが小さい。 */
+  const s=size/180;
   ctx.strokeStyle=color;ctx.lineWidth=4*s;ctx.lineCap="round";ctx.lineJoin="round";
   ctx.beginPath();
   ctx.moveTo(cx,cy+28*s);
@@ -3690,32 +3691,33 @@ function canvasGoalIcon(ctx,cx,cy,size,color,line){
 function createTimeShareImage(result){
   try{
       /* 共有画像は、ホームに並ぶMY GOALパネルそのものと同じ縦横比・情報配置にする。 */
-      const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=390;
+      const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=368;
       const ctx=canvas.getContext("2d");if(!ctx)return null;
       const light=document.documentElement.dataset.theme==="light";
       const bg=light?"#f7f9fd":"#0c111f",panel=light?"#ffffff":"#161f38",panel2=light?"#f2f6fc":"#1b2545",line=light?"#d8e1ee":"#27314f";
       const ink=light?"#1d2940":"#eef2ff",muted=light?"#8b98ad":"#5d6a8e",mid=light?"#586780":"#9aa6c8";
       const time=light?"#548fe5":"#4cc3ff",warm=light?"#ee729d":"#ffb84d",accent=timeShareMissionAccent(result);
-      ctx.fillStyle=bg;ctx.fillRect(0,0,1200,390);
+      ctx.fillStyle=bg;ctx.fillRect(0,0,1200,368);
       ctx.strokeStyle=light?"rgba(74,111,164,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
-      for(let x=0;x<=1200;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,390);ctx.stroke()}
-      for(let y=0;y<=390;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.stroke()}
-      const card=ctx.createLinearGradient(30,30,1170,360);card.addColorStop(0,panel2);card.addColorStop(1,panel);
-      canvasRoundRect(ctx,18,18,1164,354,34);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=line;ctx.lineWidth=2;ctx.stroke();
-      ctx.save();canvasRoundRect(ctx,18,18,1164,354,34);ctx.clip();
-      const glow=ctx.createRadialGradient(80,195,0,80,195,430);glow.addColorStop(0,accent+"30");glow.addColorStop(1,accent+"00");ctx.fillStyle=glow;ctx.fillRect(18,18,1164,354);ctx.restore();
-      canvasGoalIcon(ctx,113,195,132,accent,line);
-      ctx.fillStyle=accent;ctx.font="700 24px 'Chakra Petch',sans-serif";ctx.letterSpacing="5px";ctx.fillText("MY GOAL",234,76);ctx.letterSpacing="0px";
-      const goal=String(result.goal||"目標日").slice(0,40);fitCanvasText(ctx,goal,900,52,34);ctx.fillStyle=ink;ctx.fillText(goal,234,140);
+      for(let x=0;x<=1200;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,368);ctx.stroke()}
+      for(let y=0;y<=368;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.stroke()}
+      const card=ctx.createLinearGradient(58,15,1142,348);card.addColorStop(0,panel2);card.addColorStop(1,panel);
+      canvasRoundRect(ctx,58,15,1084,333,34);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=line;ctx.lineWidth=2;ctx.stroke();
+      ctx.save();canvasRoundRect(ctx,58,15,1084,333,34);ctx.clip();
+      const glow=ctx.createRadialGradient(78,181,0,78,181,430);glow.addColorStop(0,accent+"30");glow.addColorStop(1,accent+"00");ctx.fillStyle=glow;ctx.fillRect(58,15,1084,333);ctx.restore();
+      canvasGoalIcon(ctx,182,181,138,accent,line);
+      ctx.fillStyle=accent;ctx.font="700 24px 'Chakra Petch',sans-serif";ctx.letterSpacing="5px";ctx.fillText("MY GOAL",294,85);ctx.letterSpacing="0px";
+      const goal=String(result.goal||"目標日").slice(0,40);fitCanvasText(ctx,goal,825,52,34);ctx.fillStyle=ink;ctx.fillText(goal,294,152);
       const dayLabel=formatTimeDate(result.target)+"まで";
       const hoursLabel=result.hoursScope==="all"?"すべての時間":"目標に使える時間";
-      ctx.fillStyle=muted;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(dayLabel,234,220);ctx.fillText(hoursLabel,700,220);
+      const hourX=635;
+      ctx.fillStyle=muted;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(dayLabel,294,220);ctx.fillText(hoursLabel,hourX,220);
       const dayText=result.expired?"終了":formatTimeHeadlineHours(result.days),hoursText=formatTimeHeadlineHours(result.total);
-      ctx.fillStyle=time;ctx.font="700 76px 'Chakra Petch',sans-serif";ctx.fillText(dayText,234,310);
-      let valueWidth=ctx.measureText(dayText).width;if(!result.expired){ctx.fillStyle=mid;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",248+valueWidth,307)}
-      let hourSize=78;do{ctx.font="700 "+hourSize+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hoursText).width<=365)break;hourSize-=2}while(hourSize>54);
-      ctx.fillStyle=warm;ctx.fillText(hoursText,700,310);valueWidth=ctx.measureText(hoursText).width;
-      ctx.fillStyle=mid;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",714+valueWidth,307);
+      ctx.fillStyle=time;ctx.font="700 64px 'Chakra Petch',sans-serif";ctx.fillText(dayText,294,285);
+      let valueWidth=ctx.measureText(dayText).width;if(!result.expired){ctx.fillStyle=mid;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",306+valueWidth,283)}
+      let hourSize=66;do{ctx.font="700 "+hourSize+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hoursText).width<=360)break;hourSize-=2}while(hourSize>50);
+      ctx.fillStyle=warm;ctx.fillText(hoursText,hourX,285);valueWidth=ctx.measureText(hoursText).width;
+      ctx.fillStyle=mid;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",hourX+12+valueWidth,283);
       const dataUrl=canvas.toDataURL("image/png");
       const binary=atob(dataUrl.split(",")[1]);
       const bytes=new Uint8Array(binary.length);
@@ -3732,20 +3734,23 @@ function loadTargetSharePhoto(target){
     img.onload=()=>done(img);img.onerror=()=>done(null);img.src="school-images/"+entry.file;
   });
 }
-function drawTargetShareMetric(ctx,x,y,w,h,label,grade,sub,color,theme,overall){
-  const bg=theme.light?"#ffffff":"#0c111f",line=theme.line;
+function drawTargetShareMetric(ctx,x,y,w,h,label,grade,subLabel,subValue,color,theme,overall){
+  const bg=theme.light?"#ffffff":"#070d1c",line=theme.line;
   canvasRoundRect(ctx,x,y,w,h,20);
-  ctx.fillStyle=bg;ctx.globalAlpha=theme.light?(overall?.98:.9):(overall?.58:.45);ctx.fill();ctx.globalAlpha=1;
-  if(color){ctx.fillStyle=color;ctx.globalAlpha=overall?.11:.065;ctx.fill();ctx.globalAlpha=1}
-  ctx.strokeStyle=color||line;ctx.globalAlpha=overall?.7:.45;ctx.lineWidth=2;ctx.stroke();ctx.globalAlpha=1;
-  ctx.fillStyle=theme.muted;ctx.font="700 20px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(label,x+24,y+38);
-  ctx.fillStyle=color||theme.mid;ctx.font="700 "+(overall?40:36)+"px 'Chakra Petch','Zen Kaku Gothic New',sans-serif";ctx.fillText(grade,x+24,y+89);
-  ctx.fillStyle=theme.muted;ctx.font="700 17px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.textAlign="right";ctx.fillText(sub,x+w-22,y+h-25);ctx.textAlign="left";
+  ctx.fillStyle=bg;ctx.globalAlpha=theme.light?(overall?.98:.92):(overall?.38:.3);ctx.fill();ctx.globalAlpha=1;
+  if(color){ctx.fillStyle=color;ctx.globalAlpha=theme.light?(overall?.12:.07):(overall?.055:.025);ctx.fill();ctx.globalAlpha=1}
+  ctx.strokeStyle=color||line;ctx.globalAlpha=overall?.72:.48;ctx.lineWidth=2;ctx.stroke();ctx.globalAlpha=1;
+  ctx.fillStyle=theme.muted;ctx.font="700 23px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(label,x+27,y+48);
+  ctx.fillStyle=color||theme.mid;ctx.font="700 "+(overall?42:39)+"px 'Chakra Petch','Zen Kaku Gothic New',sans-serif";ctx.fillText(grade,x+27,y+105);
+  ctx.textAlign="right";ctx.fillStyle=theme.muted;ctx.font="700 18px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";
+  if(subLabel)ctx.fillText(subLabel,x+w-25,y+59);
+  ctx.fillStyle=theme.mid;ctx.font="700 24px 'Chakra Petch','Zen Kaku Gothic New',sans-serif";ctx.fillText(subValue,x+w-25,y+94);ctx.textAlign="left";
 }
 async function createTargetShareImage(target,mission){
   try{
     const combined=!!mission;
-    const width=1200,height=combined?630:430;
+    /* トップ画面の実パネル比率に合わせる。共有用に横長へ圧縮しない。 */
+    const width=1200,height=combined?688:440;
     const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
     const ctx=canvas.getContext("2d");if(!ctx)return null;
     const light=document.documentElement.dataset.theme==="light";
@@ -3754,45 +3759,52 @@ async function createTargetShareImage(target,mission){
     ctx.strokeStyle=light?"rgba(74,111,164,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
     for(let x=0;x<=width;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}
     for(let y=0;y<=height;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}
-    const card=ctx.createLinearGradient(18,18,1182,height-18);card.addColorStop(0,theme.panel2);card.addColorStop(1,theme.panel);
-    canvasRoundRect(ctx,18,18,1164,height-36,34);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.stroke();
+    const cardX=58,cardY=23,cardW=1084,cardH=height-52;
+    const card=ctx.createLinearGradient(cardX,cardY,cardX+cardW,cardY+cardH);card.addColorStop(0,theme.panel2);card.addColorStop(1,theme.panel);
+    canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.stroke();
+    ctx.save();canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.clip();
+    const warmGlow=ctx.createRadialGradient(cardX,cardY+cardH*.55,0,cardX,cardY+cardH*.55,520);warmGlow.addColorStop(0,theme.warm+(light?"16":"20"));warmGlow.addColorStop(1,theme.warm+"00");ctx.fillStyle=warmGlow;ctx.fillRect(cardX,cardY,cardW,cardH);ctx.restore();
     const photo=await loadTargetSharePhoto(target);
     if(photo){
-      ctx.save();canvasRoundRect(ctx,18,18,1164,height-36,34);ctx.clip();ctx.globalAlpha=light?.13:.22;
-      const scale=Math.max(590/photo.width,310/photo.height),dw=photo.width*scale,dh=photo.height*scale;
-      ctx.drawImage(photo,1182-dw,18,dw,dh);ctx.globalAlpha=1;
-      let fade=ctx.createLinearGradient(410,0,1030,0);fade.addColorStop(0,theme.panel);fade.addColorStop(.58,light?"rgba(255,255,255,.78)":"rgba(22,31,56,.78)");fade.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=fade;ctx.fillRect(18,18,1164,330);
-      fade=ctx.createLinearGradient(0,150,0,365);fade.addColorStop(0,"rgba(0,0,0,0)");fade.addColorStop(1,theme.panel);ctx.fillStyle=fade;ctx.fillRect(18,120,1164,260);ctx.restore();
+      const photoX=cardX+cardW*.4,photoY=cardY,photoW=cardW*.6,photoH=combined?440:285;
+      ctx.save();canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.clip();ctx.globalAlpha=light?.12:.2;
+      const scale=Math.max(photoW/photo.width,photoH/photo.height),dw=photo.width*scale,dh=photo.height*scale;
+      ctx.drawImage(photo,photoX+(photoW-dw)/2,photoY+(photoH-dh)/2,dw,dh);ctx.globalAlpha=1;
+      let fade=ctx.createLinearGradient(cardX+360,0,cardX+840,0);fade.addColorStop(0,theme.panel);fade.addColorStop(.65,light?"rgba(255,255,255,.62)":"rgba(22,31,56,.65)");fade.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=fade;ctx.fillRect(cardX,cardY,cardW,photoH);
+      fade=ctx.createLinearGradient(0,cardY+photoH*.48,0,cardY+photoH);fade.addColorStop(0,"rgba(0,0,0,0)");fade.addColorStop(1,theme.panel);ctx.fillStyle=fade;ctx.fillRect(cardX,cardY,cardW,photoH);ctx.restore();
     }
     const school=savedTargetSchoolLabel(target);
-    ctx.fillStyle=theme.warm;ctx.font="700 23px 'Chakra Petch',sans-serif";ctx.letterSpacing="4px";ctx.fillText(combined?"EXAM DATE":"FIRST CHOICE / 合格目標",70,70);ctx.letterSpacing="0px";
+    const contentX=116;
+    ctx.fillStyle=theme.warm;ctx.font="700 26px 'Chakra Petch',sans-serif";ctx.letterSpacing="5px";ctx.fillText(combined?"EXAM DATE":"FIRST CHOICE / 合格目標",contentX,combined?109:86);ctx.letterSpacing="0px";
     if(combined){
       const status=mission.manualDate?"EDITED":(Number(mission.examYear)===2027?"CONFIRMED":"TARGET SET");
-      ctx.font="700 18px 'Chakra Petch',sans-serif";const chipW=ctx.measureText(status).width+32;
-      canvasRoundRect(ctx,1100-chipW,43,chipW,34,17);ctx.fillStyle=light?"#edf9f4":"rgba(61,220,132,.08)";ctx.fill();ctx.strokeStyle="#3ddc84";ctx.globalAlpha=.6;ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle="#3ddc84";ctx.fillText(status,1116-chipW,66);
-      ctx.fillStyle=theme.muted;ctx.font="800 20px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("第一志望・合格目標",70,113);
+      ctx.font="700 22px 'Chakra Petch',sans-serif";const chipW=ctx.measureText(status).width+38,chipX=1080-chipW;
+      canvasRoundRect(ctx,chipX,75,chipW,48,24);ctx.fillStyle=light?"#edf9f4":"rgba(61,220,132,.08)";ctx.fill();ctx.strokeStyle="#3ddc84";ctx.lineWidth=2;ctx.globalAlpha=.65;ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle="#3ddc84";ctx.fillText(status,chipX+19,107);
+      ctx.fillStyle=theme.muted;ctx.font="800 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("第一志望・合格目標",contentX,178);
     }
-    const nameY=combined?167:136;fitCanvasText(ctx,school,1010,54,36);ctx.fillStyle=theme.ink;ctx.fillText(school,70,nameY);
+    const nameY=combined?258:151;fitCanvasText(ctx,school,965,60,40);ctx.fillStyle=theme.ink;ctx.fillText(school,contentX,nameY);
     let metricsY;
     if(combined){
       const summary=calculateSavedMission(mission);
       const dayText=summary.expired?"終了":(summary.isToday?"0":formatTimeHeadlineHours(summary.days));
       const hourText=formatTimeHeadlineHours(summary.isToday||summary.expired?0:summary.total);
-      ctx.fillStyle=theme.muted;ctx.font="700 21px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(formatTimeDate(summary.target)+"まで",70,222);ctx.fillText(savedMissionHoursLabel(mission,true),510,222);
-      ctx.fillStyle=theme.time;ctx.font="700 70px 'Chakra Petch',sans-serif";ctx.fillText(dayText,70,306);
-      let tw=ctx.measureText(dayText).width;if(!summary.expired){ctx.fillStyle=theme.mid;ctx.font="700 24px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",84+tw,303)}
-      let hs=72;do{ctx.font="700 "+hs+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hourText).width<=390)break;hs-=2}while(hs>50);
-      ctx.fillStyle=theme.warm;ctx.fillText(hourText,510,306);tw=ctx.measureText(hourText).width;ctx.fillStyle=theme.mid;ctx.font="700 24px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",524+tw,303);
-      ctx.strokeStyle=theme.line;ctx.beginPath();ctx.moveTo(70,348);ctx.lineTo(1130,348);ctx.stroke();metricsY=379;
+      const hourX=515;
+      ctx.fillStyle=theme.muted;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(formatTimeDate(summary.target)+"まで",contentX,320);ctx.fillText(savedMissionHoursLabel(mission,true),hourX,320);
+      ctx.fillStyle=theme.time;ctx.font="700 82px 'Chakra Petch',sans-serif";ctx.fillText(dayText,contentX,405);
+      let tw=ctx.measureText(dayText).width;if(!summary.expired){ctx.fillStyle=theme.mid;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",contentX+14+tw,401)}
+      let hs=82;do{ctx.font="700 "+hs+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hourText).width<=390)break;hs-=2}while(hs>56);
+      ctx.fillStyle=theme.warm;ctx.fillText(hourText,hourX,405);tw=ctx.measureText(hourText).width;ctx.fillStyle=theme.mid;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",hourX+14+tw,401);
+      ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(contentX,443);ctx.lineTo(1084,443);ctx.stroke();metricsY=467;
     }else{
-      ctx.strokeStyle=theme.line;ctx.beginPath();ctx.moveTo(70,174);ctx.lineTo(1130,174);ctx.stroke();metricsY=207;
+      ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(contentX,183);ctx.lineTo(1084,183);ctx.stroke();metricsY=211;
     }
     const overall=String(target.overall||target.label||"—").replace(/判定$/,""),nai=target.naiGrade||"—",dev=target.devGrade||"—";
     const overallColor=target.color||theme.warm,naiColor=nai!=="—"?gInfo(nai).ring:theme.muted,devColor=dev!=="—"?gInfo(dev).ring:theme.muted;
-    const gapText=(value,unit)=>value==null?"未入力":"目安 "+(Number(value)===0?"±0":(Number(value)>0?"+":"")+Number(value))+unit;
-    drawTargetShareMetric(ctx,70,metricsY,350,145,"総合判定",overall+"判定","可能性 "+(Number(target.pct)||0)+"%",overallColor,theme,true);
-    drawTargetShareMetric(ctx,440,metricsY,320,145,"内申判定",nai==="—"?"—":nai+"判定",gapText(target.naiGap,"点"),naiColor,theme,false);
-    drawTargetShareMetric(ctx,780,metricsY,350,145,"学力判定",dev==="—"?"—":dev+"判定",gapText(target.devGap,""),devColor,theme,false);
+    const gapParts=(value,unit)=>value==null?["","未入力"]:["目安",(Number(value)===0?"±0":(Number(value)>0?"+":"")+Number(value))+unit];
+    const naiGap=gapParts(target.naiGap,"点"),devGap=gapParts(target.devGap,"");
+    drawTargetShareMetric(ctx,116,metricsY,342,140,"総合判定",overall+"判定","可能性",(Number(target.pct)||0)+"%",overallColor,theme,true);
+    drawTargetShareMetric(ctx,479,metricsY,281,140,"内申判定",nai==="—"?"—":nai+"判定",naiGap[0],naiGap[1],naiColor,theme,false);
+    drawTargetShareMetric(ctx,781,metricsY,281,140,"学力判定",dev==="—"?"—":dev+"判定",devGap[0],devGap[1],devColor,theme,false);
     const dataUrl=canvas.toDataURL("image/png"),binary=atob(dataUrl.split(",")[1]),bytes=new Uint8Array(binary.length);
     for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
     return new Blob([bytes],{type:"image/png"});
