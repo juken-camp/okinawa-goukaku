@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-61 / PIXEL-MATCH-GOAL-PANEL -->
+<!-- BUILD: 20260715-62 / REMOVE-PANEL-IMAGE-SHARING -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -765,19 +765,6 @@ html[data-theme="light"] .sky::after{opacity:.18}
 .share-line{background:#06c755;color:#fff;border-color:#06c755}
 .share-copy.copied{border-color:var(--ga);color:var(--ga)}
 .share-sub{font-size:11.5px;color:var(--soft);text-align:center;margin-bottom:14px}
-.target-panel-share{margin:0 0 10px}
-
-.goal-share-card{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--time) 32%,var(--line))}
-.goal-share-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,var(--time-glow),transparent 55%)}
-.goal-share-card>*{position:relative;z-index:1}
-.goal-share-title{font-size:14px;font-weight:900;line-height:1.45;color:var(--ink)}
-.goal-share-copy{margin-top:4px;font-size:10.5px;line-height:1.7;color:var(--soft)}
-.goal-share-button{
-  width:100%;min-height:45px;margin-top:12px;border:1px solid color-mix(in srgb,var(--time) 65%,var(--line));border-radius:11px;
-  background:linear-gradient(180deg,color-mix(in srgb,var(--time) 26%,var(--panel-2)),color-mix(in srgb,var(--time) 12%,var(--panel)));
-  color:var(--time);font-size:12px;font-weight:900;cursor:pointer
-}
-.goal-share-button:active{transform:scale(.98)}
 
 .note-card{
   border:1px dashed var(--line-lt);border-radius:14px;padding:14px 16px;
@@ -1241,25 +1228,6 @@ html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.e
 .photo-credit-name{font-size:10px;font-weight:800;color:var(--mid)}
 .photo-credit-source{flex:0 0 auto;color:var(--time);font-size:8.5px;font-weight:700;text-decoration:none}
 .photo-credit-source::after{content:" ↗"}
-
-/* 保存パネル長押し：共有・削除を選べるボトムシート */
-.mission-actions-overlay{
-  position:fixed;z-index:1450;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:18px 18px calc(18px + var(--sab));
-  background:rgba(3,7,18,.72);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)
-}
-.mission-actions-overlay[hidden]{display:none}
-.mission-actions-sheet{
-  width:min(430px,100%);padding:18px;border:1px solid var(--line-lt);border-radius:20px;
-  background:linear-gradient(155deg,var(--panel-2),var(--panel));box-shadow:0 22px 70px rgba(0,0,0,.52)
-}
-.mission-actions-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.2em;color:var(--time)}
-.mission-actions-title{margin:4px 0 14px;font-size:15px;font-weight:900;line-height:1.45;color:var(--ink)}
-.mission-actions-buttons{display:grid;gap:8px}
-.mission-action-btn{min-height:48px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer}
-.mission-action-share{border:1px solid color-mix(in srgb,var(--time) 58%,var(--line));background:color-mix(in srgb,var(--time) 11%,var(--panel));color:var(--time)}
-.mission-action-delete{border:1px solid color-mix(in srgb,var(--ge) 48%,var(--line));background:color-mix(in srgb,var(--ge) 9%,var(--panel));color:var(--ge)}
-.mission-action-cancel{min-height:40px;border:0;background:transparent;color:var(--soft)}
-.mission-action-btn:active{transform:scale(.98)}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
 .hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:auto}
@@ -1861,7 +1829,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <div class="card">
           <div class="card-h" style="text-align:center">SHARE / この結果をシェアする</div>
           <div class="share-sub">友だちや保護者に結果を送ってみよう</div>
-          <button class="goal-share-button target-panel-share" type="button" onclick="shareCurrentTargetPanel(this)">トップ画面と同じパネルを共有する</button>
           <div class="share-btns">
             <button class="share-btn share-line" onclick="shareResult('line')">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
@@ -2091,13 +2058,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
         <div class="note-card" id="timeResultNote">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
 
-        <div class="card goal-share-card">
-          <div class="card-h">SHARE YOUR GOAL / 目標を共有</div>
-          <div class="goal-share-title">目標を家族や友だちと共有しよう。</div>
-          <p class="goal-share-copy">応援し合ったり、残り時間について話すきっかけになります。対応端末では、現在の結果を画像付きで送れます。</p>
-          <button class="goal-share-button" type="button" onclick="shareTimeResult(this)">この目標を共有する</button>
-        </div>
-
         <div class="result-actions single">
           <button class="btn-again" onclick="go(5)">条件を変えてもう一度計測する</button>
         </div>
@@ -2180,19 +2140,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <p class="photo-credits-intro"><strong>画像出典：Wikimedia Commons</strong><br>表示用にトリミング・縮小・色調調整・WebP変換を行っています。撮影者名とライセンスの詳細は、各学校の「出典を見る」から確認できます。</p>
     <div class="photo-credits-list" id="photoCreditsList"></div>
   </div>
-</div>
-
-<!-- 保存パネルを長押しした時の操作メニュー -->
-<div class="mission-actions-overlay" id="missionActionsOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="missionActionsTitle" onclick="missionActionsBackdropClose(event)">
-  <section class="mission-actions-sheet">
-    <div class="mission-actions-code">SAVED PANEL / ACTION</div>
-    <h2 class="mission-actions-title" id="missionActionsTitle">このパネルをどうしますか？</h2>
-    <div class="mission-actions-buttons">
-      <button class="mission-action-btn mission-action-share" id="missionActionShare" type="button" onclick="runMissionPanelAction('share')">共有する</button>
-      <button class="mission-action-btn mission-action-delete" type="button" onclick="runMissionPanelAction('remove')">削除する</button>
-      <button class="mission-action-btn mission-action-cancel" id="missionActionCancel" type="button" onclick="closeMissionPanelActions()">キャンセル</button>
-    </div>
-  </section>
 </div>
 
 <script>
@@ -3631,217 +3578,14 @@ async function shareOrCopy(options){
     if(options.title)data.title=options.title;
     if(options.text)data.text=options.text;
     if(options.url)data.url=options.url;
-    if(options.file&&typeof File!=="undefined"){
-      const files=[options.file];
-      try{
-        if(!navigator.canShare||navigator.canShare({files})){
-          data=options.fileOnly?{files}:{title:options.title,text:full,files};
-        }
-      }catch(error){}
-    }
     try{
       await navigator.share(data);
-      trackShare(options.contentType,data.files?"native_image":"native");
+      trackShare(options.contentType,"native");
       showShareFeedback(options.button,"共有しました");
       return;
     }catch(error){if(error&&error.name==="AbortError")return}
   }
   await copyShareText(full,options.button,options.contentType);
-}
-function canvasRoundRect(ctx,x,y,w,h,r){
-  const radius=Math.min(r,w/2,h/2);
-  ctx.beginPath();ctx.moveTo(x+radius,y);ctx.arcTo(x+w,y,x+w,y+h,radius);ctx.arcTo(x+w,y+h,x,y+h,radius);ctx.arcTo(x,y+h,x,y,radius);ctx.arcTo(x,y,x+w,y,radius);ctx.closePath();
-}
-function fitCanvasText(ctx,text,maxWidth,start,min){
-  let size=start;do{ctx.font="900 "+size+"px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";if(ctx.measureText(text).width<=maxWidth)break;size-=2}while(size>min);
-  return size;
-}
-function timeShareMissionAccent(result){
-  const type=result.type||document.getElementById("timeGoalType")?.value||"custom";
-  if(normalizeGoalType(type,{goalName:result.goal})==="okinawa_exam")return "#ffb84d";
-  const shareId=result.missionId||currentTimeMissionId||"__share_preview__";
-  const targetDate=timeDateKey(result.target);
-  const others=readTimeMissions()
-    .filter(item=>normalizeGoalType(item.type,item)!=="okinawa_exam"&&item.id!==shareId)
-    .concat([{id:shareId,type,goalName:result.goal,targetDate}])
-    .sort((a,b)=>String(a.targetDate).localeCompare(String(b.targetDate)));
-  const index=Math.max(0,others.findIndex(item=>item.id===shareId));
-  return MISSION_GOAL_COLORS[index%MISSION_GOAL_COLORS.length];
-}
-function canvasGoalIcon(ctx,cx,cy,size,color,line){
-  ctx.save();
-  ctx.shadowColor=color;ctx.shadowBlur=22;
-  ctx.globalAlpha=.9;ctx.strokeStyle=color;ctx.lineWidth=3;
-  ctx.beginPath();ctx.arc(cx,cy,size/2,0,Math.PI*2);ctx.stroke();
-  ctx.shadowBlur=0;ctx.globalAlpha=.1;ctx.fillStyle=color;ctx.fill();ctx.globalAlpha=1;
-  /* トップ画面は外円に対して中央の目標ピンが小さい。 */
-  const s=size/180;
-  ctx.strokeStyle=color;ctx.lineWidth=4*s;ctx.lineCap="round";ctx.lineJoin="round";
-  ctx.beginPath();
-  ctx.moveTo(cx,cy+28*s);
-  ctx.bezierCurveTo(cx-5*s,cy+22*s,cx-31*s,cy+2*s,cx-31*s,cy-17*s);
-  ctx.bezierCurveTo(cx-31*s,cy-36*s,cx-17*s,cy-49*s,cx,cy-49*s);
-  ctx.bezierCurveTo(cx+17*s,cy-49*s,cx+31*s,cy-36*s,cx+31*s,cy-17*s);
-  ctx.bezierCurveTo(cx+31*s,cy+2*s,cx+5*s,cy+22*s,cx,cy+28*s);
-  ctx.stroke();
-  ctx.beginPath();ctx.arc(cx,cy-17*s,10*s,0,Math.PI*2);ctx.stroke();
-  [[0,-39],[0,5],[-22,-17],[22,-17]].forEach(([dx,dy])=>{ctx.beginPath();ctx.moveTo(cx+dx*s,cy+(dy-3)*s);ctx.lineTo(cx+dx*s,cy+(dy+3)*s);ctx.stroke()});
-  ctx.restore();
-}
-function createTimeShareImage(result){
-  try{
-      /* 共有画像は、ホームに並ぶMY GOALパネルそのものと同じ縦横比・情報配置にする。 */
-      const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=368;
-      const ctx=canvas.getContext("2d");if(!ctx)return null;
-      const light=document.documentElement.dataset.theme==="light";
-      const bg=light?"#f7f9fd":"#0c111f",panel=light?"#ffffff":"#161f38",panel2=light?"#f2f6fc":"#1b2545",line=light?"#d8e1ee":"#27314f";
-      const ink=light?"#1d2940":"#eef2ff",muted=light?"#8b98ad":"#5d6a8e",mid=light?"#586780":"#9aa6c8";
-      const time=light?"#548fe5":"#4cc3ff",warm=light?"#ee729d":"#ffb84d",accent=timeShareMissionAccent(result);
-      ctx.fillStyle=bg;ctx.fillRect(0,0,1200,368);
-      ctx.strokeStyle=light?"rgba(74,111,164,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
-      for(let x=0;x<=1200;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,368);ctx.stroke()}
-      for(let y=0;y<=368;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.stroke()}
-      const card=ctx.createLinearGradient(58,15,1142,348);card.addColorStop(0,panel2);card.addColorStop(1,panel);
-      canvasRoundRect(ctx,58,15,1084,333,34);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=line;ctx.lineWidth=2;ctx.stroke();
-      ctx.save();canvasRoundRect(ctx,58,15,1084,333,34);ctx.clip();
-      const glow=ctx.createRadialGradient(78,181,0,78,181,430);glow.addColorStop(0,accent+"30");glow.addColorStop(1,accent+"00");ctx.fillStyle=glow;ctx.fillRect(58,15,1084,333);ctx.restore();
-      canvasGoalIcon(ctx,182,181,138,accent,line);
-      ctx.fillStyle=accent;ctx.font="700 24px 'Chakra Petch',sans-serif";ctx.letterSpacing="5px";ctx.fillText("MY GOAL",294,85);ctx.letterSpacing="0px";
-      const goal=String(result.goal||"目標日").slice(0,40);fitCanvasText(ctx,goal,825,52,34);ctx.fillStyle=ink;ctx.fillText(goal,294,152);
-      const dayLabel=formatTimeDate(result.target)+"まで";
-      const hoursLabel=result.hoursScope==="all"?"すべての時間":"目標に使える時間";
-      const hourX=635;
-      ctx.fillStyle=muted;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(dayLabel,294,220);ctx.fillText(hoursLabel,hourX,220);
-      const dayText=result.expired?"終了":formatTimeHeadlineHours(result.days),hoursText=formatTimeHeadlineHours(result.total);
-      ctx.fillStyle=time;ctx.font="700 64px 'Chakra Petch',sans-serif";ctx.fillText(dayText,294,285);
-      let valueWidth=ctx.measureText(dayText).width;if(!result.expired){ctx.fillStyle=mid;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",306+valueWidth,283)}
-      let hourSize=66;do{ctx.font="700 "+hourSize+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hoursText).width<=360)break;hourSize-=2}while(hourSize>50);
-      ctx.fillStyle=warm;ctx.fillText(hoursText,hourX,285);valueWidth=ctx.measureText(hoursText).width;
-      ctx.fillStyle=mid;ctx.font="700 25px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",hourX+12+valueWidth,283);
-      const dataUrl=canvas.toDataURL("image/png");
-      const binary=atob(dataUrl.split(",")[1]);
-      const bytes=new Uint8Array(binary.length);
-      for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-      return new Blob([bytes],{type:"image/png"});
-  }catch(error){return null}
-}
-function loadTargetSharePhoto(target){
-  return new Promise(resolve=>{
-    const entry=schoolPhotoEntry(target&&target.schoolName);if(!entry){resolve(null);return}
-    const img=new Image();let settled=false;
-    const done=value=>{if(settled)return;settled=true;clearTimeout(timer);resolve(value)};
-    const timer=setTimeout(()=>done(null),1600);
-    img.onload=()=>done(img);img.onerror=()=>done(null);img.src="school-images/"+entry.file;
-  });
-}
-function drawTargetShareMetric(ctx,x,y,w,h,label,grade,subLabel,subValue,color,theme,overall){
-  const bg=theme.light?"#ffffff":"#070d1c",line=theme.line;
-  canvasRoundRect(ctx,x,y,w,h,20);
-  ctx.fillStyle=bg;ctx.globalAlpha=theme.light?(overall?.98:.92):(overall?.38:.3);ctx.fill();ctx.globalAlpha=1;
-  if(color){ctx.fillStyle=color;ctx.globalAlpha=theme.light?(overall?.12:.07):(overall?.055:.025);ctx.fill();ctx.globalAlpha=1}
-  ctx.strokeStyle=color||line;ctx.globalAlpha=overall?.72:.48;ctx.lineWidth=2;ctx.stroke();ctx.globalAlpha=1;
-  ctx.fillStyle=theme.muted;ctx.font="700 23px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(label,x+27,y+48);
-  ctx.fillStyle=color||theme.mid;ctx.font="700 "+(overall?42:39)+"px 'Chakra Petch','Zen Kaku Gothic New',sans-serif";ctx.fillText(grade,x+27,y+105);
-  ctx.textAlign="right";ctx.fillStyle=theme.muted;ctx.font="700 18px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";
-  if(subLabel)ctx.fillText(subLabel,x+w-25,y+59);
-  ctx.fillStyle=theme.mid;ctx.font="700 24px 'Chakra Petch','Zen Kaku Gothic New',sans-serif";ctx.fillText(subValue,x+w-25,y+94);ctx.textAlign="left";
-}
-async function createTargetShareImage(target,mission){
-  try{
-    const combined=!!mission;
-    /* トップ画面の実パネル比率に合わせる。共有用に横長へ圧縮しない。 */
-    const width=1200,height=combined?688:440;
-    const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-    const ctx=canvas.getContext("2d");if(!ctx)return null;
-    const light=document.documentElement.dataset.theme==="light";
-    const theme={light,bg:light?"#f7f9fd":"#0c111f",panel:light?"#ffffff":"#161f38",panel2:light?"#f2f6fc":"#1b2545",line:light?"#d8e1ee":"#27314f",ink:light?"#1d2940":"#eef2ff",mid:light?"#586780":"#9aa6c8",muted:light?"#8b98ad":"#5d6a8e",time:light?"#548fe5":"#4cc3ff",warm:light?"#ee729d":"#ffb84d"};
-    ctx.fillStyle=theme.bg;ctx.fillRect(0,0,width,height);
-    ctx.strokeStyle=light?"rgba(74,111,164,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
-    for(let x=0;x<=width;x+=44){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}
-    for(let y=0;y<=height;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}
-    const cardX=58,cardY=23,cardW=1084,cardH=height-52;
-    const card=ctx.createLinearGradient(cardX,cardY,cardX+cardW,cardY+cardH);card.addColorStop(0,theme.panel2);card.addColorStop(1,theme.panel);
-    canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.fillStyle=card;ctx.fill();ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.stroke();
-    ctx.save();canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.clip();
-    const warmGlow=ctx.createRadialGradient(cardX,cardY+cardH*.55,0,cardX,cardY+cardH*.55,520);warmGlow.addColorStop(0,theme.warm+(light?"16":"20"));warmGlow.addColorStop(1,theme.warm+"00");ctx.fillStyle=warmGlow;ctx.fillRect(cardX,cardY,cardW,cardH);ctx.restore();
-    const photo=await loadTargetSharePhoto(target);
-    if(photo){
-      const photoX=cardX+cardW*.4,photoY=cardY,photoW=cardW*.6,photoH=combined?440:285;
-      ctx.save();canvasRoundRect(ctx,cardX,cardY,cardW,cardH,36);ctx.clip();ctx.globalAlpha=light?.12:.2;
-      const scale=Math.max(photoW/photo.width,photoH/photo.height),dw=photo.width*scale,dh=photo.height*scale;
-      ctx.drawImage(photo,photoX+(photoW-dw)/2,photoY+(photoH-dh)/2,dw,dh);ctx.globalAlpha=1;
-      let fade=ctx.createLinearGradient(cardX+360,0,cardX+840,0);fade.addColorStop(0,theme.panel);fade.addColorStop(.65,light?"rgba(255,255,255,.62)":"rgba(22,31,56,.65)");fade.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=fade;ctx.fillRect(cardX,cardY,cardW,photoH);
-      fade=ctx.createLinearGradient(0,cardY+photoH*.48,0,cardY+photoH);fade.addColorStop(0,"rgba(0,0,0,0)");fade.addColorStop(1,theme.panel);ctx.fillStyle=fade;ctx.fillRect(cardX,cardY,cardW,photoH);ctx.restore();
-    }
-    const school=savedTargetSchoolLabel(target);
-    const contentX=116;
-    ctx.fillStyle=theme.warm;ctx.font="700 26px 'Chakra Petch',sans-serif";ctx.letterSpacing="5px";ctx.fillText(combined?"EXAM DATE":"FIRST CHOICE / 合格目標",contentX,combined?109:86);ctx.letterSpacing="0px";
-    if(combined){
-      const status=mission.manualDate?"EDITED":(Number(mission.examYear)===2027?"CONFIRMED":"TARGET SET");
-      ctx.font="700 22px 'Chakra Petch',sans-serif";const chipW=ctx.measureText(status).width+38,chipX=1080-chipW;
-      canvasRoundRect(ctx,chipX,75,chipW,48,24);ctx.fillStyle=light?"#edf9f4":"rgba(61,220,132,.08)";ctx.fill();ctx.strokeStyle="#3ddc84";ctx.lineWidth=2;ctx.globalAlpha=.65;ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle="#3ddc84";ctx.fillText(status,chipX+19,107);
-      ctx.fillStyle=theme.muted;ctx.font="800 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("第一志望・合格目標",contentX,178);
-    }
-    const nameY=combined?258:151;fitCanvasText(ctx,school,965,60,40);ctx.fillStyle=theme.ink;ctx.fillText(school,contentX,nameY);
-    let metricsY;
-    if(combined){
-      const summary=calculateSavedMission(mission);
-      const dayText=summary.expired?"終了":(summary.isToday?"0":formatTimeHeadlineHours(summary.days));
-      const hourText=formatTimeHeadlineHours(summary.isToday||summary.expired?0:summary.total);
-      const hourX=515;
-      ctx.fillStyle=theme.muted;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(formatTimeDate(summary.target)+"まで",contentX,320);ctx.fillText(savedMissionHoursLabel(mission,true),hourX,320);
-      ctx.fillStyle=theme.time;ctx.font="700 82px 'Chakra Petch',sans-serif";ctx.fillText(dayText,contentX,405);
-      let tw=ctx.measureText(dayText).width;if(!summary.expired){ctx.fillStyle=theme.mid;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",contentX+14+tw,401)}
-      let hs=82;do{ctx.font="700 "+hs+"px 'Chakra Petch',sans-serif";if(ctx.measureText(hourText).width<=390)break;hs-=2}while(hs>56);
-      ctx.fillStyle=theme.warm;ctx.fillText(hourText,hourX,405);tw=ctx.measureText(hourText).width;ctx.fillStyle=theme.mid;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",hourX+14+tw,401);
-      ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(contentX,443);ctx.lineTo(1084,443);ctx.stroke();metricsY=467;
-    }else{
-      ctx.strokeStyle=theme.line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(contentX,183);ctx.lineTo(1084,183);ctx.stroke();metricsY=211;
-    }
-    const overall=String(target.overall||target.label||"—").replace(/判定$/,""),nai=target.naiGrade||"—",dev=target.devGrade||"—";
-    const overallColor=target.color||theme.warm,naiColor=nai!=="—"?gInfo(nai).ring:theme.muted,devColor=dev!=="—"?gInfo(dev).ring:theme.muted;
-    const gapParts=(value,unit)=>value==null?["","未入力"]:["目安",(Number(value)===0?"±0":(Number(value)>0?"+":"")+Number(value))+unit];
-    const naiGap=gapParts(target.naiGap,"点"),devGap=gapParts(target.devGap,"");
-    drawTargetShareMetric(ctx,116,metricsY,342,140,"総合判定",overall+"判定","可能性",(Number(target.pct)||0)+"%",overallColor,theme,true);
-    drawTargetShareMetric(ctx,479,metricsY,281,140,"内申判定",nai==="—"?"—":nai+"判定",naiGap[0],naiGap[1],naiColor,theme,false);
-    drawTargetShareMetric(ctx,781,metricsY,281,140,"学力判定",dev==="—"?"—":dev+"判定",devGap[0],devGap[1],devColor,theme,false);
-    const dataUrl=canvas.toDataURL("image/png"),binary=atob(dataUrl.split(",")[1]),bytes=new Uint8Array(binary.length);
-    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-    return new Blob([bytes],{type:"image/png"});
-  }catch(error){return null}
-}
-async function shareTargetPanel(target,mission,button,contentType){
-  const blob=await createTargetShareImage(target,mission);let file=null;
-  if(blob&&typeof File!=="undefined")file=new File([blob],"target-scan-panel.png",{type:"image/png"});
-  const text="【合格判定】\n"+savedTargetSchoolLabel(target)+"\n"+(target.label||target.overall||"判定")+"（可能性 "+(Number(target.pct)||0)+"%の目安）";
-  await shareOrCopy({title:"",text,url:"",file,fileOnly:true,button,contentType:contentType||"target_panel"});
-}
-function currentTargetShareData(){
-  const result=window.__lastResult;if(!result||!result.school)return null;
-  return{schoolId:result.school.id,schoolName:result.school.name,dept:result.school.dept,pct:result.pct,overall:result.overall,label:result.label,color:result.color,nai:result.nai,dev:result.dev,naiGrade:result.naiGrade,devGrade:result.devGrade,naiGap:result.naiGap,devGap:result.devGap};
-}
-async function shareCurrentTargetPanel(button){
-  const target=currentTargetShareData();if(!target){toast("共有する判定がありません");return}
-  await shareTargetPanel(target,null,button,"target_scan_result");
-}
-async function shareSavedMissionPanel(mission){
-  const summary=calculateSavedMission(mission);
-  const result={missionId:mission.id,type:mission.type,goal:mission.goalName||"目標日",target:summary.target,days:summary.isToday||summary.expired?0:summary.days,total:summary.isToday||summary.expired?0:summary.total,hoursScope:mission.hoursScope,expired:summary.expired};
-  const blob=createTimeShareImage(result);let file=null;
-  if(blob&&typeof File!=="undefined")file=new File([blob],"time-scan-goal.png",{type:"image/png"});
-  const text="【目標までの時間】\n"+result.goal+"\n"+formatTimeDate(result.target)+"まで";
-  await shareOrCopy({title:"",text,url:"",file,fileOnly:true,contentType:"saved_goal_panel"});
-}
-async function shareTimeResult(button){
-  const result=window.__lastTimeResult;
-  if(!result){toast("共有する計測結果がありません");return}
-  const hoursLabel=result.hoursScope==="all"?"残り合計時間":"目標に使える時間";
-  const text="【目標までの時間】\n"+result.goal+"\n"+formatTimeDate(result.target)+"まで\nあと"+formatTimeHeadlineHours(result.days)+"日 / "+hoursLabel+" "+formatTimeHeadlineHours(result.total)+"時間\n\n目標を家族や友だちと共有して、応援し合おう。";
-  const blob=createTimeShareImage(result);
-  let file=null;
-  if(blob&&typeof File!=="undefined")file=new File([blob],"time-scan-goal.png",{type:"image/png"});
-  /* 画像を共有できる端末では、トップ画面と同じ目標パネルだけを送る。 */
-  await shareOrCopy({title:"",text,url:"",file,fileOnly:true,button,contentType:"time_scan_result"});
 }
 async function shareApp(button){
   const text="目標日までの残り日数と、目標に使える時間を確認できる無料アプリです。家族や友だちと目標を共有して、残り時間について話すきっかけに。";
@@ -4401,8 +4145,8 @@ function renderSavedTargetOnly(list,target){
   const code=document.createElement("div");code.className="mission-code";code.textContent="FIRST CHOICE / 合格目標";
   const name=document.createElement("div");name.className="mission-name";name.textContent=savedTargetSchoolLabel(target);
   body.append(code,name);appendTargetSnapshot(body,target,{hideSchool:true,fixedJudgments:true});open.append(body);
-  open.setAttribute("aria-label","保存した合格判定を開く。長押しで共有または削除");
-  bindMissionCardLongPress(card,open,"saved_target","保存した判定",{open:openSavedTargetResult,share:()=>shareTargetPanel(target,null,null,"saved_target_panel"),remove:deleteSavedTargetResult});
+  open.setAttribute("aria-label","保存した合格判定を開く。長押しで削除");
+  bindMissionCardLongPress(card,open,"saved_target","保存した判定",{open:openSavedTargetResult,remove:deleteSavedTargetResult});
   card.append(open);list.appendChild(card);
 }
 function renderSavedMissions(){
@@ -4473,10 +4217,9 @@ function renderSavedMissions(){
     hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
-    open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで共有または削除");
+    open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標",{
       open:()=>loadTimeMission(mission.id),
-      share:()=>isCombinedExam?shareTargetPanel(savedTarget,mission,null,"combined_exam_panel"):shareSavedMissionPanel(mission),
       remove:()=>deleteTimeMission(mission.id,mission.goalName||"この目標",true)
     });
     card.append(open);list.appendChild(card);
@@ -4506,30 +4249,6 @@ document.addEventListener("visibilitychange",()=>{
   if(!document.hidden)refreshSavedMissionsForNewDay();
 });
 window.addEventListener("focus",refreshSavedMissionsForNewDay);
-let missionPanelActionState=null;
-function openMissionPanelActions(name,actions,returnFocus){
-  const overlay=document.getElementById("missionActionsOverlay");if(!overlay)return;
-  missionPanelActionState={name,actions,returnFocus};
-  document.getElementById("missionActionsTitle").textContent=(name||"このパネル")+"をどうしますか？";
-  document.getElementById("missionActionShare").hidden=!(actions&&actions.share);
-  overlay.hidden=false;setTimeout(()=>document.getElementById("missionActionShare").focus(),50);
-}
-function closeMissionPanelActions(){
-  const overlay=document.getElementById("missionActionsOverlay");if(!overlay||overlay.hidden)return;
-  const focus=missionPanelActionState&&missionPanelActionState.returnFocus;
-  overlay.hidden=true;missionPanelActionState=null;if(focus&&focus.focus)focus.focus();
-}
-function missionActionsBackdropClose(event){if(event.target===event.currentTarget)closeMissionPanelActions()}
-async function runMissionPanelAction(kind){
-  const state=missionPanelActionState;if(!state)return;
-  const actions=state.actions||{},name=state.name;closeMissionPanelActions();
-  if(kind==="share"&&actions.share){await actions.share();return}
-  if(kind==="remove"&&actions.remove){
-    if(!window.confirm(name+"を削除しますか？"))return;
-    FX.play("clear");actions.remove();
-  }
-}
-document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMissionPanelActions()});
 function bindMissionCardLongPress(card,button,id,name,actions){
   let deleteTimer=null,feedbackTimer=null,longPressed=false,startX=0,startY=0;
   const cancel=()=>{
@@ -4544,8 +4263,9 @@ function bindMissionCardLongPress(card,button,id,name,actions){
     deleteTimer=setTimeout(()=>{
       deleteTimer=null;longPressed=true;card.classList.remove("holding");
       vibrate([24,35,55]);
-      const resolved=actions||{open:()=>loadTimeMission(id),share:null,remove:()=>deleteTimeMission(id,name,true)};
-      openMissionPanelActions(name,resolved,button);
+      if(!window.confirm(name+"を削除しますか？"))return;
+      FX.play("clear");
+      if(actions&&actions.remove)actions.remove();else deleteTimeMission(id,name,true);
     },900);
   });
   button.addEventListener("pointermove",event=>{
