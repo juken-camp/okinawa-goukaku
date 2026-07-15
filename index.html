@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260714-50 / FULL-REAL-SCREEN-PREVIEW -->
+<!-- BUILD: 20260715-51 / ZERO-DAY-STATUS-GUARD -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -3549,6 +3549,9 @@ function timeToday(){
 function timeDateKey(d){
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
+function isTimeSameDay(a,b){
+  return !!a&&!!b&&timeDateKey(a)===timeDateKey(b);
+}
 function parseTimeDate(value){
   if(!value)return null;
   const p=value.split("-").map(Number);
@@ -3780,8 +3783,9 @@ function writeTimeMissions(missions){
 function calculateSavedMission(mission){
   const target=parseTimeDate(mission.targetDate);
   const today=timeToday();
-  if(!target)return{valid:false,days:0,total:0,expired:false};
+  if(!target)return{valid:false,days:0,total:0,expired:false,isToday:false};
   const expired=target<today;
+  const isToday=!expired&&isTimeSameDay(target,today);
   const records=expired?[]:getTimeRecords(target,mission.memorial!==false);
   const weekdays=records.filter(row=>!row.offday).length;
   const offdays=records.length-weekdays;
@@ -3802,7 +3806,7 @@ function calculateSavedMission(mission){
       total+=row.offday?(Number(period.offday)||0):(Number(period.weekday)||0);
     });
   }
-  return{valid:true,expired,days:records.length,total,target,weekdays,offdays};
+  return{valid:true,expired,isToday,days:records.length,total,target,weekdays,offdays};
 }
 function savedMissionHoursLabel(mission,isExam){
   if(mission.hoursScope==="all")return "すべての時間";
@@ -3983,12 +3987,13 @@ function renderSavedMissions(){
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayGroup=document.createElement("div");dayGroup.className="mission-stat-group days";
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
-    dayStat.innerHTML=summary.expired?"終了":formatTimeHeadlineHours(summary.days)+"<small>日</small>";
+    /* 目標当日は待ち続けた「0」を表示し、翌日から「終了」に切り替える。 */
+    dayStat.innerHTML=summary.expired?"終了":(summary.isToday?"0<small>日</small>":formatTimeHeadlineHours(summary.days)+"<small>日</small>");
     dayGroup.append(date,dayStat);
     const hourGroup=document.createElement("div");hourGroup.className="mission-stat-group hours";
     const hourLabel=document.createElement("span");hourLabel.className="mission-stat-label";hourLabel.textContent=savedMissionHoursLabel(mission,isExam);
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
-    hourStat.innerHTML=formatTimeHeadlineHours(summary.total)+"<small>時間</small>";
+    hourStat.innerHTML=formatTimeHeadlineHours(summary.isToday||summary.expired?0:summary.total)+"<small>時間</small>";
     hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
@@ -4383,6 +4388,7 @@ function calculateTimeSimulation(){
   else if(timeMode==="year")method="学年・年度ごとの平日 / 土日祝設定";
   return{
     valid:true,target,goal:(document.getElementById("timeGoalName").value.trim()||"目標日"),records,
+    isToday:isTimeSameDay(target,today),
     days:records.length,weekdays,offdays,total,average:records.length?total/records.length:0,
     impacts,subjects,method,hoursScope:timeHoursScope,memorial:document.getElementById("okinawaMemorial").checked
   };
