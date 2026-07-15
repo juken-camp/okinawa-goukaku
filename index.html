@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-52 / SHARE-BLOOM-COMPACT-HOME -->
+<!-- BUILD: 20260715-54 / RESTORE-SCAN-CARDS-LIGHT-THEME -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -14,8 +14,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#0c111f">
 <script>
-/* テーマは描画前に復元し、切り替え時の一瞬の色ずれを防ぐ。 */
-try{if(localStorage.getItem("appThemeV1")==="bloom")document.documentElement.dataset.theme="bloom"}catch(error){}
+/* テーマは描画前に復元し、切り替え時の一瞬の色ずれを防ぐ。旧BLOOM設定はLIGHTへ移行する。 */
+try{if(["light","bloom"].includes(localStorage.getItem("appThemeV1")))document.documentElement.dataset.theme="light"}catch(error){}
 </script>
 <!-- PWA / icons -->
 <meta name="application-name" content="絶対合格">
@@ -29,7 +29,7 @@ try{if(localStorage.getItem("appThemeV1")==="bloom")document.documentElement.dat
 (()=>{
   if(!/^https?:$/.test(location.protocol))return;
   const root=location.origin+"/";
-  const themeColor=document.documentElement.dataset.theme==="bloom"?"#160f22":"#0c111f";
+  const themeColor=document.documentElement.dataset.theme==="light"?"#f7f9fd":"#0c111f";
   const manifest={
     id:root,name:"絶対合格",short_name:"絶対合格",
     description:"沖縄県立高校入試の合格可能性と、目標日までの残り日数・使える時間を確認できるシミュレーター。",
@@ -109,23 +109,24 @@ html{-webkit-text-size-adjust:100%}
   --sat:env(safe-area-inset-top,0px);
   --sab:env(safe-area-inset-bottom,0px);
 }
-html[data-theme="bloom"]{
-  --bg0:#160f22;
-  --bg1:#21152f;
-  --panel:#2a1b38;
-  --panel-2:#342143;
-  --line:#493157;
-  --line-lt:#62436f;
-  --ink:#fff4fb;
-  --mid:#c9b0cd;
-  --soft:#8f7899;
-  --amber:#ff7eb3;
-  --amber-deep:#e75a98;
-  --amber-glow:rgba(255,126,179,.22);
-  --time:#b9a1ff;
-  --time-deep:#8d72e2;
-  --time-glow:rgba(185,161,255,.22);
-  --ga:#6ee7d0;--gb:#9edfff;--gc:#ffd166;--gd:#ff9f8f;--ge:#ff82a9;
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg0:#f7f9fd;
+  --bg1:#eef3fa;
+  --panel:#ffffff;
+  --panel-2:#f2f6fc;
+  --line:#d8e1ee;
+  --line-lt:#bcc9dc;
+  --ink:#1d2940;
+  --mid:#586780;
+  --soft:#8b98ad;
+  --amber:#ee729d;
+  --amber-deep:#d94f82;
+  --amber-glow:rgba(238,114,157,.18);
+  --time:#548fe5;
+  --time-deep:#3973ca;
+  --time-glow:rgba(84,143,229,.17);
+  --ga:#27ad85;--gb:#438ddd;--gc:#d99a25;--gd:#e17a57;--ge:#df668a;
 }
 body{
   font-family:var(--jp);
@@ -160,15 +161,16 @@ input{font-family:inherit}
     radial-gradient(1px 1px at 34% 6%,rgba(255,255,255,.4),transparent 100%),
     radial-gradient(1px 1px at 60% 22%,rgba(255,255,255,.28),transparent 100%);
 }
-html[data-theme="bloom"] .sky{
+html[data-theme="light"] .sky{
   background:
-    radial-gradient(ellipse 92% 62% at 50% -10%,rgba(213,126,255,.16),transparent 60%),
-    radial-gradient(ellipse 72% 52% at 50% 115%,rgba(255,126,179,.11),transparent 60%),
-    linear-gradient(rgba(190,140,220,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(190,140,220,.06) 1px,transparent 1px),
+    radial-gradient(ellipse 92% 62% at 50% -10%,rgba(126,178,255,.19),transparent 60%),
+    radial-gradient(ellipse 72% 52% at 50% 115%,rgba(255,169,198,.14),transparent 60%),
+    linear-gradient(rgba(74,111,164,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,111,164,.055) 1px,transparent 1px),
     var(--bg0);
   background-size:100% 100%,100% 100%,44px 44px,44px 44px,100% 100%;
 }
+html[data-theme="light"] .sky::after{opacity:.18}
 
 /* ---------------- アプリシェル ---------------- */
 .app{
@@ -836,7 +838,7 @@ html[data-theme="bloom"] .sky{
 .fx-toggle.on .fxi-on i:nth-child(3){animation-delay:.3s}
 @keyframes fxEq{0%,100%{height:5px}50%{height:14px}}
 
-/* NIGHT / BLOOM テーマ切り替え */
+/* NIGHT / LIGHT テーマ切り替え */
 .theme-toggle{
   position:absolute;top:calc(12px + var(--sat));right:62px;z-index:260;
   width:40px;height:40px;border-radius:12px;cursor:pointer;
@@ -847,10 +849,24 @@ html[data-theme="bloom"] .sky{
 }
 .theme-toggle:hover{border-color:var(--line-lt);color:var(--mid)}
 .theme-toggle:active{transform:scale(.92)}
-.theme-toggle.on{border-color:var(--amber);color:var(--amber);background:rgba(45,24,58,.9);box-shadow:0 0 18px var(--amber-glow)}
-html[data-theme="bloom"] .fx-toggle{background:rgba(45,24,58,.88)}
-html[data-theme="bloom"] .mission-card.exam-combined,
-html[data-theme="bloom"] .mission-card.target-only{--mission:var(--amber)!important;--mission-glow:var(--amber-glow)!important}
+.theme-toggle.on{border-color:var(--time);color:var(--time);box-shadow:0 0 18px var(--time-glow)}
+html[data-theme="light"] .fx-toggle,
+html[data-theme="light"] .theme-toggle{background:rgba(255,255,255,.9);box-shadow:0 7px 20px rgba(46,68,105,.12)}
+html[data-theme="light"] .mission-card.exam-combined,
+html[data-theme="light"] .mission-card.target-only{--mission:var(--amber)!important;--mission-glow:var(--amber-glow)!important}
+html[data-theme="light"] .mission-card,
+html[data-theme="light"] .scan-choice,
+html[data-theme="light"] .card,
+html[data-theme="light"] .result-save-choice,
+html[data-theme="light"] .home-install{box-shadow:0 9px 24px rgba(46,68,105,.1)}
+html[data-theme="light"] .mission-target-metric,
+html[data-theme="light"] .goal-welcome-family{background:rgba(228,235,247,.72)}
+html[data-theme="light"] .goal-welcome-overlay{background:rgba(225,232,244,.78)}
+html[data-theme="light"] .goal-welcome-panel{background:linear-gradient(155deg,rgba(255,255,255,.99),rgba(242,246,252,.99));box-shadow:0 24px 70px rgba(46,68,105,.22)}
+html[data-theme="light"] .goal-welcome-close,
+html[data-theme="light"] .home-install-help{background:rgba(238,243,250,.92)}
+html[data-theme="light"] .time-input[type=date]{color-scheme:light}
+html[data-theme="light"] .dock{background:linear-gradient(180deg,transparent,rgba(247,249,253,.95) 34%)}
 
 /* タップ波紋（ソナー波） */
 .fx-wave{
@@ -952,14 +968,6 @@ html[data-theme="bloom"] .mission-card.target-only{--mission:var(--amber)!import
 /* 保存後は大きな入口カードを外し、再操作と共有だけをコンパクトに残す。 */
 .saved-home-extras{display:grid;gap:9px;margin-top:12px}
 .saved-home-extras[hidden]{display:none}
-.saved-home-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.saved-home-action{
-  min-height:39px;padding:0 9px;border:1px solid var(--line);border-radius:11px;
-  background:color-mix(in srgb,var(--panel) 88%,transparent);color:var(--mid);
-  font-size:10.5px;font-weight:900;cursor:pointer
-}
-.saved-home-action.time{border-color:color-mix(in srgb,var(--time) 42%,var(--line));color:var(--time)}
-.saved-home-action:active{transform:scale(.98)}
 .saved-home-share{
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;
   padding:12px 13px;border:1px solid color-mix(in srgb,var(--time) 28%,var(--line));border-radius:14px;
@@ -1185,10 +1193,10 @@ body.goal-welcome-open{overflow:hidden}
 .hub-scroll.has-saved .hub-content{display:flex;flex-direction:column;justify-content:flex-start;min-height:calc(100% + 2px);padding:calc(28px + var(--sat)) 0 calc(18px + var(--sab))}
 .hub-scroll.has-saved .hub-head{display:none}
 .hub-scroll.has-saved .saved-list{order:1;margin-top:0}
-.hub-scroll.has-saved .scan-choices{display:none}
-.hub-scroll.has-saved .saved-home-extras{order:2}
-.hub-scroll.has-saved .home-install{order:3}
-.hub-scroll.has-saved .hub-footer{order:4;margin-top:14px}
+.hub-scroll.has-saved .scan-choices{display:grid;order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.hub-scroll.has-saved .saved-home-extras{order:3}
+.hub-scroll.has-saved .home-install{order:4}
+.hub-scroll.has-saved .hub-footer{display:none}
 .hub-scroll.has-saved .scan-choice{min-width:0;padding:12px;border-radius:14px;box-shadow:0 7px 20px rgba(0,0,0,.16)}
 .hub-scroll.has-saved .choice-top{gap:8px;margin-bottom:9px}
 .hub-scroll.has-saved .choice-icon{width:34px;height:34px;flex-basis:34px;box-shadow:0 0 12px var(--choice-glow)}
@@ -1421,8 +1429,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
 <div class="app">
 
-  <!-- NIGHT / BLOOM テーマ切り替え -->
-  <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleAppTheme()" aria-pressed="false" aria-label="BLOOMテーマに切り替える" title="テーマカラーを切り替える">
+  <!-- NIGHT / LIGHT テーマ切り替え -->
+  <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleAppTheme()" aria-pressed="false" aria-label="LIGHTテーマに切り替える" title="テーマカラーを切り替える">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1.2 2.9 2.8 4.5 5.7 5.7-2.9 1.2-4.5 2.8-5.7 5.7-1.2-2.9-2.8-4.5-5.7-5.7C9.2 7.5 10.8 5.9 12 3Z"/><path d="M18.5 14.5c.6 1.5 1.5 2.4 3 3-1.5.6-2.4 1.5-3 3-.6-1.5-1.5-2.4-3-3 1.5-.6 2.4-1.5 3-3Z"/><path d="M5 14c.4 1 .9 1.5 2 2-1.1.5-1.6 1-2 2-.4-1-.9-1.5-2-2 1.1-.5 1.6-1 2-2Z"/></svg>
   </button>
 
@@ -1498,10 +1506,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <div class="saved-list" id="savedMissionList" hidden aria-label="保存した目標"></div>
 
         <div class="saved-home-extras" id="savedHomeExtras" hidden>
-          <div class="saved-home-actions" aria-label="新しい操作">
-            <button class="saved-home-action" id="savedTargetAction" type="button" onclick="startMission()">合格判定をする</button>
-            <button class="saved-home-action time" type="button" onclick="startCustomGoalFromWelcome()">＋ 新しい目標を追加</button>
-          </div>
           <section class="saved-home-share" aria-label="アプリを共有">
             <div>
               <div class="saved-home-share-code">SHARE THE APP</div>
@@ -3489,28 +3493,28 @@ function flashVictory(){
    ================================================================ */
 const APP_THEME_KEY="appThemeV1";
 function applyAppTheme(theme,persist){
-  const next=theme==="bloom"?"bloom":"night";
+  const next=theme==="light"?"light":"night";
   document.documentElement.dataset.theme=next;
   const button=document.getElementById("themeToggle");
   if(button){
-    const bloom=next==="bloom";
-    button.classList.toggle("on",bloom);
-    button.setAttribute("aria-pressed",String(bloom));
-    button.setAttribute("aria-label",bloom?"NIGHTテーマに切り替える":"BLOOMテーマに切り替える");
-    button.title=bloom?"NIGHTテーマへ":"BLOOMテーマへ";
+    const light=next==="light";
+    button.classList.toggle("on",light);
+    button.setAttribute("aria-pressed",String(light));
+    button.setAttribute("aria-label",light?"NIGHTテーマに切り替える":"LIGHTテーマに切り替える");
+    button.title=light?"NIGHTテーマへ":"LIGHTテーマへ";
   }
   const themeMeta=document.querySelector('meta[name="theme-color"]');
-  if(themeMeta)themeMeta.content=next==="bloom"?"#160f22":"#0c111f";
+  if(themeMeta)themeMeta.content=next==="light"?"#f7f9fd":"#0c111f";
   if(persist!==false){try{localStorage.setItem(APP_THEME_KEY,next)}catch(error){}}
 }
 function toggleAppTheme(){
-  const next=document.documentElement.dataset.theme==="bloom"?"night":"bloom";
+  const next=document.documentElement.dataset.theme==="light"?"night":"light";
   applyAppTheme(next,true);vibrate(10);FX.play("tap");
-  toast(next==="bloom"?"BLOOMテーマに切り替えました":"NIGHTテーマに切り替えました");
+  toast(next==="light"?"LIGHTテーマに切り替えました":"NIGHTテーマに切り替えました");
 }
 function restoreAppTheme(){
-  let saved=document.documentElement.dataset.theme==="bloom"?"bloom":"night";
-  try{saved=localStorage.getItem(APP_THEME_KEY)==="bloom"?"bloom":"night"}catch(error){}
+  let saved=document.documentElement.dataset.theme==="light"?"light":"night";
+  try{saved=["light","bloom"].includes(localStorage.getItem(APP_THEME_KEY))?"light":"night"}catch(error){}
   applyAppTheme(saved,false);
 }
 function trackShare(contentType,method){
@@ -3558,19 +3562,19 @@ function createTimeShareImage(result){
   try{
       const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=630;
       const ctx=canvas.getContext("2d");if(!ctx)return null;
-      const bloom=document.documentElement.dataset.theme==="bloom";
-      const bg=bloom?"#160f22":"#0c111f",panel=bloom?"#2a1b38":"#161f38",line=bloom?"#62436f":"#333f63";
-      const ink=bloom?"#fff4fb":"#eef2ff",muted=bloom?"#c9b0cd":"#9aa6c8",accent=bloom?"#b9a1ff":"#4cc3ff",warm=bloom?"#ff7eb3":"#ffb84d";
+      const light=document.documentElement.dataset.theme==="light";
+      const bg=light?"#f7f9fd":"#0c111f",panel=light?"#ffffff":"#161f38",line=light?"#d8e1ee":"#333f63";
+      const ink=light?"#1d2940":"#eef2ff",muted=light?"#586780":"#9aa6c8",accent=light?"#548fe5":"#4cc3ff",warm=light?"#ee729d":"#ffb84d";
       ctx.fillStyle=bg;ctx.fillRect(0,0,1200,630);
-      ctx.strokeStyle=bloom?"rgba(190,140,220,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
+      ctx.strokeStyle=light?"rgba(74,111,164,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
       for(let x=0;x<=1200;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,630);ctx.stroke()}
       for(let y=0;y<=630;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.stroke()}
-      const glow=ctx.createRadialGradient(1040,0,0,1040,0,540);glow.addColorStop(0,bloom?"rgba(255,126,179,.22)":"rgba(76,195,255,.17)");glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,1200,630);
+      const glow=ctx.createRadialGradient(1040,0,0,1040,0,540);glow.addColorStop(0,light?"rgba(126,178,255,.2)":"rgba(76,195,255,.17)");glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,1200,630);
       canvasRoundRect(ctx,58,50,1084,530,28);ctx.fillStyle=panel;ctx.fill();ctx.strokeStyle=line;ctx.lineWidth=2;ctx.stroke();
       ctx.fillStyle=accent;ctx.font="700 24px 'Chakra Petch',sans-serif";ctx.fillText("TIME SCAN / SHARE YOUR GOAL",100,106);
       const goal=String(result.goal||"目標日").slice(0,40);fitCanvasText(ctx,goal,1000,58,34);ctx.fillStyle=ink;ctx.fillText(goal,100,184);
       ctx.fillStyle=muted;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(formatTimeDate(result.target)+" まで",100,232);
-      canvasRoundRect(ctx,100,274,470,194,22);ctx.fillStyle=bloom?"rgba(45,24,58,.75)":"rgba(12,17,31,.62)";ctx.fill();ctx.strokeStyle=line;ctx.stroke();
+      canvasRoundRect(ctx,100,274,470,194,22);ctx.fillStyle=light?"#f2f6fc":"rgba(12,17,31,.62)";ctx.fill();ctx.strokeStyle=line;ctx.stroke();
       canvasRoundRect(ctx,630,274,470,194,22);ctx.fill();ctx.stroke();
       ctx.fillStyle=muted;ctx.font="700 24px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("残り日数",138,322);ctx.fillText(result.hoursScope==="all"?"残り合計時間":"目標に使える時間",668,322);
       ctx.fillStyle=accent;ctx.font="700 94px 'Chakra Petch',sans-serif";ctx.fillText(formatTimeHeadlineHours(result.days),138,425);
@@ -4180,8 +4184,6 @@ function renderSavedMissions(){
   document.querySelector(".hub-scroll").classList.toggle("has-saved",hasSaved);
   const extras=document.getElementById("savedHomeExtras");
   if(extras)extras.hidden=!hasSaved;
-  const targetAction=document.getElementById("savedTargetAction");
-  if(targetAction)targetAction.textContent=savedTarget?"合格判定を更新":"合格判定をする";
   list.innerHTML="";
   if(savedTarget&&!hasExamMission)renderSavedTargetOnly(list,savedTarget);
   let otherMissionIndex=0;
