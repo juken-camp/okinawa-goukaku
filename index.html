@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-51 / ZERO-DAY-STATUS-GUARD -->
+<!-- BUILD: 20260715-52 / SHARE-BLOOM-COMPACT-HOME -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -13,6 +13,10 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#0c111f">
+<script>
+/* テーマは描画前に復元し、切り替え時の一瞬の色ずれを防ぐ。 */
+try{if(localStorage.getItem("appThemeV1")==="bloom")document.documentElement.dataset.theme="bloom"}catch(error){}
+</script>
 <!-- PWA / icons -->
 <meta name="application-name" content="絶対合格">
 <meta name="mobile-web-app-capable" content="yes">
@@ -25,10 +29,11 @@
 (()=>{
   if(!/^https?:$/.test(location.protocol))return;
   const root=location.origin+"/";
+  const themeColor=document.documentElement.dataset.theme==="bloom"?"#160f22":"#0c111f";
   const manifest={
     id:root,name:"絶対合格",short_name:"絶対合格",
     description:"沖縄県立高校入試の合格可能性と、目標日までの残り日数・使える時間を確認できるシミュレーター。",
-    start_url:root,scope:root,display:"standalone",background_color:"#0c111f",theme_color:"#0c111f",lang:"ja",dir:"ltr",
+    start_url:root,scope:root,display:"standalone",background_color:themeColor,theme_color:themeColor,lang:"ja",dir:"ltr",
     categories:["education","utilities"],prefer_related_applications:false,
     icons:[
       {src:root+"pwa-zettai-goukaku-192.png",sizes:"192x192",type:"image/png",purpose:"any"},
@@ -104,6 +109,24 @@ html{-webkit-text-size-adjust:100%}
   --sat:env(safe-area-inset-top,0px);
   --sab:env(safe-area-inset-bottom,0px);
 }
+html[data-theme="bloom"]{
+  --bg0:#160f22;
+  --bg1:#21152f;
+  --panel:#2a1b38;
+  --panel-2:#342143;
+  --line:#493157;
+  --line-lt:#62436f;
+  --ink:#fff4fb;
+  --mid:#c9b0cd;
+  --soft:#8f7899;
+  --amber:#ff7eb3;
+  --amber-deep:#e75a98;
+  --amber-glow:rgba(255,126,179,.22);
+  --time:#b9a1ff;
+  --time-deep:#8d72e2;
+  --time-glow:rgba(185,161,255,.22);
+  --ga:#6ee7d0;--gb:#9edfff;--gc:#ffd166;--gd:#ff9f8f;--ge:#ff82a9;
+}
 body{
   font-family:var(--jp);
   font-size:15px;line-height:1.65;
@@ -137,6 +160,15 @@ input{font-family:inherit}
     radial-gradient(1px 1px at 34% 6%,rgba(255,255,255,.4),transparent 100%),
     radial-gradient(1px 1px at 60% 22%,rgba(255,255,255,.28),transparent 100%);
 }
+html[data-theme="bloom"] .sky{
+  background:
+    radial-gradient(ellipse 92% 62% at 50% -10%,rgba(213,126,255,.16),transparent 60%),
+    radial-gradient(ellipse 72% 52% at 50% 115%,rgba(255,126,179,.11),transparent 60%),
+    linear-gradient(rgba(190,140,220,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(190,140,220,.06) 1px,transparent 1px),
+    var(--bg0);
+  background-size:100% 100%,100% 100%,44px 44px,44px 44px,100% 100%;
+}
 
 /* ---------------- アプリシェル ---------------- */
 .app{
@@ -148,7 +180,7 @@ input{font-family:inherit}
 
 /* ---------------- トップバー（工程レール） ---------------- */
 .rail{
-  padding:calc(12px + var(--sat)) 64px 10px 18px;
+  padding:calc(12px + var(--sat)) 112px 10px 18px;
   display:none;align-items:center;gap:10px;
 }
 .rail.show{display:flex}
@@ -699,6 +731,18 @@ input{font-family:inherit}
 .share-copy.copied{border-color:var(--ga);color:var(--ga)}
 .share-sub{font-size:11.5px;color:var(--soft);text-align:center;margin-bottom:14px}
 
+.goal-share-card{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--time) 32%,var(--line))}
+.goal-share-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,var(--time-glow),transparent 55%)}
+.goal-share-card>*{position:relative;z-index:1}
+.goal-share-title{font-size:14px;font-weight:900;line-height:1.45;color:var(--ink)}
+.goal-share-copy{margin-top:4px;font-size:10.5px;line-height:1.7;color:var(--soft)}
+.goal-share-button{
+  width:100%;min-height:45px;margin-top:12px;border:1px solid color-mix(in srgb,var(--time) 65%,var(--line));border-radius:11px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--time) 26%,var(--panel-2)),color-mix(in srgb,var(--time) 12%,var(--panel)));
+  color:var(--time);font-size:12px;font-weight:900;cursor:pointer
+}
+.goal-share-button:active{transform:scale(.98)}
+
 .note-card{
   border:1px dashed var(--line-lt);border-radius:14px;padding:14px 16px;
   font-size:11.5px;line-height:1.8;color:var(--soft);margin-bottom:14px;
@@ -791,6 +835,22 @@ input{font-family:inherit}
 .fx-toggle.on .fxi-on i:nth-child(2){animation-delay:.15s}
 .fx-toggle.on .fxi-on i:nth-child(3){animation-delay:.3s}
 @keyframes fxEq{0%,100%{height:5px}50%{height:14px}}
+
+/* NIGHT / BLOOM テーマ切り替え */
+.theme-toggle{
+  position:absolute;top:calc(12px + var(--sat));right:62px;z-index:260;
+  width:40px;height:40px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(22,31,56,.85);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  color:var(--soft);display:grid;place-items:center;
+  transition:border-color .2s,color .2s,box-shadow .25s,transform .12s,background .25s;
+}
+.theme-toggle:hover{border-color:var(--line-lt);color:var(--mid)}
+.theme-toggle:active{transform:scale(.92)}
+.theme-toggle.on{border-color:var(--amber);color:var(--amber);background:rgba(45,24,58,.9);box-shadow:0 0 18px var(--amber-glow)}
+html[data-theme="bloom"] .fx-toggle{background:rgba(45,24,58,.88)}
+html[data-theme="bloom"] .mission-card.exam-combined,
+html[data-theme="bloom"] .mission-card.target-only{--mission:var(--amber)!important;--mission-glow:var(--amber-glow)!important}
 
 /* タップ波紋（ソナー波） */
 .fx-wave{
@@ -888,6 +948,32 @@ input{font-family:inherit}
   color:var(--soft);font-size:8px;letter-spacing:.04em;text-decoration:underline;text-decoration-color:rgba(144,155,190,.35);text-underline-offset:3px;cursor:pointer
 }
 .photo-credits-link:hover,.goal-welcome-link:hover{color:var(--mid)}
+
+/* 保存後は大きな入口カードを外し、再操作と共有だけをコンパクトに残す。 */
+.saved-home-extras{display:grid;gap:9px;margin-top:12px}
+.saved-home-extras[hidden]{display:none}
+.saved-home-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.saved-home-action{
+  min-height:39px;padding:0 9px;border:1px solid var(--line);border-radius:11px;
+  background:color-mix(in srgb,var(--panel) 88%,transparent);color:var(--mid);
+  font-size:10.5px;font-weight:900;cursor:pointer
+}
+.saved-home-action.time{border-color:color-mix(in srgb,var(--time) 42%,var(--line));color:var(--time)}
+.saved-home-action:active{transform:scale(.98)}
+.saved-home-share{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;
+  padding:12px 13px;border:1px solid color-mix(in srgb,var(--time) 28%,var(--line));border-radius:14px;
+  background:linear-gradient(155deg,color-mix(in srgb,var(--panel-2) 92%,var(--time) 8%),var(--panel))
+}
+.saved-home-share-code{font-family:var(--num);font-size:7.5px;font-weight:700;letter-spacing:.17em;color:var(--time)}
+.saved-home-share-title{margin-top:2px;font-size:11.5px;font-weight:900;line-height:1.4}
+.saved-home-share-copy{margin-top:2px;font-size:8.8px;line-height:1.55;color:var(--soft)}
+.saved-home-share-btn{
+  min-height:38px;padding:0 12px;border:1px solid color-mix(in srgb,var(--time) 58%,var(--line));border-radius:10px;
+  background:color-mix(in srgb,var(--time) 10%,var(--panel));color:var(--time);font-size:10px;font-weight:900;white-space:nowrap;cursor:pointer
+}
+.saved-home-share-btn:active{transform:scale(.97)}
+@media(max-width:370px){.saved-home-share{grid-template-columns:1fr}.saved-home-share-btn{width:100%}}
 
 /* 初回だけ、受験以外にも自由に使えることを伝える。 */
 .goal-welcome-overlay{
@@ -1096,12 +1182,13 @@ body.goal-welcome-open{overflow:hidden}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
 .hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:auto}
-.hub-scroll.has-saved .hub-content{display:flex;flex-direction:column;justify-content:center;min-height:calc(100% + 2px);padding:calc(28px + var(--sat)) 0 calc(34px + var(--sab))}
+.hub-scroll.has-saved .hub-content{display:flex;flex-direction:column;justify-content:flex-start;min-height:calc(100% + 2px);padding:calc(28px + var(--sat)) 0 calc(18px + var(--sab))}
 .hub-scroll.has-saved .hub-head{display:none}
 .hub-scroll.has-saved .saved-list{order:1;margin-top:0}
-.hub-scroll.has-saved .scan-choices{order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.hub-scroll.has-saved .scan-choices{display:none}
+.hub-scroll.has-saved .saved-home-extras{order:2}
 .hub-scroll.has-saved .home-install{order:3}
-.hub-scroll.has-saved .hub-footer{order:4;margin-top:16px}
+.hub-scroll.has-saved .hub-footer{order:4;margin-top:14px}
 .hub-scroll.has-saved .scan-choice{min-width:0;padding:12px;border-radius:14px;box-shadow:0 7px 20px rgba(0,0,0,.16)}
 .hub-scroll.has-saved .choice-top{gap:8px;margin-bottom:9px}
 .hub-scroll.has-saved .choice-icon{width:34px;height:34px;flex-basis:34px;box-shadow:0 0 12px var(--choice-glow)}
@@ -1334,6 +1421,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 
 <div class="app">
 
+  <!-- NIGHT / BLOOM テーマ切り替え -->
+  <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleAppTheme()" aria-pressed="false" aria-label="BLOOMテーマに切り替える" title="テーマカラーを切り替える">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1.2 2.9 2.8 4.5 5.7 5.7-2.9 1.2-4.5 2.8-5.7 5.7-1.2-2.9-2.8-4.5-5.7-5.7C9.2 7.5 10.8 5.9 12 3Z"/><path d="M18.5 14.5c.6 1.5 1.5 2.4 3 3-1.5.6-2.4 1.5-3 3-.6-1.5-1.5-2.4-3-3 1.5-.6 2.4-1.5 3-3Z"/><path d="M5 14c.4 1 .9 1.5 2 2-1.1.5-1.6 1-2 2-.4-1-.9-1.5-2-2 1.1-.5 1.6-1 2-2Z"/></svg>
+  </button>
+
   <!-- FXモード切り替え（効果音＋演出） -->
   <button class="fx-toggle" id="fxToggle" onclick="toggleFX()" aria-pressed="false" aria-label="効果音と演出をオンにする">
     <svg class="fxi-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
@@ -1404,6 +1496,21 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </div>
 
         <div class="saved-list" id="savedMissionList" hidden aria-label="保存した目標"></div>
+
+        <div class="saved-home-extras" id="savedHomeExtras" hidden>
+          <div class="saved-home-actions" aria-label="新しい操作">
+            <button class="saved-home-action" id="savedTargetAction" type="button" onclick="startMission()">合格判定をする</button>
+            <button class="saved-home-action time" type="button" onclick="startCustomGoalFromWelcome()">＋ 新しい目標を追加</button>
+          </div>
+          <section class="saved-home-share" aria-label="アプリを共有">
+            <div>
+              <div class="saved-home-share-code">SHARE THE APP</div>
+              <div class="saved-home-share-title">家族や友だちにも、このアプリを</div>
+              <p class="saved-home-share-copy">目標を共有して、応援し合ったり、残り時間について話すきっかけに。</p>
+            </div>
+            <button class="saved-home-share-btn" type="button" onclick="shareApp(this)">共有する</button>
+          </section>
+        </div>
 
         <aside class="home-install" id="homeInstall" hidden aria-label="ホーム画面への追加案内">
           <div class="home-install-icon" aria-hidden="true">
@@ -1901,6 +2008,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         </div>
 
         <div class="note-card" id="timeResultNote">これは入力した条件から使える時間を合計するシミュレーターです。必要な勉強時間や勉強方法、適切な教科配分を判定するものではありません。</div>
+
+        <div class="card goal-share-card">
+          <div class="card-h">SHARE YOUR GOAL / 目標を共有</div>
+          <div class="goal-share-title">目標を家族や友だちと共有しよう。</div>
+          <p class="goal-share-copy">応援し合ったり、残り時間について話すきっかけになります。対応端末では、現在の結果を画像付きで送れます。</p>
+          <button class="goal-share-button" type="button" onclick="shareTimeResult(this)">この目標を共有する</button>
+        </div>
 
         <div class="result-actions single">
           <button class="btn-again" onclick="go(5)">条件を変えてもう一度計測する</button>
@@ -3373,6 +3487,119 @@ function flashVictory(){
 /* ================================================================
    SHARE
    ================================================================ */
+const APP_THEME_KEY="appThemeV1";
+function applyAppTheme(theme,persist){
+  const next=theme==="bloom"?"bloom":"night";
+  document.documentElement.dataset.theme=next;
+  const button=document.getElementById("themeToggle");
+  if(button){
+    const bloom=next==="bloom";
+    button.classList.toggle("on",bloom);
+    button.setAttribute("aria-pressed",String(bloom));
+    button.setAttribute("aria-label",bloom?"NIGHTテーマに切り替える":"BLOOMテーマに切り替える");
+    button.title=bloom?"NIGHTテーマへ":"BLOOMテーマへ";
+  }
+  const themeMeta=document.querySelector('meta[name="theme-color"]');
+  if(themeMeta)themeMeta.content=next==="bloom"?"#160f22":"#0c111f";
+  if(persist!==false){try{localStorage.setItem(APP_THEME_KEY,next)}catch(error){}}
+}
+function toggleAppTheme(){
+  const next=document.documentElement.dataset.theme==="bloom"?"night":"bloom";
+  applyAppTheme(next,true);vibrate(10);FX.play("tap");
+  toast(next==="bloom"?"BLOOMテーマに切り替えました":"NIGHTテーマに切り替えました");
+}
+function restoreAppTheme(){
+  let saved=document.documentElement.dataset.theme==="bloom"?"bloom":"night";
+  try{saved=localStorage.getItem(APP_THEME_KEY)==="bloom"?"bloom":"night"}catch(error){}
+  applyAppTheme(saved,false);
+}
+function trackShare(contentType,method){
+  try{if(typeof gtag==="function")gtag("event","share",{content_type:contentType,method})}catch(error){}
+}
+function showShareFeedback(button,label){
+  if(!button)return;
+  const original=button.dataset.originalLabel||button.textContent;
+  button.dataset.originalLabel=original;button.textContent=label;button.disabled=true;
+  setTimeout(()=>{button.textContent=original;button.disabled=false},2200);
+}
+async function copyShareText(full,button,contentType){
+  const done=()=>{vibrate(15);FX.play("copy");showShareFeedback(button,"コピーしました");trackShare(contentType,"copy")};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    try{await navigator.clipboard.writeText(full);done();return}catch(error){}
+  }
+  window.prompt("コピーしてください:",full);trackShare(contentType,"manual_copy");
+}
+async function shareOrCopy(options){
+  const full=options.text+"\n"+options.url;
+  if(navigator.share){
+    let data={title:options.title,text:options.text,url:options.url};
+    if(options.file&&typeof File!=="undefined"){
+      const files=[options.file];
+      try{if(!navigator.canShare||navigator.canShare({files}))data={title:options.title,text:full,files}}catch(error){}
+    }
+    try{
+      await navigator.share(data);
+      trackShare(options.contentType,data.files?"native_image":"native");
+      showShareFeedback(options.button,"共有しました");
+      return;
+    }catch(error){if(error&&error.name==="AbortError")return}
+  }
+  await copyShareText(full,options.button,options.contentType);
+}
+function canvasRoundRect(ctx,x,y,w,h,r){
+  const radius=Math.min(r,w/2,h/2);
+  ctx.beginPath();ctx.moveTo(x+radius,y);ctx.arcTo(x+w,y,x+w,y+h,radius);ctx.arcTo(x+w,y+h,x,y+h,radius);ctx.arcTo(x,y+h,x,y,radius);ctx.arcTo(x,y,x+w,y,radius);ctx.closePath();
+}
+function fitCanvasText(ctx,text,maxWidth,start,min){
+  let size=start;do{ctx.font="900 "+size+"px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";if(ctx.measureText(text).width<=maxWidth)break;size-=2}while(size>min);
+  return size;
+}
+function createTimeShareImage(result){
+  try{
+      const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=630;
+      const ctx=canvas.getContext("2d");if(!ctx)return null;
+      const bloom=document.documentElement.dataset.theme==="bloom";
+      const bg=bloom?"#160f22":"#0c111f",panel=bloom?"#2a1b38":"#161f38",line=bloom?"#62436f":"#333f63";
+      const ink=bloom?"#fff4fb":"#eef2ff",muted=bloom?"#c9b0cd":"#9aa6c8",accent=bloom?"#b9a1ff":"#4cc3ff",warm=bloom?"#ff7eb3":"#ffb84d";
+      ctx.fillStyle=bg;ctx.fillRect(0,0,1200,630);
+      ctx.strokeStyle=bloom?"rgba(190,140,220,.08)":"rgba(90,110,180,.08)";ctx.lineWidth=1;
+      for(let x=0;x<=1200;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,630);ctx.stroke()}
+      for(let y=0;y<=630;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1200,y);ctx.stroke()}
+      const glow=ctx.createRadialGradient(1040,0,0,1040,0,540);glow.addColorStop(0,bloom?"rgba(255,126,179,.22)":"rgba(76,195,255,.17)");glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,1200,630);
+      canvasRoundRect(ctx,58,50,1084,530,28);ctx.fillStyle=panel;ctx.fill();ctx.strokeStyle=line;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=accent;ctx.font="700 24px 'Chakra Petch',sans-serif";ctx.fillText("TIME SCAN / SHARE YOUR GOAL",100,106);
+      const goal=String(result.goal||"目標日").slice(0,40);fitCanvasText(ctx,goal,1000,58,34);ctx.fillStyle=ink;ctx.fillText(goal,100,184);
+      ctx.fillStyle=muted;ctx.font="700 27px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText(formatTimeDate(result.target)+" まで",100,232);
+      canvasRoundRect(ctx,100,274,470,194,22);ctx.fillStyle=bloom?"rgba(45,24,58,.75)":"rgba(12,17,31,.62)";ctx.fill();ctx.strokeStyle=line;ctx.stroke();
+      canvasRoundRect(ctx,630,274,470,194,22);ctx.fill();ctx.stroke();
+      ctx.fillStyle=muted;ctx.font="700 24px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("残り日数",138,322);ctx.fillText(result.hoursScope==="all"?"残り合計時間":"目標に使える時間",668,322);
+      ctx.fillStyle=accent;ctx.font="700 94px 'Chakra Petch',sans-serif";ctx.fillText(formatTimeHeadlineHours(result.days),138,425);
+      ctx.fillStyle=muted;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("日",430,423);
+      ctx.fillStyle=warm;ctx.font="700 82px 'Chakra Petch',sans-serif";ctx.fillText(formatTimeHeadlineHours(result.total),668,425);
+      ctx.fillStyle=muted;ctx.font="700 28px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("時間",1010,423);
+      ctx.fillStyle=muted;ctx.font="700 20px 'Zen Kaku Gothic New','Hiragino Sans',sans-serif";ctx.fillText("絶対合格｜沖縄県立高校入試 合格判定シミュレーター",100,528);
+      ctx.textAlign="right";ctx.font="600 20px 'Chakra Petch',sans-serif";ctx.fillText("okinawa-goukaku.jp",1100,528);ctx.textAlign="left";
+      const dataUrl=canvas.toDataURL("image/png");
+      const binary=atob(dataUrl.split(",")[1]);
+      const bytes=new Uint8Array(binary.length);
+      for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+      return new Blob([bytes],{type:"image/png"});
+  }catch(error){return null}
+}
+async function shareTimeResult(button){
+  const result=window.__lastTimeResult;
+  if(!result){toast("共有する計測結果がありません");return}
+  const hoursLabel=result.hoursScope==="all"?"残り合計時間":"目標に使える時間";
+  const text="【目標までの時間】\n"+result.goal+"\n"+formatTimeDate(result.target)+"まで\nあと"+formatTimeHeadlineHours(result.days)+"日 / "+hoursLabel+" "+formatTimeHeadlineHours(result.total)+"時間\n\n目標を家族や友だちと共有して、応援し合おう。";
+  const blob=createTimeShareImage(result);
+  let file=null;
+  if(blob&&typeof File!=="undefined")file=new File([blob],"time-scan-goal.png",{type:"image/png"});
+  await shareOrCopy({title:"目標までの時間｜絶対合格",text,url:"https://okinawa-goukaku.jp/",file,button,contentType:"time_scan_result"});
+}
+async function shareApp(button){
+  const text="目標日までの残り日数と、目標に使える時間を確認できる無料アプリです。家族や友だちと目標を共有して、残り時間について話すきっかけに。";
+  await shareOrCopy({title:"沖縄県立高校入試 合格判定シミュレーター｜絶対合格",text,url:"https://okinawa-goukaku.jp/",button,contentType:"app"});
+}
 function shareResult(kind){
   const r=window.__lastResult;
   if(!r){return}
@@ -3951,6 +4178,10 @@ function renderSavedMissions(){
   const hasSaved=missions.length>0||!!savedTarget;
   list.hidden=!hasSaved;
   document.querySelector(".hub-scroll").classList.toggle("has-saved",hasSaved);
+  const extras=document.getElementById("savedHomeExtras");
+  if(extras)extras.hidden=!hasSaved;
+  const targetAction=document.getElementById("savedTargetAction");
+  if(targetAction)targetAction.textContent=savedTarget?"合格判定を更新":"合格判定をする";
   list.innerHTML="";
   if(savedTarget&&!hasExamMission)renderSavedTargetOnly(list,savedTarget);
   let otherMissionIndex=0;
@@ -4577,6 +4808,7 @@ function initTimeScan(){
 /* ================================================================
    GLOBAL INIT
    ================================================================ */
+restoreAppTheme();
 renderSchools();
 initPad("naishin");initPad("dev");initPad("score");
 updateDock();
