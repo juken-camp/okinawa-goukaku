@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-62 / REMOVE-PANEL-IMAGE-SHARING -->
+<!-- BUILD: 20260715-63 / IOS-SHARE-ICON-ASSETS -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -36,9 +36,9 @@ try{if(["light","bloom"].includes(localStorage.getItem("appThemeV1")))document.d
     start_url:root,scope:root,display:"standalone",background_color:themeColor,theme_color:themeColor,lang:"ja",dir:"ltr",
     categories:["education","utilities"],prefer_related_applications:false,
     icons:[
-      {src:root+"pwa-zettai-goukaku-192.png",sizes:"192x192",type:"image/png",purpose:"any"},
-      {src:root+"pwa-zettai-goukaku-512.png",sizes:"512x512",type:"image/png",purpose:"any"},
-      {src:root+"pwa-zettai-goukaku-maskable-512.png",sizes:"512x512",type:"image/png",purpose:"maskable"}
+      {src:root+"pwa-zettai-goukaku-192.png?v=20260715-63",sizes:"192x192",type:"image/png",purpose:"any"},
+      {src:root+"pwa-zettai-goukaku-512.png?v=20260715-63",sizes:"512x512",type:"image/png",purpose:"any"},
+      {src:root+"pwa-zettai-goukaku-maskable-512.png?v=20260715-63",sizes:"512x512",type:"image/png",purpose:"maskable"}
     ]
   };
   try{
@@ -52,12 +52,14 @@ try{if(["light","bloom"].includes(localStorage.getItem("appThemeV1")))document.d
   }catch(error){}
 })();
 </script>
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/pwa-zettai-goukaku-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/pwa-zettai-goukaku-512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-zettai-goukaku.png">
+<link rel="icon" href="/favicon.ico?v=20260715-63" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=20260715-63">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=20260715-63">
+<link rel="icon" type="image/png" sizes="192x192" href="/pwa-zettai-goukaku-192.png?v=20260715-63">
+<link rel="icon" type="image/png" sizes="512x512" href="/pwa-zettai-goukaku-512.png?v=20260715-63">
+<!-- iOSは標準名を最優先。共有パネル・ホーム画面用に透過なしの180px画像を使う。 -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260715-63">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-zettai-goukaku.png?v=20260715-63">
 <title>沖縄県立高校入試 合格判定シミュレーター</title>
 <meta name="description" content="沖縄県立高校入試の合格可能性と、さまざまな目標日までの残り日数・使える時間をブラウザ内で確認できる無料シミュレーター。">
 <meta name="robots" content="index,follow">
