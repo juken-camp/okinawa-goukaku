@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-54 / RESTORE-SCAN-CARDS-LIGHT-THEME -->
+<!-- BUILD: 20260715-55 / LIGHT-JUDGMENTS-RESTORE-FOOTER -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -958,6 +958,7 @@ html[data-theme="light"] .dock{background:linear-gradient(180deg,transparent,rgb
 .choice-btn:active{transform:scale(.975)}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
+.hub-disclaimer{max-width:430px;margin:10px auto 0;font-size:8px;line-height:1.65;color:var(--soft)}
 .hub-help-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 13px;margin-top:8px}
 .photo-credits-link,.goal-welcome-link{
   display:inline-block;margin:0;padding:2px 4px;border:0;background:transparent;
@@ -1153,6 +1154,20 @@ body.goal-welcome-open{overflow:hidden}
   text-align:right;font-size:6.5px;line-height:1.15;white-space:nowrap
 }
 .mission-card .fixed-judgments .mission-target-gap strong{font-size:10px;line-height:1.15}
+/* LIGHTでは判定3枠を白ベースの淡い判定色にし、NIGHT用の濃いグレーを残さない。 */
+html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric{
+  border-color:color-mix(in srgb,var(--grade-color,var(--mission)) 30%,var(--line));
+  background:color-mix(in srgb,var(--grade-color,var(--mission)) 8%,#fff);
+  box-shadow:0 3px 10px rgba(46,68,105,.045)
+}
+html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.overall{
+  border-color:color-mix(in srgb,var(--grade-color,var(--mission)) 48%,var(--line));
+  background:linear-gradient(145deg,color-mix(in srgb,var(--grade-color,var(--mission)) 15%,#fff),#fff);
+  box-shadow:inset 0 0 18px color-mix(in srgb,var(--grade-color,var(--mission)) 8%,transparent),0 3px 10px rgba(46,68,105,.05)
+}
+html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.empty{
+  border-color:var(--line);background:#f7f9fd;box-shadow:none
+}
 @media(max-width:370px){
   .mission-card.exam-combined{padding:15px 16px}
   .mission-card.exam-combined .mission-name{font-size:19px}
@@ -1196,7 +1211,7 @@ body.goal-welcome-open{overflow:hidden}
 .hub-scroll.has-saved .scan-choices{display:grid;order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
 .hub-scroll.has-saved .saved-home-extras{order:3}
 .hub-scroll.has-saved .home-install{order:4}
-.hub-scroll.has-saved .hub-footer{display:none}
+.hub-scroll.has-saved .hub-footer{display:block;order:5;margin-top:17px;padding:0 6px 4px}
 .hub-scroll.has-saved .scan-choice{min-width:0;padding:12px;border-radius:14px;box-shadow:0 7px 20px rgba(0,0,0,.16)}
 .hub-scroll.has-saved .choice-top{gap:8px;margin-bottom:9px}
 .hub-scroll.has-saved .choice-icon{width:34px;height:34px;flex-basis:34px;box-shadow:0 0 12px var(--choice-glow)}
@@ -1537,6 +1552,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <button class="goal-welcome-link" type="button" onclick="openGoalWelcome(true)">使い方・活用例</button>
             <button class="photo-credits-link" type="button" onclick="openPhotoCredits()">学校画像の出典・ライセンス</button>
           </div>
+          <p class="hub-disclaimer">判定・残り時間は参考情報です。実際の入試制度や日程は、沖縄県教育委員会・各高校の最新情報をご確認ください。</p>
         </div>
        </div>
       </div>
