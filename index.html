@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-63 / IOS-SHARE-ICON-ASSETS -->
+<!-- BUILD: 20260715-64 / NATURAL-TIME-LABELS -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -1927,8 +1927,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <section class="time-section">
           <div class="time-section-h"><h3 class="time-section-title">時間の数え方</h3><span class="time-section-code">02 / HOURS</span></div>
           <div class="time-scope-tabs" role="tablist" aria-label="時間の数え方">
-            <button class="time-scope-btn" type="button" data-time-scope="all" onclick="switchTimeScope('all')"><b>すべての時間</b><small>1日24時間で数える</small></button>
-            <button class="time-scope-btn on" type="button" data-time-scope="usable" onclick="switchTimeScope('usable')"><b>目標に使える時間</b><small>生活に合わせて数える</small></button>
+            <button class="time-scope-btn" type="button" data-time-scope="all" onclick="switchTimeScope('all')"><b>ぜんぶで</b><small>1日24時間で数える</small></button>
+            <button class="time-scope-btn on" type="button" data-time-scope="usable" onclick="switchTimeScope('usable')"><b>目標に使えるのは</b><small>生活に合わせて数える</small></button>
           </div>
           <div class="time-all-note" id="timeAllHoursNote" hidden>目標日までの時間を、1日24時間としてそのまま合計します。</div>
           <div id="timeUsableControls">
@@ -4029,8 +4029,8 @@ function calculateSavedMission(mission){
   return{valid:true,expired,isToday,days:records.length,total,target,weekdays,offdays};
 }
 function savedMissionHoursLabel(mission,isExam){
-  if(mission.hoursScope==="all")return "すべての時間";
-  return isExam?"勉強に使える時間":"目標に使える時間";
+  if(mission.hoursScope==="all")return "ぜんぶで";
+  return isExam?"勉強に使えるのは":"目標に使えるのは";
 }
 function savedTargetSchoolLabel(target){
   const raw=String(target.schoolName||"志望校").trim();
