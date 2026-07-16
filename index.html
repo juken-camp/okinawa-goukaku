@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-74 / EXAM-COUNTDOWN-DATE -->
+<!-- BUILD: 20260716-75 / SAFARI-VIEWPORT-SHELL -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -114,6 +114,7 @@ html{
   --jp:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;
   --sat:env(safe-area-inset-top,0px);
   --sab:env(safe-area-inset-bottom,0px);
+  --app-height:100dvh;
 }
 html[data-theme="light"]{
   color-scheme:light;
@@ -177,7 +178,7 @@ input{font-family:inherit}
 
 /* ---------------- 背景：夜のグリッド ---------------- */
 .sky{
-  position:absolute;inset:0;z-index:0;pointer-events:none;
+  position:fixed;inset:0;z-index:0;pointer-events:none;
   min-height:100vh;min-height:100lvh;
   background:
     radial-gradient(ellipse 90% 60% at 50% -10%,rgba(76,120,255,.12),transparent 60%),
@@ -211,7 +212,7 @@ html[data-theme="light"] .sky::after{opacity:.18}
 .app{
   position:relative;z-index:1;
   max-width:560px;margin:0 auto;
-  height:100dvh;
+  height:var(--app-height);min-height:0;overflow:hidden;
   display:flex;flex-direction:column;
 }
 
@@ -260,7 +261,7 @@ html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba
 @media(max-width:370px){.rail{padding-left:96px}.workflow-home{left:10px;padding-inline:9px}}
 
 /* ---------------- シーン ---------------- */
-.stage{flex:1;position:relative;overflow:hidden;overscroll-behavior:none}
+.stage{flex:1;min-height:0;position:relative;overflow:hidden;overscroll-behavior:none}
 .scene{
   position:absolute;inset:0;
   display:flex;flex-direction:column;
@@ -859,7 +860,7 @@ html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba
 
 /* ---------------- FXモード（効果音＋大げさ演出） ---------------- */
 .fx-toggle{
-  position:absolute;top:calc(12px + var(--sat));right:14px;z-index:260;
+  position:fixed;top:calc(12px + var(--sat));right:max(14px,calc(50vw - 266px));z-index:260;
   width:40px;height:40px;border-radius:12px;cursor:pointer;
   border:1px solid var(--line);background:rgba(22,31,56,.85);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
@@ -880,7 +881,7 @@ html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba
 
 /* NIGHT / LIGHT テーマ切り替え */
 .theme-toggle{
-  position:absolute;top:calc(12px + var(--sat));right:62px;z-index:260;
+  position:fixed;top:calc(12px + var(--sat));right:max(62px,calc(50vw - 218px));z-index:260;
   width:40px;height:40px;border-radius:12px;cursor:pointer;
   border:1px solid var(--line);background:rgba(22,31,56,.85);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
@@ -1311,6 +1312,8 @@ html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.e
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
 .hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:contain}
 .hub-scroll.has-saved .hub-content{display:flex;flex-direction:column;justify-content:flex-start;min-height:calc(100% + 2px);padding:calc(28px + var(--sat)) 0 calc(18px + var(--sab))}
+/* Safariブラウザでは上の余白を詰め、同じ表示領域で志望校パネル全体を見せる。 */
+html.browser-shell .hub-scroll.has-saved .hub-content{padding-top:calc(16px + var(--sat));padding-bottom:calc(26px + var(--sab))}
 .hub-scroll.has-saved .hub-head{display:none}
 .hub-scroll.has-saved .saved-list{order:1;margin-top:0}
 .hub-scroll.has-saved .scan-choices{display:grid;order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
@@ -2784,6 +2787,24 @@ const SCHOOL_PHOTOS=[
   {name:"泊",file:"59.webp",source:"https://commons.wikimedia.org/wiki/File:Okinawa_Prefectural_Tomari_High_School.JPG"}
 ];
 const SCHOOL_PHOTO_MAP=new Map(SCHOOL_PHOTOS.map(item=>[item.name,item]));
+/* Safariのツールバーを除いた実表示高にアプリを合わせ、ブラウザ表示を識別する。 */
+(function syncAppViewportShell(){
+  const root=document.documentElement;
+  const standaloneQuery=window.matchMedia("(display-mode: standalone)");
+  const sync=()=>{
+    const standalone=standaloneQuery.matches||window.navigator.standalone===true;
+    root.classList.toggle("browser-shell",!standalone);
+    const viewport=window.visualViewport;
+    const height=viewport&&viewport.height?viewport.height:window.innerHeight;
+    if(height>0)root.style.setProperty("--app-height",Math.round(height)+"px");
+  };
+  sync();
+  window.addEventListener("resize",sync,{passive:true});
+  window.addEventListener("orientationchange",sync,{passive:true});
+  window.addEventListener("pageshow",sync,{passive:true});
+  if(window.visualViewport)window.visualViewport.addEventListener("resize",sync,{passive:true});
+  standaloneQuery.addEventListener?.("change",sync);
+})();
 
 let scene=0;               /* 0:hub 1:school 2:naishin 3:dev 4:target result 5:time setup 6:time result */
 let currentArea="南部";
@@ -5149,7 +5170,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-74", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-75", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
