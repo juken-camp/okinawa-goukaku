@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-67 / EQUAL-PRIMARY-SCAN-CTAS -->
+<!-- BUILD: 20260716-69 / ALWAYS-VISIBLE-HOME-BACK -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -217,10 +217,11 @@ html[data-theme="light"] .sky::after{opacity:.18}
 
 /* ---------------- トップバー（工程レール） ---------------- */
 .rail{
-  padding:calc(12px + var(--sat)) 112px 10px 18px;
+  padding:calc(12px + var(--sat)) 112px 10px 104px;
   display:none;align-items:center;gap:10px;
 }
 .rail.show{display:flex}
+.rail .rail-back{display:none}
 .rail-back{
   width:36px;height:36px;border-radius:10px;flex-shrink:0;
   border:1px solid var(--line);background:var(--panel);
@@ -241,6 +242,22 @@ html[data-theme="light"] .sky::after{opacity:.18}
 .rail-step.done span{color:var(--mid)}
 .rail-step.on{border-color:var(--amber);background:var(--amber-glow)}
 .rail-step.on small,.rail-step.on span{color:var(--amber)}
+
+/* 入力中・結果表示中に、スクロール位置に関係なくホームへ戻れる共通ボタン。 */
+.workflow-home{
+  position:fixed;z-index:190;top:calc(12px + var(--sat));left:max(14px,calc(50vw - 266px));
+  height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 11px;
+  border:1px solid var(--line-lt);border-radius:12px;background:rgba(22,31,56,.92);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 7px 20px rgba(0,0,0,.2);
+  color:var(--mid);font-size:10px;font-weight:900;line-height:1;white-space:nowrap;cursor:pointer;
+  transition:border-color .15s,color .15s,transform .12s,background .2s
+}
+.workflow-home[hidden]{display:none}
+.workflow-home svg{width:15px;height:15px}
+.workflow-home:hover{border-color:var(--time);color:var(--ink)}
+.workflow-home:active{transform:scale(.96)}
+html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba(255,255,255,.94);color:var(--mid);box-shadow:0 7px 20px rgba(46,68,105,.13)}
+@media(max-width:370px){.rail{padding-left:96px}.workflow-home{left:10px;padding-inline:9px}}
 
 /* ---------------- シーン ---------------- */
 .stage{flex:1;position:relative;overflow:hidden}
@@ -1110,6 +1127,9 @@ body.goal-welcome-open{overflow:hidden}
 .mission-icon svg{width:23px;height:23px}
 .mission-body{min-width:0}
 .mission-code{font-family:var(--num);font-size:8px;font-weight:700;letter-spacing:.18em;color:var(--mission);margin-bottom:2px}
+.mission-code-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.mission-code-row .mission-code{min-width:0;margin-bottom:0}
+.mission-chip-group{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:4px}
 .mission-role{margin:2px 0 1px;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--mid)}
 .mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
 .mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
@@ -1123,11 +1143,11 @@ body.goal-welcome-open{overflow:hidden}
 .mission-stat{font-family:var(--num);font-size:20px;font-weight:700;line-height:1.05;color:var(--time);white-space:nowrap}
 .mission-stat-group:last-child .mission-stat{color:var(--amber)}
 .mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
-.mission-stat.is-ended{
+.mission-stat.is-status{
   padding:2px 0 3px;font-family:var(--jp);font-size:14px!important;font-weight:900;line-height:1.15;
-  letter-spacing:.12em;color:color-mix(in srgb,var(--time) 76%,var(--mid));text-shadow:none
+  letter-spacing:.08em;color:color-mix(in srgb,var(--time) 82%,var(--ink));text-shadow:none
 }
-.mission-card.exam-combined .mission-stat.is-ended{font-size:16px!important}
+.mission-card.exam-combined .mission-stat.is-status{font-size:16px!important}
 .mission-card.other-goal .mission-stat{font-size:23px;line-height:1.02}
 .mission-card.other-goal .mission-stat small{font-size:9.5px}
 .mission-target-snapshot{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--mission) 22%,var(--line))}
@@ -1148,7 +1168,7 @@ body.goal-welcome-open{overflow:hidden}
 .mission-card.target-only .mission-target-snapshot{margin-top:8px}
 .mission-card.target-only .mission-name,.mission-card.exam-combined .mission-name{font-size:19px;letter-spacing:.01em}
 
-/* 目標期間中は発光、終了後は暗転。斜めのスタンプで状態を一目で伝える。 */
+/* 状態は内容を隠さず、発光・小さなバッジ・補足文だけで伝える。 */
 .mission-card.mission-active{
   border-color:color-mix(in srgb,var(--mission) 74%,#fff 8%);
   box-shadow:0 12px 32px rgba(0,0,0,.23),0 0 25px var(--mission-glow),inset 0 0 24px color-mix(in srgb,var(--mission) 8%,transparent)
@@ -1156,27 +1176,22 @@ body.goal-welcome-open{overflow:hidden}
 .mission-card.mission-active::before{opacity:1;animation:missionActiveGlow 2.2s ease-in-out infinite}
 @keyframes missionActiveGlow{0%,100%{opacity:.72}50%{opacity:1}}
 .mission-card.mission-expired{border-color:color-mix(in srgb,var(--line) 76%,#596177)}
-.mission-card.mission-expired .mission-open{opacity:.34;filter:grayscale(.72) saturate(.35) brightness(.72)}
-.mission-card.mission-expired .mission-school-photo{opacity:.08;filter:grayscale(1) brightness(.55)}
-.mission-card.mission-expired::after{
-  content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:rgba(4,8,18,.34)
+.mission-card.mission-expired .mission-open{opacity:.76;filter:grayscale(.18) saturate(.72)}
+.mission-card.mission-expired .mission-school-photo{opacity:.1;filter:grayscale(.7) saturate(.45) brightness(.7)}
+.mission-state-chip{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:18px;padding:2px 7px 1px;
+  border:1px solid color-mix(in srgb,var(--mission) 52%,var(--line));border-radius:999px;
+  background:color-mix(in srgb,var(--mission) 10%,var(--panel));font-family:var(--num);font-size:7px;font-weight:700;
+  line-height:1;letter-spacing:.1em;color:var(--mission);white-space:nowrap;box-shadow:0 0 12px var(--mission-glow)
 }
-.mission-state-stamp{
-  position:absolute;z-index:4;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-width:min(82%,270px);padding:6px 14px 7px;border:3px solid currentColor;border-radius:8px;
-  transform:translate(-50%,-50%) rotate(-8deg);pointer-events:none;text-align:center;text-transform:uppercase;
-  font-family:var(--num);color:var(--mission);background:color-mix(in srgb,var(--panel) 74%,transparent);
-  box-shadow:0 0 0 2px color-mix(in srgb,currentColor 34%,transparent),0 0 22px var(--mission-glow)
-}
-.mission-state-stamp strong{font-size:clamp(22px,7.3vw,36px);font-weight:700;line-height:1;letter-spacing:.075em;white-space:nowrap;text-shadow:0 0 16px var(--mission-glow)}
-.mission-state-stamp small{margin-top:5px;font-family:var(--jp);font-size:8px;font-weight:900;line-height:1.2;letter-spacing:.12em;color:currentColor;white-space:nowrap}
-.mission-card.mission-expired .mission-state-stamp{color:#9aa3b8;background:rgba(10,15,28,.82);box-shadow:0 0 0 2px rgba(154,163,184,.2)}
-.mission-card.mission-expired .mission-state-stamp strong{text-shadow:none}
+.mission-card.mission-expired .mission-state-chip{border-color:rgba(154,163,184,.36);background:rgba(154,163,184,.08);color:#aab2c5;box-shadow:none}
+.mission-state-note{margin-top:5px;font-size:8px;font-weight:800;line-height:1.35;letter-spacing:.055em;color:color-mix(in srgb,var(--mission) 62%,var(--mid))}
+.mission-card.mission-expired .mission-state-note{color:color-mix(in srgb,var(--soft) 76%,var(--mid))}
 html[data-theme="light"] .mission-card.mission-active{box-shadow:0 10px 28px rgba(47,68,105,.13),0 0 24px var(--mission-glow),inset 0 0 20px color-mix(in srgb,var(--mission) 7%,transparent)}
 html[data-theme="light"] .mission-card.mission-expired{background:#eef1f6;border-color:#cbd2df}
-html[data-theme="light"] .mission-card.mission-expired::after{background:rgba(232,236,244,.48)}
-html[data-theme="light"] .mission-card.mission-expired .mission-state-stamp{color:#697386;background:rgba(248,250,253,.9);box-shadow:0 0 0 2px rgba(105,115,134,.18)}
-@media(max-width:370px){.mission-state-stamp{min-width:84%;padding-inline:10px}.mission-state-stamp strong{font-size:22px}.mission-state-stamp small{font-size:7.5px}}
+html[data-theme="light"] .mission-card.mission-expired .mission-open{opacity:.8}
+html[data-theme="light"] .mission-card.mission-expired .mission-state-chip{border-color:#c3cad7;background:#f8f9fc;color:#697386}
+@media(max-width:370px){.mission-state-chip{padding-inline:6px;font-size:6.5px}.mission-chip-group{gap:3px}}
 
 /* 毎日見る「入試パネル」：上から目標・期限・残り時間・3判定の順に読む */
 .mission-card.exam-combined{padding:16px 18px}
@@ -1528,6 +1543,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   <button class="fx-toggle" id="fxToggle" onclick="toggleFX()" aria-pressed="false" aria-label="効果音と演出をオンにする">
     <svg class="fxi-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <span class="fxi-on" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  <!-- どの工程からでも設定を中断してホームへ戻る -->
+  <button class="workflow-home" id="workflowHome" type="button" onclick="exitWorkflowToHome()" aria-label="設定を中断してホームへ戻る" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>ホーム</span>
   </button>
 
   <!-- 工程レール -->
@@ -2798,6 +2819,14 @@ function go(n){
     b.classList.toggle("on",s===n);
     b.classList.toggle("done",s<n);
   });
+  const workflowHome=document.getElementById("workflowHome");
+  if(workflowHome)workflowHome.hidden=n===0;
+  /* 別の画面を開いた時は必ず先頭から見せ、戻る導線も見失わせない。 */
+  if(prev!==n&&n!==0){
+    const activeScene=document.getElementById(SCENE_IDS[n]);
+    const scroller=activeScene&&activeScene.querySelector(".scene-scroll");
+    if(scroller)scroller.scrollTop=0;
+  }
   updateDock();
   updateTimeDock();
   if(n===5) updateTimeSimulation();
@@ -2805,6 +2834,7 @@ function go(n){
 }
 function goBack(){ if(scene>1) go(scene-1); else go(0); }
 function goHome(){ renderSavedMissions();go(0); }
+function exitWorkflowToHome(){goHome()}
 function railJump(n){ go(n); }
 function startMission(){ vibrate(15); FX.play("launch"); go(1); }
 function startTimeMission(){ vibrate(15); FX.play("launch"); prepareNewTimeGoal();go(5); }
@@ -4158,21 +4188,20 @@ function missionStateCopy(mission,summary,isExam){
   if(!summary.active&&!summary.expired)return null;
   const challenge=isChallengeMission(mission,isExam);
   if(summary.active){
-    if(challenge)return{className:"mission-active",label:"GOOD LUCK!",sub:isExam?"県立高校入試の期間中です":"本番の日です"};
-    if(summary.isRange)return{className:"mission-active",label:"ENJOY!",sub:"予定の期間中です"};
-    return{className:"mission-active",label:"TODAY!",sub:"今日です"};
+    if(summary.isRange)return{className:"mission-active",label:challenge?"GOOD LUCK!":"開催中",sub:isExam?"県立高校入試の期間中です":"目標の期間中です",dayText:"開催中"};
+    if(challenge)return{className:"mission-active",label:"GOOD LUCK!",sub:"本番の日です",dayText:"本日"};
+    return{className:"mission-active",label:"TODAY",sub:"目標の日です",dayText:"本日"};
   }
-  return challenge
-    ?{className:"mission-expired",label:"GOOD JOB!",sub:"おつかれさまでした"}
-    :{className:"mission-expired",label:"FINISHED",sub:"この予定は終了しました"};
+  return{className:"mission-expired",label:"終了",sub:challenge?"おつかれさまでした":"この目標は終了しました",dayText:"終了"};
 }
-function appendMissionStateStamp(card,state){
+function applyMissionState(card,state){
   if(!state)return;
   card.classList.add(state.className);
-  const stamp=document.createElement("div");stamp.className="mission-state-stamp";stamp.setAttribute("aria-hidden","true");
-  const label=document.createElement("strong");label.textContent=state.label;
-  const sub=document.createElement("small");sub.textContent=state.sub;
-  stamp.append(label,sub);card.appendChild(stamp);
+}
+function appendMissionStateChip(container,state){
+  if(!container||!state)return;
+  const chip=document.createElement("span");chip.className="mission-state-chip";chip.textContent=state.label;
+  container.appendChild(chip);
 }
 function savedTargetSchoolLabel(target){
   const raw=String(target.schoolName||"志望校").trim();
@@ -4339,28 +4368,36 @@ function renderSavedMissions(){
     else if(isExam)code.textContent=mission.manualDate?"EXAM DATE / EDITED":(Number(mission.examYear)===2027?"EXAM DATE / CONFIRMED":"EXAM DATE");
     else code.textContent="MY GOAL";
     const codeRow=document.createElement("div");codeRow.className="mission-code-row";codeRow.appendChild(code);
+    const chipGroup=document.createElement("div");chipGroup.className="mission-chip-group";
     if(isCombinedExam){
       const status=document.createElement("span");
       const statusType=mission.manualDate?"edited":(Number(mission.examYear)===2027?"confirmed":"set");
       status.className="mission-status-chip "+statusType;
       status.textContent=statusType==="set"?"TARGET SET":statusType.toUpperCase();
-      codeRow.appendChild(status);
+      chipGroup.appendChild(status);
     }
+    appendMissionStateChip(chipGroup,state);
+    if(chipGroup.childElementCount)codeRow.appendChild(chipGroup);
     const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
     const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
-    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDateRange(summary.target,summary.end);
+    const date=document.createElement("div");date.className="mission-date";
+    date.textContent=summary.expired
+      ?(summary.isRange?formatTimeDateRange(summary.target,summary.end)+"・終了":formatTimeDate(summary.end)+"に終了")
+      :formatTimeDateRange(summary.target,summary.end);
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayGroup=document.createElement("div");dayGroup.className="mission-stat-group days";
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
-    /* 開始日から終了日までは待ち続けた「0」。終了日の翌日から「終了」に切り替える。 */
-    dayStat.classList.toggle("is-ended",summary.expired);
-    dayStat.innerHTML=summary.expired?"終了":(summary.active?"0<small>日</small>":formatTimeHeadlineHours(summary.days)+"<small>日</small>");
+    /* 当日・期間中・終了は数値より言葉で示し、内容を隠さず状態を伝える。 */
+    dayStat.classList.toggle("is-status",!!state);
+    if(state)dayStat.textContent=state.dayText;
+    else dayStat.innerHTML=formatTimeHeadlineHours(summary.days)+"<small>日</small>";
     dayGroup.append(date,dayStat);
     const hourGroup=document.createElement("div");hourGroup.className="mission-stat-group hours";
     const hourLabel=document.createElement("span");hourLabel.className="mission-stat-label";hourLabel.textContent=savedMissionHoursLabel(mission,isExam);
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHeadlineHours(summary.active||summary.expired?0:summary.total)+"<small>時間</small>";
-    hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
+    hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(codeRow);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
+    if(state){const note=document.createElement("div");note.className="mission-state-note";note.textContent=state.sub;body.appendChild(note)}
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+(state?"。"+state.sub:"")+"。開く。長押しで削除");
@@ -4368,7 +4405,7 @@ function renderSavedMissions(){
       open:()=>loadTimeMission(mission.id),
       remove:()=>deleteTimeMission(mission.id,mission.goalName||"この目標",true)
     });
-    card.append(open);appendMissionStateStamp(card,state);list.appendChild(card);
+    card.append(open);applyMissionState(card,state);list.appendChild(card);
   });
 }
 /* 日付が変わったら、保存済みパネルの「あと○日・○時間」も更新する。
@@ -5087,7 +5124,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-67", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-69", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
