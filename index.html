@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-75 / SAFARI-VIEWPORT-SHELL -->
+<!-- BUILD: 20260716-76 / LOCK-IOS-ZOOM -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -11,7 +11,7 @@
   gtag('js', new Date());
   gtag('config', 'G-QB9X0232K7');
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0c111f">
 <script>
 /* テーマは描画前に復元し、切り替え時の一瞬の色ずれを防ぐ。旧BLOOM設定はLIGHTへ移行する。 */
@@ -175,6 +175,13 @@ html[data-theme="light"] body{
 }
 button{font-family:inherit;-webkit-tap-highlight-color:transparent}
 input{font-family:inherit}
+/* iOS Safariの連続タップ拡大を止める。縦スクロールや通常のタップ操作は維持する。 */
+button,a,[role="button"],input,select,textarea,label{touch-action:manipulation}
+/* 16px未満の入力欄へフォーカスした時にSafariが自動拡大するのを防ぐ。 */
+@supports (-webkit-touch-callout:none){
+  .time-input,.time-select,.allocation-name-input{font-size:16px!important}
+  .tc-number,.impact-minute-input input{font-size:17px!important}
+}
 
 /* ---------------- 背景：夜のグリッド ---------------- */
 .sky{
@@ -2806,6 +2813,15 @@ const SCHOOL_PHOTO_MAP=new Map(SCHOOL_PHOTOS.map(item=>[item.name,item]));
   standaloneQuery.addEventListener?.("change",sync);
 })();
 
+/* iOS Safariはviewport指定だけではピンチ操作を許す版があるため、拡大ジェスチャーも明示的に止める。 */
+(function lockSafariPageZoom(){
+  const stopZoom=event=>event.preventDefault();
+  document.addEventListener("gesturestart",stopZoom,{passive:false});
+  document.addEventListener("gesturechange",stopZoom,{passive:false});
+  document.addEventListener("gestureend",stopZoom,{passive:false});
+  document.addEventListener("dblclick",stopZoom,{passive:false});
+})();
+
 let scene=0;               /* 0:hub 1:school 2:naishin 3:dev 4:target result 5:time setup 6:time result */
 let currentArea="南部";
 let selectedId=null;
@@ -5170,7 +5186,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-75", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-76", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
