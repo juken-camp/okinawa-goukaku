@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260715-64 / NATURAL-TIME-LABELS -->
+<!-- BUILD: 20260716-67 / EQUAL-PRIMARY-SCAN-CTAS -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -977,7 +977,14 @@ html[data-theme="light"] .dock{background:linear-gradient(180deg,transparent,rgb
   background:color-mix(in srgb,var(--choice) 12%,var(--panel));color:var(--choice);font-size:14px;font-weight:900;
   display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,background .18s,box-shadow .18s;
 }
-.scan-choice.target .choice-btn{background:linear-gradient(180deg,var(--amber),var(--amber-deep));border-color:transparent;color:#241500}
+.scan-choice.target .choice-btn{
+  background:linear-gradient(180deg,var(--amber),var(--amber-deep));border-color:transparent;color:#241500;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 7px 18px rgba(232,154,42,.18)
+}
+.scan-choice.time .choice-btn{
+  background:linear-gradient(180deg,#62d3ff,var(--time-deep));border-color:transparent;color:#071827;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 7px 18px rgba(35,141,202,.18)
+}
 .choice-btn:active{transform:scale(.975)}
 @media (hover:hover){.scan-choice:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--choice) 65%,var(--line));box-shadow:0 14px 34px rgba(0,0,0,.25),0 0 22px var(--choice-glow)}.choice-btn:hover{box-shadow:0 0 22px var(--choice-glow)}}
 .hub-footer{text-align:center;margin-top:18px}
@@ -1116,6 +1123,11 @@ body.goal-welcome-open{overflow:hidden}
 .mission-stat{font-family:var(--num);font-size:20px;font-weight:700;line-height:1.05;color:var(--time);white-space:nowrap}
 .mission-stat-group:last-child .mission-stat{color:var(--amber)}
 .mission-stat small{font-family:var(--jp);font-size:9px;color:var(--soft);font-weight:700;margin-left:3px}
+.mission-stat.is-ended{
+  padding:2px 0 3px;font-family:var(--jp);font-size:14px!important;font-weight:900;line-height:1.15;
+  letter-spacing:.12em;color:color-mix(in srgb,var(--time) 76%,var(--mid));text-shadow:none
+}
+.mission-card.exam-combined .mission-stat.is-ended{font-size:16px!important}
 .mission-card.other-goal .mission-stat{font-size:23px;line-height:1.02}
 .mission-card.other-goal .mission-stat small{font-size:9.5px}
 .mission-target-snapshot{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--mission) 22%,var(--line))}
@@ -1135,6 +1147,36 @@ body.goal-welcome-open{overflow:hidden}
 .mission-target-source{grid-column:1/-1;margin-top:1px;font-size:7px;line-height:1.5;color:var(--soft);opacity:.8}
 .mission-card.target-only .mission-target-snapshot{margin-top:8px}
 .mission-card.target-only .mission-name,.mission-card.exam-combined .mission-name{font-size:19px;letter-spacing:.01em}
+
+/* 目標期間中は発光、終了後は暗転。斜めのスタンプで状態を一目で伝える。 */
+.mission-card.mission-active{
+  border-color:color-mix(in srgb,var(--mission) 74%,#fff 8%);
+  box-shadow:0 12px 32px rgba(0,0,0,.23),0 0 25px var(--mission-glow),inset 0 0 24px color-mix(in srgb,var(--mission) 8%,transparent)
+}
+.mission-card.mission-active::before{opacity:1;animation:missionActiveGlow 2.2s ease-in-out infinite}
+@keyframes missionActiveGlow{0%,100%{opacity:.72}50%{opacity:1}}
+.mission-card.mission-expired{border-color:color-mix(in srgb,var(--line) 76%,#596177)}
+.mission-card.mission-expired .mission-open{opacity:.34;filter:grayscale(.72) saturate(.35) brightness(.72)}
+.mission-card.mission-expired .mission-school-photo{opacity:.08;filter:grayscale(1) brightness(.55)}
+.mission-card.mission-expired::after{
+  content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:rgba(4,8,18,.34)
+}
+.mission-state-stamp{
+  position:absolute;z-index:4;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:min(82%,270px);padding:6px 14px 7px;border:3px solid currentColor;border-radius:8px;
+  transform:translate(-50%,-50%) rotate(-8deg);pointer-events:none;text-align:center;text-transform:uppercase;
+  font-family:var(--num);color:var(--mission);background:color-mix(in srgb,var(--panel) 74%,transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb,currentColor 34%,transparent),0 0 22px var(--mission-glow)
+}
+.mission-state-stamp strong{font-size:clamp(22px,7.3vw,36px);font-weight:700;line-height:1;letter-spacing:.075em;white-space:nowrap;text-shadow:0 0 16px var(--mission-glow)}
+.mission-state-stamp small{margin-top:5px;font-family:var(--jp);font-size:8px;font-weight:900;line-height:1.2;letter-spacing:.12em;color:currentColor;white-space:nowrap}
+.mission-card.mission-expired .mission-state-stamp{color:#9aa3b8;background:rgba(10,15,28,.82);box-shadow:0 0 0 2px rgba(154,163,184,.2)}
+.mission-card.mission-expired .mission-state-stamp strong{text-shadow:none}
+html[data-theme="light"] .mission-card.mission-active{box-shadow:0 10px 28px rgba(47,68,105,.13),0 0 24px var(--mission-glow),inset 0 0 20px color-mix(in srgb,var(--mission) 7%,transparent)}
+html[data-theme="light"] .mission-card.mission-expired{background:#eef1f6;border-color:#cbd2df}
+html[data-theme="light"] .mission-card.mission-expired::after{background:rgba(232,236,244,.48)}
+html[data-theme="light"] .mission-card.mission-expired .mission-state-stamp{color:#697386;background:rgba(248,250,253,.9);box-shadow:0 0 0 2px rgba(105,115,134,.18)}
+@media(max-width:370px){.mission-state-stamp{min-width:84%;padding-inline:10px}.mission-state-stamp strong{font-size:22px}.mission-state-stamp small{font-size:7.5px}}
 
 /* 毎日見る「入試パネル」：上から目標・期限・残り時間・3判定の順に読む */
 .mission-card.exam-combined{padding:16px 18px}
@@ -1304,6 +1346,11 @@ html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.e
 .save-hint svg{color:var(--time)}
 .check-row{display:flex;align-items:flex-start;gap:9px;margin-top:10px;font-size:11px;color:var(--mid);cursor:pointer}
 .check-row input{width:18px;height:18px;accent-color:var(--time);flex:0 0 auto;margin-top:1px}
+.time-range-toggle{margin:1px 0 12px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:rgba(76,195,255,.035)}
+.time-range-toggle[hidden],.time-end-date-field[hidden]{display:none}
+.time-range-toggle>span{font-weight:800;color:var(--mid)}
+.time-range-toggle>span small{display:block;margin-top:2px;font-size:8.5px;font-weight:600;line-height:1.45;color:var(--soft)}
+.time-end-date-field{margin:-1px 0 12px;padding:11px;border:1px solid rgba(76,195,255,.22);border-radius:10px;background:rgba(76,195,255,.04)}
 .goal-examples{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:-3px 0 12px}
 .goal-examples[hidden]{display:none}
 .goal-example{
@@ -1906,7 +1953,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
           </div>
           <div class="time-field-grid" id="timeDateGradeGrid">
             <label class="time-field">
-              <span>目標日</span>
+              <span id="timeStartDateLabel">目標日</span>
               <input class="time-input" id="timeTargetDate" type="date">
             </label>
             <label class="time-field" id="timeGradeField">
@@ -1918,6 +1965,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               </select>
             </label>
           </div>
+          <label class="check-row time-range-toggle" id="timeDateRangeToggle">
+            <input type="checkbox" id="timeUseEndDate">
+            <span>数日間の予定にする<small>旅行・大会・複数日の試験など</small></span>
+          </label>
+          <label class="time-field time-end-date-field" id="timeEndDateField" hidden>
+            <span id="timeEndDateLabel">終了日 <small>この日までパネルが光ります</small></span>
+            <input class="time-input" id="timeEndDate" type="date">
+          </label>
           <div class="date-status" id="timeDateStatus">学年に合わせて入試日を自動設定します。</div>
           <button class="restore-auto-date" id="restoreAutoDate" onclick="applyExamDate(true)">入試日を自動設定に戻す</button>
           <label class="check-row" id="timeMemorialRow"><input type="checkbox" id="okinawaMemorial" checked><span>沖縄の「慰霊の日」（6月23日）も休日として数える</span></label>
@@ -3800,6 +3855,59 @@ function formatTimeDate(d){
 function formatTimeShortDate(d){
   return (d.getMonth()+1)+"/"+d.getDate();
 }
+function normalizedMissionEndDate(mission,start){
+  if(!start)return null;
+  const stored=parseTimeDate(mission&&mission.endDate);
+  if(stored&&stored>=start)return stored;
+  return normalizeGoalType(mission&&mission.type,mission)==="okinawa_exam"?addTimeDays(start,1):start;
+}
+function formatTimeDateRange(start,end){
+  if(!start)return"—";
+  if(!end||isTimeSameDay(start,end))return formatTimeDate(start)+"まで";
+  if(start.getFullYear()===end.getFullYear()){
+    if(start.getMonth()===end.getMonth())return start.getFullYear()+"年"+(start.getMonth()+1)+"月"+start.getDate()+"日〜"+end.getDate()+"日";
+    return start.getFullYear()+"年"+(start.getMonth()+1)+"月"+start.getDate()+"日〜"+(end.getMonth()+1)+"月"+end.getDate()+"日";
+  }
+  return formatTimeDate(start)+"〜"+formatTimeDate(end);
+}
+function isCurrentDateRangeEnabled(){
+  return document.getElementById("timeGoalType").value==="okinawa_exam"||document.getElementById("timeUseEndDate").checked;
+}
+function currentTimeEndDate(start){
+  if(!start)return null;
+  if(!isCurrentDateRangeEnabled())return start;
+  return parseTimeDate(document.getElementById("timeEndDate").value);
+}
+function syncTimeDateRangeUI(options){
+  options=options||{};
+  const type=document.getElementById("timeGoalType").value;
+  const exam=type==="okinawa_exam";
+  const toggle=document.getElementById("timeUseEndDate");
+  const toggleRow=document.getElementById("timeDateRangeToggle");
+  const endField=document.getElementById("timeEndDateField");
+  const startInput=document.getElementById("timeTargetDate");
+  const endInput=document.getElementById("timeEndDate");
+  if(exam)toggle.checked=true;
+  toggleRow.hidden=exam;
+  const enabled=exam||toggle.checked;
+  endField.hidden=!enabled;
+  document.getElementById("timeStartDateLabel").textContent=exam?"入試1日目":(enabled?"開始日":"目標日");
+  document.getElementById("timeEndDateLabel").innerHTML=(exam?"入試2日目":"終了日")+' <small>この日までパネルが光ります</small>';
+  const start=parseTimeDate(startInput.value);
+  const minimum=start?addTimeDays(start,1):timeToday();
+  endInput.min=timeDateKey(minimum);
+  if(!enabled){
+    endInput.value=start?timeDateKey(start):"";
+    return false;
+  }
+  if(start){
+    const end=parseTimeDate(endInput.value);
+    if(options.forceNextDay||!end||end<minimum)endInput.value=timeDateKey(minimum);
+  }else if(options.clearWithoutStart){
+    endInput.value="";
+  }
+  return true;
+}
 function playTimeValueSound(value,max){
   const now=performance.now();
   if(now-lastTimeFxAt<38)return;
@@ -3845,6 +3953,7 @@ function updateGoalContext(){
   document.getElementById("timeYearModeButton").hidden=!usesGrade;
   document.getElementById("timeGoalExamples").hidden=usesGrade;
   document.querySelector(".time-mode-tabs").classList.toggle("three",!usesGrade);
+  syncTimeDateRangeUI();
   if(!usesGrade&&timeMode==="year")switchTimeMode("average");
 }
 function applyGoalExample(name){
@@ -3860,7 +3969,9 @@ function updateExamDateStatus(){
   const type=document.getElementById("timeGoalType").value;
   status.className="date-status";
   if(type!=="okinawa_exam"){
-    status.textContent="目標日を手動で設定してください。学年は使わず、他県の入試・資格・試験・仕事などに利用できます。";
+    status.textContent=document.getElementById("timeUseEndDate").checked
+      ?"開始日と終了日を設定してください。残り時間は開始日までを計算し、その期間中はホームのパネルが光ります。"
+      :"目標日を手動で設定してください。学年は使わず、他県の入試・資格・試験・仕事などに利用できます。";
     restore.classList.remove("show");
     return;
   }
@@ -3868,10 +3979,10 @@ function updateExamDateStatus(){
   const second=addTimeDays(info.date,1);
   if(info.confirmed){
     status.classList.add("confirmed");
-    status.textContent="令和9年度（2027年）は3月3日・4日。1日目の3月3日を自動設定しています。";
+    status.textContent="令和9年度（2027年）は3月3日・4日。1日目と2日目を自動設定しています。";
   }else{
     status.classList.add("predicted");
-    status.textContent=info.year+"年は"+formatTimeDate(info.date)+"・"+formatTimeDate(second)+"と予測しています。公式発表前の推測なので、発表後に修正してください。";
+    status.textContent=info.year+"年は"+formatTimeDate(info.date)+"・"+formatTimeDate(second)+"と予測し、2日間を自動設定しています。公式発表前の推測なので、発表後に修正してください。";
   }
   if(timeDateManuallyEdited){
     status.textContent+=" 現在は日付を手動で変更しています。";
@@ -3886,7 +3997,10 @@ function applyExamDate(force){
   const info=examDateForGrade(document.getElementById("timeGrade").value);
   timeInternalDateChange=true;
   document.getElementById("timeTargetDate").value=timeDateKey(info.date);
+  document.getElementById("timeUseEndDate").checked=true;
+  document.getElementById("timeEndDate").value=timeDateKey(addTimeDays(info.date,1));
   timeInternalDateChange=false;
+  syncTimeDateRangeUI();
   timeDateManuallyEdited=false;
   updateExamDateStatus();
   if(timeMode==="year")renderYearPeriods();
@@ -4003,10 +4117,13 @@ function writeTimeMissions(missions){
 function calculateSavedMission(mission){
   const target=parseTimeDate(mission.targetDate);
   const today=timeToday();
-  if(!target)return{valid:false,days:0,total:0,expired:false,isToday:false};
-  const expired=target<today;
-  const isToday=!expired&&isTimeSameDay(target,today);
-  const records=expired?[]:getTimeRecords(target,mission.memorial!==false);
+  if(!target)return{valid:false,days:0,total:0,expired:false,active:false,isToday:false};
+  const end=normalizedMissionEndDate(mission,target);
+  const active=today>=target&&today<=end;
+  const expired=today>end;
+  const isToday=isTimeSameDay(target,today);
+  /* 残り時間は開始日まで。期間に入ったら0のまま、終了日の翌日に終了へ切り替える。 */
+  const records=active||expired?[]:getTimeRecords(target,mission.memorial!==false);
   const weekdays=records.filter(row=>!row.offday).length;
   const offdays=records.length-weekdays;
   const values=Object.assign({},TIME_DEFAULT_VALUES,mission.timeValues||{});
@@ -4026,11 +4143,36 @@ function calculateSavedMission(mission){
       total+=row.offday?(Number(period.offday)||0):(Number(period.weekday)||0);
     });
   }
-  return{valid:true,expired,isToday,days:records.length,total,target,weekdays,offdays};
+  const rangeDays=Math.max(1,Math.round((end-target)/86400000)+1);
+  return{valid:true,expired,active,isToday,days:records.length,total,target,end,rangeDays,isRange:rangeDays>1,weekdays,offdays};
 }
 function savedMissionHoursLabel(mission,isExam){
   if(mission.hoursScope==="all")return "ぜんぶで";
   return isExam?"勉強に使えるのは":"目標に使えるのは";
+}
+function isChallengeMission(mission,isExam){
+  if(isExam)return true;
+  return /試験|テスト|模試|入試|受験|英検|漢検|数検|検定|大会|発表会|コンクール|面接|選考/.test(String(mission.goalName||""));
+}
+function missionStateCopy(mission,summary,isExam){
+  if(!summary.active&&!summary.expired)return null;
+  const challenge=isChallengeMission(mission,isExam);
+  if(summary.active){
+    if(challenge)return{className:"mission-active",label:"GOOD LUCK!",sub:isExam?"県立高校入試の期間中です":"本番の日です"};
+    if(summary.isRange)return{className:"mission-active",label:"ENJOY!",sub:"予定の期間中です"};
+    return{className:"mission-active",label:"TODAY!",sub:"今日です"};
+  }
+  return challenge
+    ?{className:"mission-expired",label:"GOOD JOB!",sub:"おつかれさまでした"}
+    :{className:"mission-expired",label:"FINISHED",sub:"この予定は終了しました"};
+}
+function appendMissionStateStamp(card,state){
+  if(!state)return;
+  card.classList.add(state.className);
+  const stamp=document.createElement("div");stamp.className="mission-state-stamp";stamp.setAttribute("aria-hidden","true");
+  const label=document.createElement("strong");label.textContent=state.label;
+  const sub=document.createElement("small");sub.textContent=state.sub;
+  stamp.append(label,sub);card.appendChild(stamp);
 }
 function savedTargetSchoolLabel(target){
   const raw=String(target.schoolName||"志望校").trim();
@@ -4180,6 +4322,7 @@ function renderSavedMissions(){
     const summary=calculateSavedMission(mission);
     const isExam=normalizeGoalType(mission.type,mission)==="okinawa_exam";
     const isCombinedExam=isExam&&!!savedTarget;
+    const state=missionStateCopy(mission,summary,isExam);
     const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
     const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
     card.style.setProperty("--mission",accent);
@@ -4205,26 +4348,27 @@ function renderSavedMissions(){
     }
     const role=document.createElement("div");role.className="mission-role";role.textContent="第一志望・合格目標";
     const name=document.createElement("div");name.className="mission-name";name.textContent=isCombinedExam?savedTargetSchoolLabel(savedTarget):(mission.goalName||"目標日");
-    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDate(summary.target)+"まで";
+    const date=document.createElement("div");date.className="mission-date";date.textContent=formatTimeDateRange(summary.target,summary.end);
     const stats=document.createElement("div");stats.className="mission-stats";
     const dayGroup=document.createElement("div");dayGroup.className="mission-stat-group days";
     const dayStat=document.createElement("span");dayStat.className="mission-stat";
-    /* 目標当日は待ち続けた「0」を表示し、翌日から「終了」に切り替える。 */
-    dayStat.innerHTML=summary.expired?"終了":(summary.isToday?"0<small>日</small>":formatTimeHeadlineHours(summary.days)+"<small>日</small>");
+    /* 開始日から終了日までは待ち続けた「0」。終了日の翌日から「終了」に切り替える。 */
+    dayStat.classList.toggle("is-ended",summary.expired);
+    dayStat.innerHTML=summary.expired?"終了":(summary.active?"0<small>日</small>":formatTimeHeadlineHours(summary.days)+"<small>日</small>");
     dayGroup.append(date,dayStat);
     const hourGroup=document.createElement("div");hourGroup.className="mission-stat-group hours";
     const hourLabel=document.createElement("span");hourLabel.className="mission-stat-label";hourLabel.textContent=savedMissionHoursLabel(mission,isExam);
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
-    hourStat.innerHTML=formatTimeHeadlineHours(summary.isToday||summary.expired?0:summary.total)+"<small>時間</small>";
+    hourStat.innerHTML=formatTimeHeadlineHours(summary.active||summary.expired?0:summary.total)+"<small>時間</small>";
     hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(isCombinedExam?codeRow:code);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
-    open.setAttribute("aria-label",(mission.goalName||"目標")+"を開く。長押しで削除");
+    open.setAttribute("aria-label",(mission.goalName||"目標")+(state?"。"+state.sub:"")+"。開く。長押しで削除");
     bindMissionCardLongPress(card,open,mission.id,mission.goalName||"この目標",{
       open:()=>loadTimeMission(mission.id),
       remove:()=>deleteTimeMission(mission.id,mission.goalName||"この目標",true)
     });
-    card.append(open);list.appendChild(card);
+    card.append(open);appendMissionStateStamp(card,state);list.appendChild(card);
   });
 }
 /* 日付が変わったら、保存済みパネルの「あと○日・○時間」も更新する。
@@ -4293,6 +4437,8 @@ function resetTimeGoalControls(type){
   Object.keys(timeYearValues).forEach(key=>delete timeYearValues[key]);
   Object.keys(TIME_VALUES).forEach(key=>syncTimeValue(key,TIME_VALUES[key]));
   syncImpactMinutes(30);
+  document.getElementById("timeUseEndDate").checked=type==="okinawa_exam";
+  if(type!=="okinawa_exam")document.getElementById("timeEndDate").value="";
   timeAllocations=defaultAllocationsForType(type||"okinawa_exam");
   renderAllocationControls();
 }
@@ -4315,6 +4461,9 @@ function captureTimeMission(){
   const type=document.getElementById("timeGoalType").value;
   const grade=Number(document.getElementById("timeGrade").value)||0;
   const examInfo=type==="okinawa_exam"?examDateForGrade(grade):null;
+  const targetDate=document.getElementById("timeTargetDate").value;
+  const dateRange=isCurrentDateRangeEnabled();
+  const endDate=dateRange?document.getElementById("timeEndDate").value:targetDate;
   const allocations=timeAllocations.map(item=>({id:item.id,name:item.name,weight:Number(item.weight)||0,color:item.color}));
   const subjectWeights={};
   allocations.forEach(item=>{subjectWeights[item.name]=item.weight});
@@ -4323,7 +4472,7 @@ function captureTimeMission(){
   return{
     id:currentTimeMissionId||("mission_"+Date.now()+"_"+Math.random().toString(36).slice(2,7)),
     type,goalName:document.getElementById("timeGoalName").value.trim()||"目標日",
-    targetDate:document.getElementById("timeTargetDate").value,grade,
+    targetDate,endDate,dateRange,grade,
     examYear:examInfo?examInfo.year:null,manualDate:type==="okinawa_exam"&&timeDateManuallyEdited,
     memorial:document.getElementById("okinawaMemorial").checked,mode:timeMode,hoursScope:timeHoursScope,
     timeValues:Object.assign({},TIME_VALUES),yearValues,allocations,subjectWeights,
@@ -4357,8 +4506,13 @@ function loadTimeMission(id){
   document.getElementById("timeGoalName").value=mission.goalName||"";
   document.getElementById("timeGrade").value=String(Number(mission.grade)||0);
   document.getElementById("okinawaMemorial").checked=(missionType==="okinawa_exam"&&mission.memorial!==false);
+  const loadedStart=parseTimeDate(mission.targetDate);
+  const loadedEnd=normalizedMissionEndDate(mission,loadedStart);
+  const loadedRange=missionType==="okinawa_exam"||mission.dateRange===true||(loadedStart&&loadedEnd&&!isTimeSameDay(loadedStart,loadedEnd));
   timeInternalDateChange=true;
   document.getElementById("timeTargetDate").value=mission.targetDate||"";
+  document.getElementById("timeUseEndDate").checked=!!loadedRange;
+  document.getElementById("timeEndDate").value=loadedEnd?timeDateKey(loadedEnd):(mission.targetDate||"");
   timeInternalDateChange=false;
   Object.assign(TIME_VALUES,TIME_DEFAULT_VALUES,mission.timeValues||{});
   Object.keys(TIME_VALUES).forEach(key=>syncTimeValue(key,TIME_VALUES[key]));
@@ -4380,7 +4534,8 @@ function loadTimeMission(id){
   renderAllocationControls();
   if(missionType==="okinawa_exam"){
     const auto=timeDateKey(examDateForGrade(mission.grade).date);
-    timeDateManuallyEdited=mission.manualDate===true||mission.targetDate!==auto;
+    const autoEnd=timeDateKey(addTimeDays(parseTimeDate(auto),1));
+    timeDateManuallyEdited=mission.manualDate===true||mission.targetDate!==auto||(loadedEnd?timeDateKey(loadedEnd):"")!==autoEnd;
   }else timeDateManuallyEdited=false;
   timeMode=mission.mode||"average";
   updateGoalContext();
@@ -4572,8 +4727,13 @@ function calculateTimeSimulation(){
   const target=parseTimeDate(document.getElementById("timeTargetDate").value);
   const today=timeToday();
   if(!target)return{valid:false,reason:"目標日を設定してください"};
-  if(target<today)return{valid:false,reason:"今日以降の目標日を設定してください"};
-  const records=getTimeRecords(target);
+  const dateRange=isCurrentDateRangeEnabled();
+  const end=currentTimeEndDate(target);
+  if(dateRange&&!end)return{valid:false,reason:"終了日を設定してください"};
+  if(dateRange&&end<=target)return{valid:false,reason:"終了日は開始日の翌日以降に設定してください"};
+  if(end<today)return{valid:false,reason:"今日以降の目標日を設定してください"};
+  const active=today>=target&&today<=end;
+  const records=active?[]:getTimeRecords(target);
   const weekdays=records.filter(row=>!row.offday).length;
   const offdays=records.length-weekdays;
   let total=0;
@@ -4612,7 +4772,7 @@ function calculateTimeSimulation(){
   else if(timeMode==="weekday")method="曜日ごとの時間（祝日は祝日設定を優先）";
   else if(timeMode==="year")method="学年・年度ごとの平日 / 土日祝設定";
   return{
-    valid:true,target,type:document.getElementById("timeGoalType").value,goal:(document.getElementById("timeGoalName").value.trim()||"目標日"),records,
+    valid:true,target,end,dateRange,active,type:document.getElementById("timeGoalType").value,goal:(document.getElementById("timeGoalName").value.trim()||"目標日"),records,
     isToday:isTimeSameDay(target,today),
     days:records.length,weekdays,offdays,total,average:records.length?total/records.length:0,
     impacts,subjects,method,hoursScope:timeHoursScope,memorial:document.getElementById("okinawaMemorial").checked
@@ -4645,7 +4805,7 @@ function updateTimeDock(calculated){
   const btn=document.getElementById("timeDockBtn");
   const lock=document.getElementById("timeDockLock");
   btn.disabled=!result.valid;
-  lock.innerHTML=result.valid?"計測可能：<b>あと"+result.days+"日 / "+formatTimeHeadlineHours(result.total)+"時間</b>":result.reason;
+  lock.innerHTML=result.valid?(result.active?"<b>現在、この目標の期間中です</b>":"計測可能：<b>あと"+result.days+"日 / "+formatTimeHeadlineHours(result.total)+"時間</b>"):result.reason;
 }
 function animateTimeTotal(el,target){
   const start=performance.now(),duration=1050;
@@ -4677,8 +4837,8 @@ function renderTimeImpacts(result){
 }
 function renderTimeResult(result){
   document.getElementById("trGoal").textContent=result.goal;
-  document.getElementById("trDaysLeft").textContent="あと "+result.days+" DAYS";
-  document.getElementById("trTargetDate").textContent=formatTimeDate(result.target)+" まで";
+  document.getElementById("trDaysLeft").textContent=result.active?"期間中":"あと "+result.days+" DAYS";
+  document.getElementById("trTargetDate").textContent=formatTimeDateRange(result.target,result.end);
   document.getElementById("trTotalDays").textContent=result.days;
   document.getElementById("trWeekdays").textContent=result.weekdays;
   document.getElementById("trOffdays").textContent=result.offdays;
@@ -4715,7 +4875,7 @@ function renderTimeResult(result){
     :result.method+"。日本の祝日"+(result.memorial?"と沖縄の慰霊の日":"")+"を土日祝側として計算。今日を含めず、目標日を含みます。";
   document.getElementById("timeSaveTitle").textContent=currentTimeMissionId?"この目標の保存内容を更新しますか？":"この目標をホームに保存しますか？";
   document.getElementById("timeSaveText").textContent=currentTimeMissionId
-    ?"更新すると、変更した日付と時間の数え方がホームの目標に反映されます。"
+    ?"更新すると、変更した開始日・終了日と時間の数え方がホームの目標に反映されます。"
     :(allHours?"保存すると、残り日数と時間をホームからすぐ確認できます。":"保存すると、残り日数と使える時間をホームからすぐ確認できます。");
   document.getElementById("timeResultScroll").scrollTop=0;
 }
@@ -4723,7 +4883,7 @@ function runTimeScan(){
   const result=calculateTimeSimulation();
   if(!result.valid){
     FX.play("err");vibrate([30,30,30]);
-    shakeElement(document.getElementById("timeTargetDate"));
+    shakeElement(/終了日/.test(result.reason)?document.getElementById("timeEndDate"):document.getElementById("timeTargetDate"));
     toast(result.reason);
     return;
   }
@@ -4756,14 +4916,31 @@ function saveTimeResultAndHome(){
 function discardTimeResultAndHome(){goHome()}
 function initTimeScan(){
   const target=document.getElementById("timeTargetDate");
+  const end=document.getElementById("timeEndDate");
+  const rangeToggle=document.getElementById("timeUseEndDate");
   target.min=timeDateKey(timeToday());
+  end.min=timeDateKey(timeToday());
   initTimeValueInputs();
   initTimeImpactInputs();
   initSubjectInputs();
   target.addEventListener("input",()=>{
-    if(!timeInternalDateChange&&document.getElementById("timeGoalType").value==="okinawa_exam")timeDateManuallyEdited=true;
+    const exam=document.getElementById("timeGoalType").value==="okinawa_exam";
+    if(!timeInternalDateChange&&exam)timeDateManuallyEdited=true;
+    syncTimeDateRangeUI({forceNextDay:exam,clearWithoutStart:true});
     updateExamDateStatus();
     if(timeMode==="year")renderYearPeriods();
+    FX.play("lock");
+    updateTimeSimulation();
+  });
+  rangeToggle.addEventListener("change",()=>{
+    FX.play("tap");
+    syncTimeDateRangeUI({forceNextDay:rangeToggle.checked,clearWithoutStart:true});
+    updateExamDateStatus();
+    updateTimeSimulation();
+  });
+  end.addEventListener("input",()=>{
+    if(!timeInternalDateChange&&document.getElementById("timeGoalType").value==="okinawa_exam")timeDateManuallyEdited=true;
+    updateExamDateStatus();
     FX.play("lock");
     updateTimeSimulation();
   });
@@ -4782,7 +4959,8 @@ function initTimeScan(){
       document.getElementById("timeGoalName").value="";
       switchTimeScope("all");
       timeDateManuallyEdited=false;
-      timeInternalDateChange=true;target.value="";timeInternalDateChange=false;
+      timeInternalDateChange=true;target.value="";end.value="";rangeToggle.checked=false;timeInternalDateChange=false;
+      syncTimeDateRangeUI({clearWithoutStart:true});
       updateExamDateStatus();
       if(timeMode==="year")renderYearPeriods();
       updateTimeSimulation();
@@ -4909,7 +5087,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260714-50", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-67", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
