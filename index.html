@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-69 / ALWAYS-VISIBLE-HOME-BACK -->
+<!-- BUILD: 20260716-70 / COMPACT-STATE-BADGES -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -1130,6 +1130,9 @@ body.goal-welcome-open{overflow:hidden}
 .mission-code-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
 .mission-code-row .mission-code{min-width:0;margin-bottom:0}
 .mission-chip-group{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:4px}
+/* 単独の目標パネルではバッジをフローから外し、通常時と同じ高さを保つ。 */
+.mission-card:not(.exam-combined) .mission-code-row{position:relative}
+.mission-card:not(.exam-combined) .mission-chip-group{position:absolute;z-index:3;top:-3px;right:0}
 .mission-role{margin:2px 0 1px;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--mid)}
 .mission-name{font-size:17px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
 .mission-date{font-size:9.5px;color:var(--soft);margin-top:2px}
@@ -1185,8 +1188,6 @@ body.goal-welcome-open{overflow:hidden}
   line-height:1;letter-spacing:.1em;color:var(--mission);white-space:nowrap;box-shadow:0 0 12px var(--mission-glow)
 }
 .mission-card.mission-expired .mission-state-chip{border-color:rgba(154,163,184,.36);background:rgba(154,163,184,.08);color:#aab2c5;box-shadow:none}
-.mission-state-note{margin-top:5px;font-size:8px;font-weight:800;line-height:1.35;letter-spacing:.055em;color:color-mix(in srgb,var(--mission) 62%,var(--mid))}
-.mission-card.mission-expired .mission-state-note{color:color-mix(in srgb,var(--soft) 76%,var(--mid))}
 html[data-theme="light"] .mission-card.mission-active{box-shadow:0 10px 28px rgba(47,68,105,.13),0 0 24px var(--mission-glow),inset 0 0 20px color-mix(in srgb,var(--mission) 7%,transparent)}
 html[data-theme="light"] .mission-card.mission-expired{background:#eef1f6;border-color:#cbd2df}
 html[data-theme="light"] .mission-card.mission-expired .mission-open{opacity:.8}
@@ -4188,11 +4189,11 @@ function missionStateCopy(mission,summary,isExam){
   if(!summary.active&&!summary.expired)return null;
   const challenge=isChallengeMission(mission,isExam);
   if(summary.active){
-    if(summary.isRange)return{className:"mission-active",label:challenge?"GOOD LUCK!":"開催中",sub:isExam?"県立高校入試の期間中です":"目標の期間中です",dayText:"開催中"};
-    if(challenge)return{className:"mission-active",label:"GOOD LUCK!",sub:"本番の日です",dayText:"本日"};
-    return{className:"mission-active",label:"TODAY",sub:"目標の日です",dayText:"本日"};
+    if(summary.isRange)return{className:"mission-active",label:challenge?"GOOD LUCK!":"開催中",sub:"開催中",dayText:"開催中"};
+    if(challenge)return{className:"mission-active",label:"GOOD LUCK!",sub:"本日",dayText:"本日"};
+    return{className:"mission-active",label:"TODAY",sub:"本日",dayText:"本日"};
   }
-  return{className:"mission-expired",label:"終了",sub:challenge?"おつかれさまでした":"この目標は終了しました",dayText:"終了"};
+  return{className:"mission-expired",label:"終了しました",sub:"終了しました",dayText:"終了"};
 }
 function applyMissionState(card,state){
   if(!state)return;
@@ -4397,7 +4398,6 @@ function renderSavedMissions(){
     const hourStat=document.createElement("span");hourStat.className="mission-stat";
     hourStat.innerHTML=formatTimeHeadlineHours(summary.active||summary.expired?0:summary.total)+"<small>時間</small>";
     hourGroup.append(hourLabel,hourStat);stats.append(dayGroup,hourGroup);body.appendChild(codeRow);if(isCombinedExam)body.appendChild(role);body.append(name,stats);
-    if(state){const note=document.createElement("div");note.className="mission-state-note";note.textContent=state.sub;body.appendChild(note)}
     if(isCombinedExam)appendTargetSnapshot(body,savedTarget,{hideSchool:true,unifiedJudgments:true});
     if(isCombinedExam)open.append(body);else open.append(icon,body);
     open.setAttribute("aria-label",(mission.goalName||"目標")+(state?"。"+state.sub:"")+"。開く。長押しで削除");
@@ -5124,7 +5124,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-69", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-70", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
