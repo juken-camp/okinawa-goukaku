@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-70 / COMPACT-STATE-BADGES -->
+<!-- BUILD: 20260716-71 / FIXED-MISSION-GRID -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -1153,6 +1153,25 @@ body.goal-welcome-open{overflow:hidden}
 .mission-card.exam-combined .mission-stat.is-status{font-size:16px!important}
 .mission-card.other-goal .mission-stat{font-size:23px;line-height:1.02}
 .mission-card.other-goal .mission-stat small{font-size:9.5px}
+/* TIME SCANの単独パネルは状態に関係なく同寸。左右も同じ2段グリッドで固定する。 */
+.mission-card.time-mission:not(.exam-combined){height:116px;min-height:116px}
+.mission-card.time-mission:not(.exam-combined) .mission-name{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal
+}
+.mission-card.time-mission:not(.exam-combined) .mission-stats{align-items:start}
+.mission-card.time-mission:not(.exam-combined) .mission-stat-group{
+  display:grid;grid-template-rows:12px 25px;align-items:start;justify-content:stretch
+}
+.mission-card.time-mission:not(.exam-combined) .mission-stat-group .mission-date,
+.mission-card.time-mission:not(.exam-combined) .mission-stat-label{
+  width:100%;height:12px;min-height:12px;margin:0;line-height:12px
+}
+.mission-card.time-mission:not(.exam-combined) .mission-stat{
+  width:100%;height:25px;min-height:25px;display:flex;align-items:baseline;padding:0;line-height:25px
+}
+.mission-card.time-mission:not(.exam-combined) .mission-stat.is-status{
+  height:25px;min-height:25px;padding:0;font-size:17px!important;line-height:25px;letter-spacing:.06em
+}
 .mission-target-snapshot{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--mission) 22%,var(--line))}
 .mission-target-copy{min-width:0}
 .mission-target-cap{font-family:var(--num);font-size:7px;font-weight:700;letter-spacing:.15em;color:var(--mission);line-height:1.25}
@@ -4354,7 +4373,7 @@ function renderSavedMissions(){
     const isCombinedExam=isExam&&!!savedTarget;
     const state=missionStateCopy(mission,summary,isExam);
     const accent=isExam?"#ffb84d":MISSION_GOAL_COLORS[otherMissionIndex++%MISSION_GOAL_COLORS.length];
-    const card=document.createElement("div");card.className="mission-card"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
+    const card=document.createElement("div");card.className="mission-card time-mission"+(isCombinedExam?" exam-combined":(!isExam?" other-goal":""));
     card.style.setProperty("--mission",accent);
     card.style.setProperty("--mission-glow","color-mix(in srgb,"+accent+" 20%,transparent)");
     if(isCombinedExam)appendSchoolPhoto(card,savedTarget);
@@ -5124,7 +5143,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-70", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-71", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
