@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- BUILD: 20260716-71 / FIXED-MISSION-GRID -->
+<!-- BUILD: 20260716-72 / IOS-SCROLL-BOUNDARY -->
 <meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QB9X0232K7"></script>
@@ -260,7 +260,7 @@ html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba
 @media(max-width:370px){.rail{padding-left:96px}.workflow-home{left:10px;padding-inline:9px}}
 
 /* ---------------- シーン ---------------- */
-.stage{flex:1;position:relative;overflow:hidden}
+.stage{flex:1;position:relative;overflow:hidden;overscroll-behavior:none}
 .scene{
   position:absolute;inset:0;
   display:flex;flex-direction:column;
@@ -271,7 +271,7 @@ html[data-theme="light"] .workflow-home{border-color:var(--line);background:rgba
 }
 .scene.active{opacity:1;transform:translateX(0);pointer-events:auto}
 .scene.exit-left{transform:translateX(-28px)}
-.scene-scroll{overflow-y:auto;padding-bottom:calc(96px + var(--sab));-webkit-overflow-scrolling:touch}
+.scene-scroll{overflow-y:auto;padding-bottom:calc(96px + var(--sab));-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;touch-action:pan-y}
 
 .eyebrow{
   font-family:var(--num);font-size:10px;font-weight:600;
@@ -965,7 +965,7 @@ html[data-theme="light"] .dock{background:linear-gradient(180deg,transparent,rgb
 
 /* 2つのスキャンを選ぶホーム */
 #sceneTitle{justify-content:flex-start;text-align:left;padding-bottom:0}
-.hub-scroll{width:100%;flex:1;min-height:0;padding:22px 0 calc(34px + var(--sab));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.hub-scroll{width:100%;flex:1;min-height:0;padding:22px 0 calc(34px + var(--sab));overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;touch-action:pan-y}
 .hub-head{text-align:center;margin-bottom:20px;padding:0 2px}
 .hub-kicker{font-family:var(--num);font-size:9px;font-weight:700;letter-spacing:.25em;color:var(--soft);margin-bottom:6px}
 .hub-title{font-size:clamp(22px,6vw,29px);font-weight:900;line-height:1.4;letter-spacing:.02em}
@@ -1309,7 +1309,7 @@ html[data-theme="light"] .mission-card .fixed-judgments .mission-target-metric.e
 .photo-credit-source::after{content:" ↗"}
 
 /* 保存後のホーム：目標を先頭に置き、2つの入口は小型の操作パネルにする */
-.hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:auto}
+.hub-scroll.has-saved{display:block;padding:0;overscroll-behavior-y:none}
 .hub-scroll.has-saved .hub-content{display:flex;flex-direction:column;justify-content:flex-start;min-height:calc(100% + 2px);padding:calc(28px + var(--sat)) 0 calc(18px + var(--sab))}
 .hub-scroll.has-saved .hub-head{display:none}
 .hub-scroll.has-saved .saved-list{order:1;margin-top:0}
@@ -2466,6 +2466,29 @@ document.addEventListener("pointerdown",e=>{
   boing(btn);
   if(!btn.matches(FX_SPECIAL))FX.play("tap");
 },{passive:true});
+
+/* iOSで一覧の端を引っ張った時、画面本体まで連動して下へずれる現象を防ぐ。 */
+(function guardIOSScrollBoundary(){
+  let touchStartY=0;
+  const scrollSelector=".hub-scroll,.scene-scroll,.goal-welcome-panel,.photo-credits-list";
+  document.addEventListener("touchstart",event=>{
+    if(event.touches.length===1)touchStartY=event.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener("touchmove",event=>{
+    if(event.touches.length!==1)return;
+    const target=event.target;
+    if(!(target instanceof Element)||target.closest("input,textarea,select"))return;
+    const scroller=target.closest(scrollSelector);
+    if(!scroller)return;
+    const deltaY=event.touches[0].clientY-touchStartY;
+    if(Math.abs(deltaY)<2)return;
+    const atTop=scroller.scrollTop<=0;
+    const atBottom=scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-1;
+    if((atTop&&deltaY>0)||(atBottom&&deltaY<0))event.preventDefault();
+  },{passive:false});
+  document.addEventListener("touchend",()=>{touchStartY=0},{passive:true});
+  document.addEventListener("touchcancel",()=>{touchStartY=0},{passive:true});
+})();
 
 /* ================================================================
    DATA（2025年度PDF目視照合済みデータを統合）
@@ -5143,7 +5166,7 @@ document.querySelectorAll("input[type='number']").forEach(el=>{
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-    .register("/service-worker.js?build=20260716-71", { updateViaCache: "none" })
+    .register("/service-worker.js?build=20260716-72", { updateViaCache: "none" })
       .catch((error) => console.warn("Service Worker registration failed:", error));
   });
 }
